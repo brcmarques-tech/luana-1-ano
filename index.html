@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1a0a2e" />
+  <meta name="description" content="Um ano de Luana 💛" />
+  <title>Pra Luana 💛</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main id="app">
+
+    <!-- TELA 1: brincadeira "você é a Luana?" -->
+    <section id="screen-gate" class="screen active">
+      <div class="gate-content">
+        <h1 class="gate-title">Você é a <span class="highlight">Luana</span>?</h1>
+        <p class="gate-subtitle">(precisamos ter certeza 🔍)</p>
+        <div class="gate-buttons">
+          <button id="btn-yes" class="btn btn-yes" type="button">Sim 💛</button>
+          <button id="btn-no" class="btn btn-no" type="button">Não</button>
+        </div>
+        <p id="gate-hint" class="gate-hint"></p>
+      </div>
+    </section>
+
+    <!-- TELA 2: abertura com nome digitando -->
+    <section id="screen-welcome" class="screen">
+      <div class="welcome-content">
+        <p class="welcome-greeting">oi,</p>
+        <h1 class="welcome-name" id="welcome-name"></h1>
+        <p class="welcome-sub" id="welcome-sub"></p>
+        <button id="btn-start" class="btn btn-start" type="button">vamos? →</button>
+      </div>
+      <div class="confetti-layer" id="confetti-layer"></div>
+    </section>
+
+    <!-- TELA 3: timeline horizontal swipeável -->
+    <section id="screen-journey" class="screen">
+      <header class="journey-header">
+        <h2 class="journey-title">nosso 1º ano</h2>
+        <span class="journey-counter" id="journey-counter">1 / 13</span>
+      </header>
+
+      <div class="timeline" id="timeline">
+        <!-- cards injetados via JS -->
+      </div>
+
+      <div class="timeline-dots" id="timeline-dots"></div>
+
+      <div class="journey-hint">
+        <span>← deslize →</span>
+      </div>
+    </section>
+
+    <!-- TELA 4: coisas que eu amo na Luana -->
+    <section id="screen-loves" class="screen">
+      <div class="loves-scroll">
+        <header class="loves-header">
+          <p class="loves-eyebrow">algumas coisas</p>
+          <h2 class="loves-title">que eu amo<br />em você</h2>
+          <p class="loves-sub">(lista parcial — não cabia tudo)</p>
+        </header>
+
+        <ul class="loves-list" id="loves-list"></ul>
+
+        <footer class="loves-footer">
+          <p class="loves-quote">e ainda tem muito mais.</p>
+          <button id="btn-to-game" class="btn btn-to-game" type="button">tem mais →</button>
+        </footer>
+      </div>
+    </section>
+
+    <!-- TELA 5: memory game -->
+    <section id="screen-game" class="screen">
+      <header class="game-header">
+        <h2 class="game-title">encontre os pares</h2>
+        <p class="game-sub">acerta os 6 pares pra desbloquear o final</p>
+        <div class="game-stats">
+          <span class="game-stat">pares: <strong id="game-pairs">0/6</strong></span>
+          <span class="game-stat">jogadas: <strong id="game-moves">0</strong></span>
+        </div>
+      </header>
+
+      <div class="game-board" id="game-board"></div>
+
+      <button id="btn-game-restart" class="btn btn-restart" type="button">↻ reiniciar</button>
+
+      <!-- overlay de vitória -->
+      <div class="game-win" id="game-win" hidden>
+        <div class="win-content">
+          <div class="win-emoji">💛</div>
+          <h3 class="win-title">você acertou tudo!</h3>
+          <p class="win-text">claro que você acertaria</p>
+          <button id="btn-to-final" class="btn btn-yes" type="button">o que vem agora →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TELA 6: mensagem final -->
+    <section id="screen-final" class="screen">
+      <div class="final-bg-hearts" id="final-bg-hearts"></div>
+
+      <div class="final-scroll">
+        <header class="final-header">
+          <div class="final-date" id="final-date"></div>
+          <div class="final-badge" id="final-badge"></div>
+          <div class="final-heart">💛</div>
+        </header>
+
+        <div class="final-body" id="final-body"></div>
+
+        <footer class="final-footer">
+          <p class="final-signature" id="final-signature"></p>
+          <button id="btn-final-restart" class="btn btn-final-restart" type="button"></button>
+        </footer>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- controle de som -->
+  <button id="btn-mute" class="btn-mute" type="button" aria-label="Ligar/desligar som" hidden>🔊</button>
+
+  <audio id="bg-music" loop preload="none">
+    <!-- coloque a música em assets/audio/musica.mp3 -->
+    <source src="assets/audio/musica.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

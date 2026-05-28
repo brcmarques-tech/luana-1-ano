@@ -1,0 +1,179 @@
+// 4 easter eggs espalhados pelo site.
+// Edite as mensagens/frases pra customizar o que cada um revela.
+
+export const EGG_HINTS = [
+  '🤫 achou o primeiro segredo',
+  '👀 outro escondidinho',
+  '💘 modo cupido ativado',
+  '✨ tá ficando boa nisso',
+];
+
+export const TIMELINE_STATS = [
+  '8.760 horas com você',
+  '525.600 minutos juntos',
+  '≈ 1.245 cafés tomados',
+  '0 vezes que cansei',
+  '∞ vontades de te abraçar',
+];
+
+export const KONAMI_WORD = 'luana';
+export const KONAMI_MESSAGE = 'você digitou meu nome favorito 💛';
+
+let eggsFound = new Set();
+let eggCounter = null;
+
+const ensureCounter = () => {
+  if (eggCounter) return eggCounter;
+  eggCounter = document.createElement('div');
+  eggCounter.className = 'egg-counter';
+  eggCounter.hidden = true;
+  document.body.appendChild(eggCounter);
+  return eggCounter;
+};
+
+const updateCounter = () => {
+  const c = ensureCounter();
+  c.textContent = `🥚 ${eggsFound.size}/4`;
+  c.hidden = false;
+  c.classList.add('show');
+  clearTimeout(c._hideTimer);
+  c._hideTimer = setTimeout(() => c.classList.remove('show'), 2200);
+};
+
+const showToast = (text) => {
+  const t = document.createElement('div');
+  t.className = 'egg-toast';
+  t.textContent = text;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => {
+    t.classList.remove('show');
+    setTimeout(() => t.remove(), 400);
+  }, 2400);
+};
+
+const markFound = (id, hintIdx) => {
+  if (eggsFound.has(id)) return false;
+  eggsFound.add(id);
+  showToast(EGG_HINTS[hintIdx] || '🥚 achou um segredo');
+  updateCounter();
+  return true;
+};
+
+// ===== EGG 1: triplo toque no nome "Luana" da tela welcome =====
+
+export const setupEggWelcomeName = (nameEl, spawnConfetti) => {
+  let clicks = 0;
+  let timer;
+  nameEl.style.cursor = 'pointer';
+  nameEl.addEventListener('click', () => {
+    clicks++;
+    clearTimeout(timer);
+    timer = setTimeout(() => { clicks = 0; }, 800);
+    if (clicks >= 3) {
+      clicks = 0;
+      if (markFound('welcome-name', 0)) {
+        spawnConfetti?.(30);
+      }
+    }
+  });
+};
+
+// ===== EGG 2: toque no contador da timeline rotaciona estatísticas =====
+
+export const setupEggTimelineCounter = (counterEl) => {
+  let idx = 0;
+  let original = '';
+  let originalTimer;
+  counterEl.style.cursor = 'pointer';
+  counterEl.addEventListener('click', () => {
+    if (!original) original = counterEl.textContent;
+    counterEl.textContent = TIMELINE_STATS[idx % TIMELINE_STATS.length];
+    counterEl.classList.add('counter-stat');
+    idx++;
+
+    clearTimeout(originalTimer);
+    originalTimer = setTimeout(() => {
+      counterEl.classList.remove('counter-stat');
+      original = '';
+    }, 2500);
+
+    if (idx === 1) markFound('timeline-counter', 1);
+  });
+};
+
+// ===== EGG 3: triplo toque no coração da tela final =====
+
+export const setupEggFinalHeart = (heartEl, spawnConfetti, finalHeartsLayerEl) => {
+  let clicks = 0;
+  let timer;
+  heartEl.style.cursor = 'pointer';
+  heartEl.addEventListener('click', () => {
+    clicks++;
+    clearTimeout(timer);
+    timer = setTimeout(() => { clicks = 0; }, 800);
+    if (clicks >= 3) {
+      clicks = 0;
+      if (markFound('final-heart', 2)) {
+        // chuva mega de corações
+        for (let i = 0; i < 30; i++) {
+          setTimeout(() => spawnHeart(finalHeartsLayerEl, true), i * 80);
+        }
+        spawnConfetti?.(80);
+      }
+    }
+  });
+};
+
+const spawnHeart = (layer, mega = false) => {
+  if (!layer) return;
+  const heart = document.createElement('div');
+  heart.className = 'final-bg-heart';
+  heart.textContent = ['💛', '💗', '💖', '💕'][Math.floor(Math.random() * 4)];
+  heart.style.left = (5 + Math.random() * 90) + '%';
+  heart.style.bottom = '-20px';
+  heart.style.fontSize = (mega ? 1.5 + Math.random() * 2 : 0.9 + Math.random() * 1.2) + 'rem';
+  heart.style.animationDuration = (4 + Math.random() * 4) + 's';
+  heart.style.zIndex = '5';
+  layer.appendChild(heart);
+  setTimeout(() => heart.remove(), 10000);
+};
+
+// ===== EGG 4: digitar "luana" em qualquer tela (konami-like) =====
+
+export const setupEggKonami = (spawnConfetti) => {
+  let buffer = '';
+  let timer;
+
+  const handleChar = (char) => {
+    if (!char || char.length !== 1) return;
+    buffer += char.toLowerCase();
+    clearTimeout(timer);
+    timer = setTimeout(() => { buffer = ''; }, 1500);
+
+    if (buffer.endsWith(KONAMI_WORD)) {
+      buffer = '';
+      if (markFound('konami', 3)) {
+        showBigMessage(KONAMI_MESSAGE);
+        spawnConfetti?.(50);
+      }
+    }
+  };
+
+  // teclado físico
+  document.addEventListener('keydown', (e) => {
+    if (e.key && e.key.length === 1) handleChar(e.key);
+  });
+};
+
+const showBigMessage = (text) => {
+  const m = document.createElement('div');
+  m.className = 'egg-big-message';
+  m.textContent = text;
+  document.body.appendChild(m);
+  requestAnimationFrame(() => m.classList.add('show'));
+  setTimeout(() => {
+    m.classList.remove('show');
+    setTimeout(() => m.remove(), 600);
+  }, 3000);
+};

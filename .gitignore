@@ -1,0 +1,26 @@
+# dependências
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# vercel
+.vercel/
+
+# build / deploy
+dist/
+build/
+
+# secrets
+.env
+.env.local
+
+# screenshots de debug do playwright
+scripts/screenshots/
