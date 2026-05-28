@@ -10,6 +10,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Pra Luana 💛" />
+  <link rel="apple-touch-icon" href="assets/icons/icon.svg" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Pra Luana 💛" />
+  <meta property="og:description" content="Um presente especial. Só pra você." />
+  <meta property="og:image" content="assets/icons/og-preview.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Pra Luana 💛" />
+  <meta name="twitter:description" content="Um presente especial. Só pra você." />
 </head>
 <body>
   <main id="app">
@@ -24,6 +40,17 @@
           <button id="btn-no" class="btn btn-no" type="button">Não</button>
         </div>
         <p id="gate-hint" class="gate-hint"></p>
+      </div>
+    </section>
+
+    <!-- TELA: loading — aparece após confirmar que é a Luana -->
+    <section id="screen-loading" class="screen">
+      <div class="loading-content">
+        <div class="loading-heart">💛</div>
+        <p class="loading-label" id="loading-label"></p>
+        <div class="loading-bar-track">
+          <div class="loading-bar-fill" id="loading-bar"></div>
+        </div>
       </div>
     </section>
 
@@ -65,6 +92,31 @@
 
       <div class="journey-hint">
         <span>← deslize →</span>
+      </div>
+    </section>
+
+    <!-- TELA 3.5: serendipidade -->
+    <section id="screen-serendipity" class="screen">
+      <div class="serendipity-content">
+        <p class="serendipity-kanji">偶然の美</p>
+        <h2 class="serendipity-word">serendipidade</h2>
+        <div class="serendipity-divider"></div>
+        <p class="serendipity-def">
+          encontrar algo lindo<br/>sem ter ido procurar
+        </p>
+        <p class="serendipity-text">
+          foi assim que você chegou.<br/>
+          sem plano, sem aviso —<br/>
+          só aconteceu.
+        </p>
+        <div class="serendipity-sparkles" aria-hidden="true">
+          <span class="sp sp1">✦</span>
+          <span class="sp sp2">✧</span>
+          <span class="sp sp3">✦</span>
+          <span class="sp sp4">✧</span>
+          <span class="sp sp5">✦</span>
+        </div>
+        <button id="btn-serendipity-next" class="btn btn-serendipity-next" type="button">continuar →</button>
       </div>
     </section>
 
@@ -114,26 +166,7 @@
 
     <!-- TELA 5.5: carta TCG da Luana -->
     <section id="screen-card" class="screen">
-      <div class="card-stage" id="card-stage">
-        <article class="luana-card" id="luana-card">
-          <div class="card-holo"></div>
-          <header class="card-header">
-            <span class="card-name" id="card-name"></span>
-            <span class="card-rarity" id="card-rarity"></span>
-          </header>
-          <div class="card-portrait">
-            <div class="card-portrait-bg"></div>
-            <div class="card-portrait-emoji">🌸</div>
-            <span class="card-level" id="card-level"></span>
-          </div>
-          <div class="card-type" id="card-type"></div>
-          <div class="card-stats" id="card-stats"></div>
-          <ul class="card-abilities" id="card-abilities"></ul>
-          <div class="card-flavor" id="card-flavor"></div>
-        </article>
-      </div>
-      <p class="card-hint">deslize/incline pra brilhar ✨</p>
-      <button id="btn-card-next" class="btn btn-card-next" type="button">vamos pro final →</button>
+      <div class="card-stage" id="card-stage"></div>
     </section>
 
     <!-- TELA 6: mensagem final -->
@@ -156,15 +189,51 @@
       </div>
     </section>
 
+    <!-- TELA BLOQUEADA: aparece após 7 dias de acesso -->
+    <section id="screen-locked" class="screen">
+      <div class="locked-content">
+        <div class="locked-icon">🌸</div>
+        <h2 class="locked-title">até o próximo capítulo</h2>
+        <p class="locked-sub">esse presente foi guardado com carinho<br/>e vai estar aqui quando chegar a hora</p>
+        <div class="locked-countdown" id="locked-countdown">
+          <div class="countdown-unit">
+            <span id="cd-days">---</span>
+            <small>dias</small>
+          </div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit">
+            <span id="cd-hours">--</span>
+            <small>horas</small>
+          </div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit">
+            <span id="cd-mins">--</span>
+            <small>min</small>
+          </div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit">
+            <span id="cd-secs">--</span>
+            <small>seg</small>
+          </div>
+        </div>
+        <p class="locked-until">17 de junho de 2027 💛</p>
+        <p class="locked-hint">você tem 1 ano inteiro pra sentir saudades 🌸</p>
+      </div>
+    </section>
+
+    <!-- aviso landscape -->
+    <div class="landscape-warning" aria-hidden="true">
+      <div class="landscape-icon">📱</div>
+      <p>gira o celular pra continuar 🌸</p>
+    </div>
+
   </main>
 
   <!-- controle de som -->
   <button id="btn-mute" class="btn-mute" type="button" aria-label="Ligar/desligar som" hidden>🔊</button>
 
-  <audio id="bg-music" loop preload="none">
-    <!-- coloque a música em assets/audio/musica.mp3 -->
-    <source src="assets/audio/musica.mp3" type="audio/mpeg" />
-  </audio>
+  <audio id="bg-music-a" preload="none"></audio>
+  <audio id="bg-music-b" preload="none"></audio>
 
   <script type="module" src="js/main.js"></script>
 </body>

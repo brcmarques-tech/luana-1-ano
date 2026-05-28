@@ -2,26 +2,43 @@ import { TIMELINE } from './timeline-data.js';
 import { LOVES } from './loves-data.js';
 import { PAIRS } from './game-data.js';
 import { FINAL } from './final-data.js';
-import { CARD } from './card-data.js';
+import { CARD, BONUS_CARDS, SPECIAL_CARD } from './card-data.js';
 import {
   setupEggWelcomeName,
   setupEggTimelineCounter,
   setupEggFinalHeart,
   setupEggKonami,
   setupKonamiCode,
+  triggerEgg4Mobile,
 } from './easter-eggs.js';
-import { initAmbient } from './ambient.js';
+import { initAmbient, startSakura } from './ambient.js';
+import { initMusic, playTrack, preloadTrack, toggleMute, isMuted } from './music.js';
 import { initHUD, updateHUDForScreen } from './hud.js';
-import { unlock } from './achievements.js';
+import { unlock, onAllEggsUnlocked } from './achievements.js';
 import { animeTransition } from './transitions.js';
+import { initSession, loadAchievements } from './progress.js';
+import { initAdmin, openAdminPanel } from './admin.js';
+import { haptic, HAPTIC } from './haptic.js';
+import { initMobileKeyboard } from './mobile-keyboard.js';
+import { applyHoloTilt } from './card-holo.js';
+import {
+  createShaderBg,
+  SHADER_GATE, SHADER_WELCOME,
+  SHADER_JOURNEY, SHADER_SERENDIPITY, SHADER_LOVES,
+  SHADER_GAME, SHADER_CARD, SHADER_FINAL, SHADER_LOCKED,
+} from './shader-bg.js';
+import { runPreloader } from './preloader.js';
+import { initLoveLetter } from './love-letter.js';
 
 'use strict';
 
 const screens = {
   gate: document.getElementById('screen-gate'),
+  loading: document.getElementById('screen-loading'),
   welcome: document.getElementById('screen-welcome'),
   hanami: document.getElementById('screen-hanami'),
   journey: document.getElementById('screen-journey'),
+  serendipity: document.getElementById('screen-serendipity'),
   loves: document.getElementById('screen-loves'),
   game: document.getElementById('screen-game'),
   card: document.getElementById('screen-card'),
@@ -35,7 +52,6 @@ const welcomeName = document.getElementById('welcome-name');
 const welcomeSub = document.getElementById('welcome-sub');
 const btnStart = document.getElementById('btn-start');
 const confettiLayer = document.getElementById('confetti-layer');
-const music = document.getElementById('bg-music');
 const btnMute = document.getElementById('btn-mute');
 
 // ===== gate: brincadeira do botão "Não" que foge =====
@@ -80,10 +96,14 @@ btnNo.addEventListener('click', (e) => {
 });
 
 btnYes.addEventListener('click', () => {
-  tryPlayMusic();
+  haptic(HAPTIC.tap);
+  playTrack('gate');
   spawnConfetti(40);
   unlock('first-step');
-  setTimeout(() => goToScreen('welcome'), 350);
+  setTimeout(() => {
+    goToScreen('loading');
+    startPreloading();
+  }, 350);
 });
 
 // ===== welcome: typing effect =====
@@ -133,6 +153,7 @@ const timelineEl = document.getElementById('timeline');
 const dotsEl = document.getElementById('timeline-dots');
 const counterEl = document.getElementById('journey-counter');
 let timelineRendered = false;
+let lastTimelineIdx = 0;
 
 const renderTimeline = () => {
   if (timelineRendered) return;
@@ -155,13 +176,16 @@ const renderTimeline = () => {
       `;
     } else {
       const photoContent = item.photo
-        ? `<img src="${item.photo}" alt="${item.caption}" loading="lazy" />`
+        ? `<img src="${item.photo}" alt="${item.caption}" loading="lazy"
+               class="img-loading"
+               onload="this.classList.remove('img-loading');this.closest('.card-photo').classList.remove('card-photo--skeleton')"
+               onerror="this.style.display='none';this.closest('.card-photo').classList.remove('card-photo--skeleton')" />`
         : `<div>
              <div class="placeholder-icon">📷</div>
              <div class="placeholder-text">foto de ${item.date.toLowerCase()}</div>
            </div>`;
       card.innerHTML = `
-        <div class="card-photo">${photoContent}</div>
+        <div class="card-photo${item.photo ? ' card-photo--skeleton' : ''}">${photoContent}</div>
         <div class="card-info">
           <div class="card-date">${item.date}</div>
           <div class="card-caption">${item.caption}</div>
@@ -227,6 +251,14 @@ const renderTimeline = () => {
       counterEl.textContent = `${closestIdx + 1} / ${TIMELINE.length}`;
       seenIndices.add(closestIdx);
       if (seenIndices.size === TIMELINE.length) unlock('all-cards-seen');
+      if (closestIdx !== lastTimelineIdx) {
+        lastTimelineIdx = closestIdx;
+        playTrack(`timeline-${String(closestIdx + 1).padStart(2, '0')}`);
+        const nextIdx = closestIdx + 2;
+        if (nextIdx <= TIMELINE.length) {
+          preloadTrack(`timeline-${String(nextIdx).padStart(2, '0')}`);
+        }
+      }
     }, 80);
   }, { passive: true });
 
@@ -236,9 +268,34 @@ const renderTimeline = () => {
   // botão do card final → vai pra próxima tela
   timelineEl.addEventListener('click', (e) => {
     if (e.target.id === 'btn-to-loves') {
-      goToScreen('loves');
+      goToScreen('serendipity');
     }
   });
+};
+
+// ===== serendipidade =====
+
+const renderSerendipity = () => {
+  const btn = document.getElementById('btn-serendipity-next');
+  if (!btn || btn.dataset.wired) return;
+  btn.dataset.wired = '1';
+  btn.addEventListener('click', () => goToScreen('loves'));
+
+  // mobile egg #4: triplo toque rápido no kanji 偶然の美
+  const kanji = document.querySelector('.serendipity-kanji');
+  if (kanji && !kanji.dataset.eggWired) {
+    kanji.dataset.eggWired = '1';
+    let taps = 0, tapTimer;
+    kanji.addEventListener('click', () => {
+      taps++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => { taps = 0; }, 700);
+      if (taps >= 3) {
+        taps = 0;
+        triggerEgg4Mobile(spawnConfetti);
+      }
+    });
+  }
 };
 
 // ===== loves =====
@@ -363,6 +420,7 @@ const onCardClick = (card, idx) => {
 const checkMatch = () => {
   const [a, b] = gameState.flipped;
   if (a.id === b.id) {
+    haptic(HAPTIC.match);
     a.card.classList.add('matched');
     b.card.classList.add('matched');
     gameState.matched.add(a.id);
@@ -396,85 +454,246 @@ btnToFinal?.addEventListener('click', () => {
   goToScreen('card');
 });
 
-// ===== carta TCG da Luana =====
+// ===== carta TCG da Luana + baralho de pets =====
 
 let cardRendered = false;
 
-const renderCard = () => {
-  if (!cardRendered) {
-    cardRendered = true;
-    document.getElementById('card-name').textContent = CARD.name;
-    document.getElementById('card-rarity').textContent = CARD.rarity;
-    document.getElementById('card-level').textContent = CARD.level;
-    document.getElementById('card-type').textContent = CARD.type;
-    document.getElementById('card-flavor').textContent = CARD.flavor;
+const imgBase = () => {
+  const u = localStorage.getItem('luana_api_url');
+  return u ? `${u}/assets/img` : 'assets/img';
+};
 
-    const statsEl = document.getElementById('card-stats');
-    statsEl.innerHTML = CARD.stats.map((s) => `
-      <div class="card-stat" style="border-top-color: ${s.color}">
-        <div class="stat-label">${s.label}</div>
-        <div class="stat-value" style="color: ${s.color}">${s.value}</div>
+const renderFullCard = (card) => {
+  const photoUrl = card.photoKey ? `${imgBase()}/${card.photoKey}.jpg` : null;
+  const imgTag = photoUrl
+    ? `<img src="${photoUrl}" alt="" class="card-portrait-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />`
+    : '';
+  const emojiStyle = photoUrl ? 'style="display:none"' : '';
+
+  const statsHtml = card.stats.map((s) => `
+    <div class="card-stat" style="border-top-color:${s.color}">
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value" style="color:${s.color}">${s.value}</div>
+    </div>`).join('');
+
+  const abilHtml = card.abilities.map((a) => `
+    <li class="card-ability">
+      <span class="ability-icon">${a.icon}</span>
+      <div class="ability-text">
+        <span class="ability-name">${a.name}</span>
+        <span class="ability-desc">${a.desc}</span>
       </div>
-    `).join('');
+    </li>`).join('');
 
-    const abilEl = document.getElementById('card-abilities');
-    abilEl.innerHTML = CARD.abilities.map((a) => `
-      <li class="card-ability">
-        <span class="ability-icon">${a.icon}</span>
-        <div class="ability-text">
-          <span class="ability-name">${a.name}</span>
-          <span class="ability-desc">${a.desc}</span>
+  const cols = card.stats.length;
+  return `
+    <article class="tcg-card" style="background:${card.gradient};--card-border:${card.border}">
+      <div class="card-holo"></div>
+      <header class="card-header">
+        <span class="card-name">${card.name}</span>
+        <span class="card-rarity">${card.rarity}</span>
+      </header>
+      <div class="card-portrait">
+        <div class="card-portrait-bg"></div>
+        ${imgTag}
+        <div class="card-portrait-emoji" ${emojiStyle}>${card.emoji}</div>
+      </div>
+      <div class="card-type">${card.type}</div>
+      <div class="card-stats" style="grid-template-columns:repeat(${cols},1fr)">${statsHtml}</div>
+      <ul class="card-abilities">${abilHtml}</ul>
+      <div class="card-flavor">${card.flavor}</div>
+    </article>`;
+};
+
+const renderCard = () => {
+  if (cardRendered) return;
+  cardRendered = true;
+
+  const stage = document.getElementById('card-stage');
+  const unlocked = loadAchievements();
+
+  // Bruno nunca entra no baralho — só aparece via reveal especial
+  const deckCardsHtml = BONUS_CARDS.map((card, i) => {
+    const isUnlocked = unlocked.has(card.achievementKey);
+    return `
+      <div class="deck-card ${isUnlocked ? 'deck-card--unlocked' : 'deck-card--locked'}" data-idx="${i}">
+        <div class="deck-card-inner">
+          <div class="deck-card-back">
+            <div class="deck-back-pattern"></div>
+            <div class="deck-back-emblem">✦</div>
+          </div>
+          <div class="deck-card-front">
+            ${renderFullCard(card)}
+          </div>
         </div>
-      </li>
-    `).join('');
+      </div>`;
+  }).join('');
 
-    setupCardTilt();
-  }
+  stage.className = 'card-stage card-stage--deck';
+  stage.innerHTML = `
+    <div class="deck-intro">
+      <p class="deck-title">suas cartas</p>
+      <p class="deck-sub">escolha uma para revelar</p>
+    </div>
+    <div class="card-deck">${deckCardsHtml}</div>
+    <button class="btn btn-card-next deck-hidden" id="btn-deck-next">ver sua carta principal →</button>`;
+
+  const nextBtn = stage.querySelector('#btn-deck-next');
+  let flippedAny = false;
+
+  stage.querySelectorAll('.deck-card--unlocked').forEach((el) => {
+    el.addEventListener('click', () => {
+      haptic(HAPTIC.tap);
+      if (el.classList.contains('flipped')) return;
+      el.classList.add('flipped');
+      setTimeout(() => applyHoloTilt(el.querySelector('.tcg-card')), 650);
+      if (!flippedAny) {
+        flippedAny = true;
+        nextBtn.classList.remove('deck-hidden');
+        nextBtn.classList.add('deck-show');
+      }
+    });
+  });
+
+  nextBtn.addEventListener('click', showMainCard);
 };
 
-const setupCardTilt = () => {
-  const card = document.getElementById('luana-card');
-  const holo = card.querySelector('.card-holo');
-  if (!card) return;
+const showMainCard = () => {
+  const stage = document.getElementById('card-stage');
 
-  const updateTilt = (px, py) => {
-    const rect = card.getBoundingClientRect();
-    const x = (px - rect.left) / rect.width;
-    const y = (py - rect.top) / rect.height;
-    const rx = (y - 0.5) * -16;
-    const ry = (x - 0.5) * 16;
-    card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-    holo.style.backgroundPosition = `${x * 200}% ${y * 200}%`;
-  };
+  const photoUrl = CARD.photoKey ? `${imgBase()}/${CARD.photoKey}.jpg` : null;
+  const imgTag = photoUrl
+    ? `<img src="${photoUrl}" alt="" class="card-portrait-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />`
+    : '';
+  const emojiStyle = photoUrl ? 'style="display:none"' : '';
 
-  const reset = () => {
-    card.style.transform = '';
-    holo.style.backgroundPosition = '0% 0%';
-  };
+  const statsHtml = CARD.stats.map((s) => `
+    <div class="card-stat" style="border-top-color:${s.color}">
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value" style="color:${s.color}">${s.value}</div>
+    </div>`).join('');
 
-  // mouse
-  card.addEventListener('pointermove', (e) => updateTilt(e.clientX, e.clientY));
-  card.addEventListener('pointerleave', reset);
+  const abilHtml = CARD.abilities.map((a) => `
+    <li class="card-ability">
+      <span class="ability-icon">${a.icon}</span>
+      <div class="ability-text">
+        <span class="ability-name">${a.name}</span>
+        <span class="ability-desc">${a.desc}</span>
+      </div>
+    </li>`).join('');
 
-  // gyroscope no celular
-  if (window.DeviceOrientationEvent) {
-    let baseBeta = null, baseGamma = null;
-    window.addEventListener('deviceorientation', (e) => {
-      if (e.beta == null || e.gamma == null) return;
-      if (baseBeta == null) { baseBeta = e.beta; baseGamma = e.gamma; return; }
-      const dBeta = (e.beta - baseBeta);
-      const dGamma = (e.gamma - baseGamma);
-      const rect = card.getBoundingClientRect();
-      const px = rect.left + rect.width / 2 + dGamma * 4;
-      const py = rect.top + rect.height / 2 + dBeta * 4;
-      updateTilt(px, py);
-    }, true);
+  stage.className = 'card-stage';
+  stage.innerHTML = `
+    <article class="luana-card" id="luana-card">
+      <div class="card-holo"></div>
+      <header class="card-header">
+        <span class="card-name">${CARD.name}</span>
+        <span class="card-rarity">${CARD.rarity}</span>
+      </header>
+      <div class="card-portrait">
+        <div class="card-portrait-bg"></div>
+        ${imgTag}
+        <div class="card-portrait-emoji" ${emojiStyle}>${CARD.emoji}</div>
+        <span class="card-level">${CARD.level}</span>
+      </div>
+      <div class="card-type">${CARD.type}</div>
+      <div class="card-stats">${statsHtml}</div>
+      <ul class="card-abilities">${abilHtml}</ul>
+      <div class="card-flavor">${CARD.flavor}</div>
+    </article>
+    <p class="card-hint">deslize/incline pra brilhar ✨</p>
+    <button id="btn-card-next" class="btn btn-card-next" type="button">continuar →</button>`;
+
+  setupCardTilt();
+
+  // Marca que ela viu a carta e anima voando para o perfil
+  const wasAlreadySeen = localStorage.getItem('luana_card_seen') === '1';
+  localStorage.setItem('luana_card_seen', '1');
+
+  if (!wasAlreadySeen) {
+    // pequeno delay para a carta aparecer antes de voar
+    setTimeout(flyCardToProfile, 1800);
   }
+
+  document.getElementById('btn-card-next').addEventListener('click', () => goToScreen('final'));
 };
 
-document.getElementById('btn-card-next')?.addEventListener('click', () => {
-  goToScreen('final');
-});
+const flyCardToProfile = () => {
+  const cardEl = document.getElementById('luana-card');
+  const avatarEl = document.getElementById('hud-avatar');
+  if (!cardEl || !avatarEl) return;
+
+  const cardRect = cardEl.getBoundingClientRect();
+  const avatarRect = avatarEl.getBoundingClientRect();
+
+  // destino: centro do avatar
+  const destX = avatarRect.left + avatarRect.width / 2 - (cardRect.left + cardRect.width / 2);
+  const destY = avatarRect.top + avatarRect.height / 2 - (cardRect.top + cardRect.height / 2);
+
+  const clone = cardEl.cloneNode(true);
+  clone.className = 'luana-card card-fly';
+  clone.style.cssText = `
+    left:${cardRect.left}px;
+    top:${cardRect.top}px;
+    width:${cardRect.width}px;
+    height:${cardRect.height}px;
+    --fly-x:${destX}px;
+    --fly-y:${destY}px;
+    animation: cardFlyToProfile 0.9s cubic-bezier(0.4,0,0.2,1) forwards;
+  `;
+  document.body.appendChild(clone);
+
+  // pulsa o avatar quando a carta chega
+  setTimeout(() => {
+    avatarEl.classList.add('hud-avatar--pulse');
+    setTimeout(() => { avatarEl.classList.remove('hud-avatar--pulse'); clone.remove(); }, 600);
+  }, 900);
+};
+
+const setupCardTilt = () => applyHoloTilt(document.getElementById('luana-card'), true);
+
+// ===== reveal especial — carta do Bruno =====
+
+const showSpecialCardReveal = () => {
+  if (document.getElementById('special-reveal')) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'special-reveal';
+  overlay.className = 'special-reveal-overlay';
+  overlay.innerHTML = `
+    <div class="special-reveal-sparkles" id="special-sparkles"></div>
+    <p class="special-reveal-title">✨ CARTA ESPECIAL DESBLOQUEADA! ✨</p>
+    <div class="special-reveal-card">${renderFullCard(SPECIAL_CARD)}</div>
+    <p class="special-reveal-sub">você encontrou todos os segredos escondidos 🏆</p>
+    <button class="btn special-reveal-close">fechar ✕</button>`;
+
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('show'));
+
+  const sparklesEl = document.getElementById('special-sparkles');
+  const sparkColors = ['#ffd700', '#ffec6e', '#ff5e8a', '#ffffff'];
+  for (let i = 0; i < 35; i++) {
+    const spark = document.createElement('div');
+    spark.className = 'special-spark';
+    spark.style.left = Math.random() * 100 + '%';
+    spark.style.top = Math.random() * 100 + '%';
+    spark.style.background = sparkColors[Math.floor(Math.random() * sparkColors.length)];
+    spark.style.setProperty('--dx', (Math.random() * 260 - 130) + 'px');
+    spark.style.setProperty('--dy', (Math.random() * 260 - 130) + 'px');
+    spark.style.animationDelay = (Math.random() * 0.6) + 's';
+    sparklesEl.appendChild(spark);
+  }
+
+  const dismiss = () => {
+    overlay.classList.remove('show');
+    setTimeout(() => overlay.remove(), 400);
+  };
+
+  overlay.querySelector('.special-reveal-close').addEventListener('click', dismiss);
+  setTimeout(() => { if (overlay.isConnected) dismiss(); }, 8000);
+};
+
+onAllEggsUnlocked(showSpecialCardReveal);
 
 // ===== tela final =====
 
@@ -558,9 +777,49 @@ const stopFinalHearts = () => {
 
 // ===== navegação entre telas =====
 
-const ANIME_TRANSITION_SCREENS = new Set(['welcome', 'hanami', 'journey', 'loves', 'game', 'card', 'final']);
+const ANIME_TRANSITION_SCREENS = new Set(['welcome', 'hanami', 'journey', 'serendipity', 'loves', 'game', 'card', 'final']);
+
+const SCREEN_TRACK = {
+  gate: 'gate',
+  welcome: 'welcome',
+  hanami: 'welcome',
+  loves: 'loves',
+  game: 'game',
+  card: 'card',
+  final: 'final',
+  // journey: inicia pelo primeiro card visível
+  // serendipity: continua a trilha do timeline
+};
+
+// ===== preloader =====
+
+const startPreloading = () => {
+  const textEl = document.getElementById('loading-label');
+  const barEl  = document.getElementById('loading-bar');
+
+  const onStep = async (label) => {
+    if (textEl.textContent) {
+      textEl.classList.add('fade');
+      await wait(240);
+    }
+    textEl.textContent = label;
+    textEl.classList.remove('fade');
+    await wait(80);
+  };
+
+  const onProgress = (pct) => {
+    if (barEl) barEl.style.width = pct + '%';
+  };
+
+  runPreloader(onStep, onProgress).then(async () => {
+    onProgress(100);
+    await wait(500);
+    goToScreen('welcome');
+  });
+};
 
 const goToScreen = async (name) => {
+  document.body.classList.toggle('screen-loading', name === 'loading');
   const isFirstLoad = !document.querySelector('.screen.active');
   if (ANIME_TRANSITION_SCREENS.has(name) && !isFirstLoad) {
     await animeTransition(name);
@@ -569,8 +828,15 @@ const goToScreen = async (name) => {
     if (!el) return;
     el.classList.toggle('active', key === name);
   });
+  switchShader(name);
+  if (SCREEN_TRACK[name]) playTrack(SCREEN_TRACK[name]);
+  if (name === 'journey') playTrack(`timeline-${String(lastTimelineIdx + 1).padStart(2, '0')}`);
+  const NEXT_TRACK = { gate:'welcome', welcome:'loves', hanami:'loves', serendipity:'loves', loves:'game', game:'card', card:'final' };
+  if (NEXT_TRACK[name]) preloadTrack(NEXT_TRACK[name]);
+  if (name === 'hanami') startSakura();
   if (name === 'welcome') playWelcomeSequence();
   if (name === 'journey') renderTimeline();
+  if (name === 'serendipity') renderSerendipity();
   if (name === 'loves') renderLoves();
   if (name === 'game') renderGame();
   if (name === 'card') renderCard();
@@ -599,29 +865,9 @@ const spawnConfetti = (count = 30) => {
 
 // ===== áudio =====
 
-let musicEnabled = false;
-
-const tryPlayMusic = async () => {
-  if (!music || musicEnabled) return;
-  try {
-    music.volume = 0.4;
-    await music.play();
-    musicEnabled = true;
-    btnMute.hidden = false;
-    btnMute.textContent = '🔊';
-  } catch (err) {
-    // navegador bloqueou autoplay — sem música, sem drama
-  }
-};
-
 btnMute.addEventListener('click', () => {
-  if (music.paused) {
-    music.play();
-    btnMute.textContent = '🔊';
-  } else {
-    music.pause();
-    btnMute.textContent = '🔇';
-  }
+  const muted = toggleMute();
+  btnMute.textContent = muted ? '🔇' : '🔊';
 });
 
 // ===== util =====
@@ -640,8 +886,94 @@ const wireUpFinalEgg = () => {
   if (finalHeart) setupEggFinalHeart(finalHeart, spawnConfetti, finalHeartsEl);
 };
 
+// ===== tela bloqueada =====
+
+const showLockedScreen = (nextUnlock) => {
+  document.querySelectorAll('.screen').forEach((s) => s.classList.remove('active'));
+  const screen = document.getElementById('screen-locked');
+  if (!screen) return;
+  screen.classList.add('active');
+
+  const daysEl  = document.getElementById('cd-days');
+  const hoursEl = document.getElementById('cd-hours');
+  const minsEl  = document.getElementById('cd-mins');
+  const secsEl  = document.getElementById('cd-secs');
+
+  const pad = (n, len = 2) => String(n).padStart(len, '0');
+
+  const tick = () => {
+    const diff = nextUnlock - Date.now();
+    if (diff <= 0) { location.reload(); return; }
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000)  / 60000);
+    const secs  = Math.floor((diff % 60000)    / 1000);
+    daysEl.textContent  = pad(days, 3);
+    hoursEl.textContent = pad(hours);
+    minsEl.textContent  = pad(mins);
+    secsEl.textContent  = pad(secs);
+  };
+
+  tick();
+  setInterval(tick, 1000);
+};
+
+// ===== shader backgrounds =====
+
+const mkCanvas = (screenEl) => {
+  const c = document.createElement('canvas');
+  c.className = 'shader-canvas';
+  screenEl.prepend(c);
+  return c;
+};
+
+const shaderGate         = createShaderBg(mkCanvas(screens.gate),         SHADER_GATE);
+const shaderLoading      = createShaderBg(mkCanvas(screens.loading),      SHADER_GATE);
+const shaderWelcome      = createShaderBg(mkCanvas(screens.welcome),      SHADER_WELCOME);
+const shaderHanami       = createShaderBg(mkCanvas(screens.hanami),       SHADER_WELCOME);
+const shaderJourney      = createShaderBg(mkCanvas(screens.journey),      SHADER_JOURNEY);
+const shaderSerendipity  = createShaderBg(mkCanvas(screens.serendipity),  SHADER_SERENDIPITY);
+const shaderLoves        = createShaderBg(mkCanvas(screens.loves),        SHADER_LOVES);
+const shaderGame         = createShaderBg(mkCanvas(screens.game),         SHADER_GAME);
+const shaderCard         = createShaderBg(mkCanvas(screens.card),         SHADER_CARD);
+const shaderFinal        = createShaderBg(mkCanvas(screens.final),        SHADER_FINAL);
+const shaderLocked       = createShaderBg(mkCanvas(screens.locked),       SHADER_LOCKED);
+
+const SCREEN_SHADERS = {
+  gate:        shaderGate,
+  loading:     shaderLoading,
+  welcome:     shaderWelcome,
+  hanami:      shaderHanami,
+  journey:     shaderJourney,
+  serendipity: shaderSerendipity,
+  loves:       shaderLoves,
+  game:        shaderGame,
+  card:        shaderCard,
+  final:       shaderFinal,
+  locked:      shaderLocked,
+};
+let _activeShader = null;
+
+const switchShader = (name) => {
+  if (_activeShader) { _activeShader.stop(); _activeShader = null; }
+  const s = SCREEN_SHADERS[name];
+  if (s) { s.start(); _activeShader = s; }
+};
+
 // boot
 initAmbient();
-initHUD();
-goToScreen('gate');
-wireUpFinalEgg();
+initAdmin();
+initMusic();
+initMobileKeyboard();
+btnMute.textContent = isMuted() ? '🔇' : '🔊';
+
+initSession().then((access) => {
+  if (!access.hasAccess) {
+    showLockedScreen(access.nextUnlock);
+  } else {
+    initHUD();
+    initLoveLetter();
+    goToScreen('gate');
+    wireUpFinalEgg();
+  }
+});

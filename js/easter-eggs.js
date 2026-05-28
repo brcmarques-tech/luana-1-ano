@@ -1,6 +1,9 @@
 // 4 easter eggs espalhados pelo site.
 // Edite as mensagens/frases pra customizar o que cada um revela.
 
+import { unlock } from './achievements.js';
+import { haptic, HAPTIC } from './haptic.js';
+
 export const EGG_HINTS = [
   '🤫 achou o primeiro segredo',
   '👀 outro escondidinho',
@@ -16,8 +19,8 @@ export const TIMELINE_STATS = [
   '∞ vontades de te abraçar',
 ];
 
-export const KONAMI_WORD = 'luana';
-export const KONAMI_MESSAGE = 'você digitou meu nome favorito 💛';
+export const KONAMI_WORD = 'amor';
+export const KONAMI_MESSAGE = 'você digitou a palavra certa 💛';
 
 let eggsFound = new Set();
 let eggCounter = null;
@@ -56,7 +59,10 @@ const markFound = (id, hintIdx) => {
   if (eggsFound.has(id)) return false;
   eggsFound.add(id);
   showToast(EGG_HINTS[hintIdx] || '🥚 achou um segredo');
+  haptic(HAPTIC.egg);
   updateCounter();
+  unlock('egg-hunter');
+  if (eggsFound.size >= 4) unlock('all-eggs');
   return true;
 };
 
@@ -140,6 +146,14 @@ const spawnHeart = (layer, mega = false) => {
 };
 
 // ===== EGG 4: digitar "luana" em qualquer tela (konami-like) =====
+
+// fallback mobile: chamar direto via triple-tap
+export const triggerEgg4Mobile = (spawnConfetti) => {
+  if (markFound('konami', 3)) {
+    showBigMessage(KONAMI_MESSAGE);
+    spawnConfetti?.(50);
+  }
+};
 
 export const setupEggKonami = (spawnConfetti) => {
   let buffer = '';
