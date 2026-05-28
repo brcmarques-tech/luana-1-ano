@@ -2,21 +2,29 @@ import { TIMELINE } from './timeline-data.js';
 import { LOVES } from './loves-data.js';
 import { PAIRS } from './game-data.js';
 import { FINAL } from './final-data.js';
+import { CARD } from './card-data.js';
 import {
   setupEggWelcomeName,
   setupEggTimelineCounter,
   setupEggFinalHeart,
   setupEggKonami,
+  setupKonamiCode,
 } from './easter-eggs.js';
+import { initAmbient } from './ambient.js';
+import { initHUD, updateHUDForScreen } from './hud.js';
+import { unlock } from './achievements.js';
+import { animeTransition } from './transitions.js';
 
 'use strict';
 
 const screens = {
   gate: document.getElementById('screen-gate'),
   welcome: document.getElementById('screen-welcome'),
+  hanami: document.getElementById('screen-hanami'),
   journey: document.getElementById('screen-journey'),
   loves: document.getElementById('screen-loves'),
   game: document.getElementById('screen-game'),
+  card: document.getElementById('screen-card'),
   final: document.getElementById('screen-final'),
 };
 
@@ -74,6 +82,7 @@ btnNo.addEventListener('click', (e) => {
 btnYes.addEventListener('click', () => {
   tryPlayMusic();
   spawnConfetti(40);
+  unlock('first-step');
   setTimeout(() => goToScreen('welcome'), 350);
 });
 
@@ -111,6 +120,10 @@ const playWelcomeSequence = async () => {
 };
 
 btnStart.addEventListener('click', () => {
+  goToScreen('hanami');
+});
+
+document.getElementById('btn-hanami-next')?.addEventListener('click', () => {
   goToScreen('journey');
 });
 
@@ -173,9 +186,28 @@ const renderTimeline = () => {
     card?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
   });
 
-  // scroll listener → update dots + counter
+  // scroll listener → update dots + counter + tilt 3D livro
   let scrollTimer;
+  const seenIndices = new Set([0]);
+  const applyBookTilt = () => {
+    const center = timelineEl.scrollLeft + timelineEl.clientWidth / 2;
+    const halfW = timelineEl.clientWidth / 2;
+    Array.from(timelineEl.children).forEach((card) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const offset = (cardCenter - center) / halfW;
+      const clamped = Math.max(-1.2, Math.min(1.2, offset));
+      const rotY = clamped * -28;
+      const scale = 1 - Math.abs(clamped) * 0.08;
+      const opacity = Math.max(0.4, 1 - Math.abs(clamped) * 0.45);
+      card.style.transform = `rotateY(${rotY}deg) scale(${scale})`;
+      card.style.opacity = opacity;
+    });
+  };
+  let rafId;
   timelineEl.addEventListener('scroll', () => {
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(applyBookTilt);
+
     clearTimeout(scrollTimer);
     scrollTimer = setTimeout(() => {
       const center = timelineEl.scrollLeft + timelineEl.clientWidth / 2;
@@ -193,8 +225,13 @@ const renderTimeline = () => {
         d.classList.toggle('active', i === closestIdx);
       });
       counterEl.textContent = `${closestIdx + 1} / ${TIMELINE.length}`;
+      seenIndices.add(closestIdx);
+      if (seenIndices.size === TIMELINE.length) unlock('all-cards-seen');
     }, 80);
   }, { passive: true });
+
+  // tilt inicial
+  requestAnimationFrame(applyBookTilt);
 
   // botão do card final → vai pra próxima tela
   timelineEl.addEventListener('click', (e) => {
@@ -231,11 +268,14 @@ const renderLoves = () => {
 
   if (lovesObserver) lovesObserver.disconnect();
   const scrollRoot = document.querySelector('.loves-scroll');
+  let revealedCount = 0;
   lovesObserver = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (e.isIntersecting) {
         e.target.classList.add('revealed');
         lovesObserver.unobserve(e.target);
+        revealedCount++;
+        if (revealedCount === LOVES.length) unlock('loves-read');
       }
     });
   }, { root: scrollRoot, threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
@@ -347,11 +387,92 @@ const checkMatch = () => {
 const showWin = () => {
   winOverlay.hidden = false;
   spawnConfetti(60);
+  unlock('memory-master');
 };
 
 btnRestart?.addEventListener('click', renderGame);
 
 btnToFinal?.addEventListener('click', () => {
+  goToScreen('card');
+});
+
+// ===== carta TCG da Luana =====
+
+let cardRendered = false;
+
+const renderCard = () => {
+  if (!cardRendered) {
+    cardRendered = true;
+    document.getElementById('card-name').textContent = CARD.name;
+    document.getElementById('card-rarity').textContent = CARD.rarity;
+    document.getElementById('card-level').textContent = CARD.level;
+    document.getElementById('card-type').textContent = CARD.type;
+    document.getElementById('card-flavor').textContent = CARD.flavor;
+
+    const statsEl = document.getElementById('card-stats');
+    statsEl.innerHTML = CARD.stats.map((s) => `
+      <div class="card-stat" style="border-top-color: ${s.color}">
+        <div class="stat-label">${s.label}</div>
+        <div class="stat-value" style="color: ${s.color}">${s.value}</div>
+      </div>
+    `).join('');
+
+    const abilEl = document.getElementById('card-abilities');
+    abilEl.innerHTML = CARD.abilities.map((a) => `
+      <li class="card-ability">
+        <span class="ability-icon">${a.icon}</span>
+        <div class="ability-text">
+          <span class="ability-name">${a.name}</span>
+          <span class="ability-desc">${a.desc}</span>
+        </div>
+      </li>
+    `).join('');
+
+    setupCardTilt();
+  }
+};
+
+const setupCardTilt = () => {
+  const card = document.getElementById('luana-card');
+  const holo = card.querySelector('.card-holo');
+  if (!card) return;
+
+  const updateTilt = (px, py) => {
+    const rect = card.getBoundingClientRect();
+    const x = (px - rect.left) / rect.width;
+    const y = (py - rect.top) / rect.height;
+    const rx = (y - 0.5) * -16;
+    const ry = (x - 0.5) * 16;
+    card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    holo.style.backgroundPosition = `${x * 200}% ${y * 200}%`;
+  };
+
+  const reset = () => {
+    card.style.transform = '';
+    holo.style.backgroundPosition = '0% 0%';
+  };
+
+  // mouse
+  card.addEventListener('pointermove', (e) => updateTilt(e.clientX, e.clientY));
+  card.addEventListener('pointerleave', reset);
+
+  // gyroscope no celular
+  if (window.DeviceOrientationEvent) {
+    let baseBeta = null, baseGamma = null;
+    window.addEventListener('deviceorientation', (e) => {
+      if (e.beta == null || e.gamma == null) return;
+      if (baseBeta == null) { baseBeta = e.beta; baseGamma = e.gamma; return; }
+      const dBeta = (e.beta - baseBeta);
+      const dGamma = (e.gamma - baseGamma);
+      const rect = card.getBoundingClientRect();
+      const px = rect.left + rect.width / 2 + dGamma * 4;
+      const py = rect.top + rect.height / 2 + dBeta * 4;
+      updateTilt(px, py);
+    }, true);
+  }
+};
+
+document.getElementById('btn-card-next')?.addEventListener('click', () => {
   goToScreen('final');
 });
 
@@ -370,6 +491,7 @@ let finalHeartsInterval = null;
 const renderFinal = () => {
   if (!finalRendered) {
     finalRendered = true;
+    unlock('happy-ending');
 
     finalDateEl.textContent = FINAL.date;
     finalBadgeEl.textContent = FINAL.badge;
@@ -436,7 +558,13 @@ const stopFinalHearts = () => {
 
 // ===== navegação entre telas =====
 
-const goToScreen = (name) => {
+const ANIME_TRANSITION_SCREENS = new Set(['welcome', 'hanami', 'journey', 'loves', 'game', 'card', 'final']);
+
+const goToScreen = async (name) => {
+  const isFirstLoad = !document.querySelector('.screen.active');
+  if (ANIME_TRANSITION_SCREENS.has(name) && !isFirstLoad) {
+    await animeTransition(name);
+  }
   Object.entries(screens).forEach(([key, el]) => {
     if (!el) return;
     el.classList.toggle('active', key === name);
@@ -445,8 +573,10 @@ const goToScreen = (name) => {
   if (name === 'journey') renderTimeline();
   if (name === 'loves') renderLoves();
   if (name === 'game') renderGame();
+  if (name === 'card') renderCard();
   if (name === 'final') renderFinal();
   if (name !== 'final') stopFinalHearts();
+  updateHUDForScreen(name);
 };
 
 // ===== confetes =====
@@ -503,6 +633,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 setupEggWelcomeName(welcomeName, spawnConfetti);
 setupEggTimelineCounter(counterEl);
 setupEggKonami(spawnConfetti);
+setupKonamiCode(spawnConfetti, () => unlock('konami-master'));
 
 const wireUpFinalEgg = () => {
   const finalHeart = document.querySelector('#screen-final .final-heart');
@@ -510,5 +641,7 @@ const wireUpFinalEgg = () => {
 };
 
 // boot
+initAmbient();
+initHUD();
 goToScreen('gate');
 wireUpFinalEgg();

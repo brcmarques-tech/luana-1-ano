@@ -1,48 +1,55 @@
 # Luana — 1 ano 💛
 
-Site-presente pra Luana Telles Melgarejo no aniversário de 1 ano do relacionamento.
+Site-presente pra **Luana Telles Melgarejo** no aniversário de 1 ano do relacionamento.
 
-- **Data de entrega:** 17/06/2026
-- **Início do relacionamento:** 17/06/2025
-- **URL final:** `https://luana.bcmtech.com.br`
-- **Acesso:** QR code impresso/embrulhado
-- **Tom:** divertido e lúdico (piadas internas, easter eggs, mini-jogos) — NÃO romântico clássico
-- **Stack:** HTML + CSS + JavaScript puro, mobile-first, zero build step
+| | |
+|--|--|
+| **Data de entrega** | 17/06/2026 |
+| **Início do relacionamento** | 17/06/2025 |
+| **URL final** | `https://luana.bcmtech.com.br` |
+| **Acesso** | QR code impresso/embrulhado |
+| **Tom** | divertido, lúdico, temático japonês/nerd |
+| **Stack** | HTML + CSS + JavaScript puro (ES modules) |
+| **Build step** | nenhum — edita e abre |
+| **Responsivo** | mobile-first, ajustes pra desktop |
 
 ---
 
 ## Como rodar localmente
 
-Não precisa de Node, bundler, nada. É só servir os arquivos estáticos.
+Não precisa de Node, bundler, nada. Só servir os arquivos estáticos via HTTP (não dá pra abrir o `index.html` com duplo-clique porque ES modules exigem servidor).
 
-### Opção 1 — Python (Linux / Windows / Mac)
-
+### Linux / Mac
 ```bash
 cd luana-1-ano
 python3 -m http.server 8080
-# abre http://localhost:8080
 ```
 
-### Opção 2 — Node (se preferir)
-
-```bash
-npx serve .
+### Windows (PowerShell)
+```powershell
+cd D:\linux\Documents\luana-1-ano
+python -m http.server 8080
 ```
 
-### Opção 3 — VS Code
-
-Extensão **Live Server** → clicar com botão direito em `index.html` → "Open with Live Server".
+Abre `http://localhost:8080` no navegador.
 
 ### Testando no celular (mesma rede Wi-Fi)
+```bash
+python3 -m http.server 8080 --bind 0.0.0.0
+```
+Descobre o IP da máquina (`ip addr` no Linux, `ipconfig` no Windows) e abre `http://SEU_IP:8080` no celular.
 
-1. Descubra o IP da sua máquina:
-   - Linux/Mac: `ip addr` ou `ifconfig`
-   - Windows: `ipconfig`
-2. No servidor acima, troque pra escutar em todas as interfaces:
-   ```bash
-   python3 -m http.server 8080 --bind 0.0.0.0
-   ```
-3. No celular, abra `http://SEU_IP:8080` (ex: `http://192.168.0.10:8080`)
+### Rodando os scripts de screenshot
+```bash
+cd luana-1-ano
+npm install            # instala playwright
+npx playwright install chromium
+node scripts/screenshot.mjs       # captura o fluxo completo
+node scripts/test-eggs.mjs        # captura easter eggs
+node scripts/test-transitions.mjs # captura transições anime
+node scripts/test-paws.mjs        # captura burst de patinhas
+```
+Screenshots salvos em `scripts/screenshots/` (gitignored).
 
 ---
 
@@ -50,107 +57,138 @@ Extensão **Live Server** → clicar com botão direito em `index.html` → "Ope
 
 ```
 luana-1-ano/
-├── index.html          # estrutura das telas
+├── index.html                  # estrutura das 8 telas
 ├── css/
-│   └── styles.css      # design system + animações
+│   └── styles.css              # design system + animações + responsive
 ├── js/
-│   └── main.js         # lógica das telas, typing, confetes, áudio
+│   ├── main.js                 # orquestrador principal (ESM)
+│   ├── ambient.js              # camada ambiental (sakura, lanternas, pets, patinhas)
+│   ├── hud.js                  # HUD RPG persistente
+│   ├── achievements.js         # sistema de conquistas
+│   ├── easter-eggs.js          # 4 easter eggs + Konami code real
+│   ├── transitions.js          # transições anime entre telas
+│   ├── timeline-data.js        # 📝 13 cards da timeline (EDITÁVEL)
+│   ├── loves-data.js           # 📝 8 coisas que ama nela (EDITÁVEL)
+│   ├── game-data.js            # 📝 6 pares do memory game (EDITÁVEL)
+│   ├── card-data.js            # 📝 atributos da carta TCG da Luana (EDITÁVEL)
+│   └── final-data.js           # 📝 mensagem final (EDITÁVEL)
 ├── assets/
-│   ├── img/            # fotos de vocês (você coloca aqui)
+│   ├── img/                    # 📷 fotos de vocês (você coloca aqui)
 │   └── audio/
-│       └── musica.mp3  # música ambiente (você coloca aqui)
-├── README.md           # este arquivo
-└── PLANO.md            # roadmap dos 21 dias
+│       └── musica.mp3          # 🎵 música ambiente (você coloca aqui)
+├── scripts/
+│   ├── screenshot.mjs          # fluxo completo via Playwright
+│   ├── test-eggs.mjs           # captura dos 4 easter eggs
+│   ├── test-transitions.mjs    # captura das transições anime
+│   ├── test-paws.mjs           # captura do burst de patinhas
+│   └── screenshots/            # output (gitignored)
+├── README.md                   # este arquivo
+├── PLANO.md                    # roadmap detalhado
+└── CONTINUAR_NO_LINUX.md       # guia rápido pra continuar de outra máquina
 ```
 
 ---
 
-## Status atual (dia 1 de 21)
+## Fluxo do site (8 telas)
 
-✅ Concluído:
-- Setup do projeto + design system (paleta lúdica: roxo escuro + rosa + amarelo + verde menta)
-- Tela 1: **gate** com brincadeira "Você é a Luana?" — botão "Não" foge no hover/toque, com mensagens crescentes
-- Tela 2: **welcome** com efeito typing do nome dela + confetes + áudio
-- Sistema de navegação entre telas
-- Botão de mute/unmute persistente
-- Mobile-first com viewport bloqueado, safe area do iOS, prefers-reduced-motion
-
-⏭️ Próximas etapas: ver `PLANO.md`
-
----
-
-## Onde colocar os assets
-
-### Fotos
-Solta tudo em `assets/img/` — qualquer formato (`.jpg`, `.png`, `.webp`, `.heic`).
-A gente nomeia depois conforme o uso (ex: `01-primeiro-encontro.jpg`, `02-viagem-praia.jpg`).
-
-**Dica:** se forem muitas, organizar em subpastas por data ajuda:
-```
-assets/img/
-├── 2025-06-junho/
-├── 2025-07-julho/
-└── ...
-```
-
-### Música
-Coloca o arquivo em `assets/audio/musica.mp3`.
-Se for outro formato (`.m4a`, `.ogg`), me avisa que eu ajusto o `<source>` no HTML.
-
-**Recomendado:** comprimir pra ~128kbps pra não pesar no celular (uns 2-3MB no máximo).
-- Online: https://www.freeconvert.com/audio-compressor
-- Linux: `ffmpeg -i original.mp3 -b:a 128k musica.mp3`
+1. **Gate** — "Você é a Luana?" com botão "Não" que foge no hover/toque
+2. **Welcome** — typing do nome "Luana" + confetes + música começa
+3. **Hanami** 🌸 — pausa contemplativa japonesa (花見) com quote poético
+4. **Timeline** — 13 cards horizontais (jun/25 → jun/26) com efeito flip 3D estilo livro
+5. **Loves** — lista vertical com scroll-reveal de 8 coisas que ama nela
+6. **Memory Game** — 6 pares (12 cartas) estilo Pokémon, completa pra desbloquear
+7. **TCG Card** 🎴 — carta estilo gacha da Luana com stats, habilidades e tilt 3D (mouse/giroscópio)
+8. **Final** — mensagem em cascata + corações flutuando + assinatura
 
 ---
 
-## Deploy (quando chegar a hora — etapa do dia 19)
+## Features ambientais (rodam em todas as telas)
 
-### Configuração do subdomínio `luana.bcmtech.com.br`
+- **Sakura caindo** 🌸 — pétalas SVG caem continuamente no fundo (mais densas em desktop)
+- **Lanternas japonesas** 🏮 — 3 lanternas vermelhas penduradas no topo balançando
+- **Pixel pets** 🐱🐶 — gatos/cachorros emoji atravessam ocasionalmente a borda inferior
+- **Burst de patinhas no click** 🐾 — 7-9 patinhas se espalham radialmente do ponto clicado
+- **HUD RPG persistente** — `🌸 Lv.X ▓░░░` no canto, barra XP enche de 0→100 conforme avança nas telas, Level Up dourado ao completar
 
-1. **Hospedagem recomendada: Vercel** (grátis, suporta domínio custom)
-2. Subir o projeto:
+---
+
+## Achievements (8 conquistas)
+
+Aparecem como toast estilo Xbox (canto superior direito) quando desbloqueadas:
+
+| ID | Trigger |
+|----|---------|
+| 👣 Primeiro passo | Clicar "Sim" na gate |
+| 📅 Memória do ano | Ver todos os 13 cards da timeline |
+| 💌 Coleção do amor | Ler todas as 8 coisas que ama |
+| 🧠 Memorizadora pro | Completar o memory game |
+| ✨ Final feliz | Chegar até a tela final |
+| 🥚 Caçadora de segredos | Achar 1 easter egg |
+| 🏆 Lendária | Achar os 4 easter eggs |
+| 🎮 Hardcore gamer | Executar o Konami code (↑↑↓↓←→←→BA) |
+
+---
+
+## Easter eggs (5 escondidos)
+
+1. **Welcome name** — triplo clique no nome "Luana" → confetes + toast
+2. **Timeline counter** — clique no "1/13" → rotaciona stats inventadas ("8.760 horas com você", "525.600 minutos juntos", "1.245 cafés tomados", "0 vezes que cansei", "∞ vontades de te abraçar")
+3. **Final heart** — triplo clique no coração da tela final → chuva mega de corações
+4. **Digite "luana"** — em qualquer tela com teclado → mensagem grande "você digitou meu nome favorito 💛"
+5. **Konami code** — ↑↑↓↓←→←→BA no teclado → "🎮 KONAMI CODE 🎮" + tela treme com invert
+
+Contador "🥚 X/4" aparece no top-center quando acha o primeiro (não rastreia Konami).
+
+---
+
+## O que você precisa fazer (pra finalizar)
+
+### Conteúdo (edita os arquivos `.js`)
+
+1. **Fotos** — joga em `assets/img/`. Pode em subpastas por mês. Formato `.jpg`/`.png`/`.webp`.
+2. **Música** — salva em `assets/audio/musica.mp3`. Recomendo comprimir pra ~128kbps:
    ```bash
-   cd luana-1-ano
-   npx vercel --prod
+   ffmpeg -i original.mp3 -b:a 128k musica.mp3
    ```
-3. No painel da Vercel:
-   - Project → Settings → Domains → adicionar `luana.bcmtech.com.br`
-4. No painel onde está o DNS do `bcmtech.com.br` (Registro.br ou outro):
-   - Criar registro **CNAME**: `luana` → `cname.vercel-dns.com.`
-5. Esperar propagação (5-30 min) e testar HTTPS.
+3. **Timeline** — edita `js/timeline-data.js`, 13 marcos do ano (data + caption + foto opcional)
+4. **Coisas que ama** — edita `js/loves-data.js`, 8 itens (emoji + texto + sub)
+5. **Memory game** — edita `js/game-data.js`, 6 pares (emoji ou foto + label)
+6. **Carta TCG** — edita `js/card-data.js` (nome, stats, habilidades, flavor)
+7. **Mensagem final** — edita `js/final-data.js` (parágrafos da carta)
 
-### Alternativa: Netlify
-Mesma coisa, com `npx netlify deploy --prod` e CNAME `luana` → `apex-loadbalancer.netlify.com`.
+### Deploy (quando conteúdo estiver pronto)
 
----
+```bash
+npm install -g vercel
+vercel login
+vercel --prod
+```
 
-## QR Code final (dia 20)
+No painel da Vercel:
+- Project → Settings → Domains → adicionar `luana.bcmtech.com.br`
 
-Gerar com `qrcode` (npm) estilizado em rosa/roxo:
+No DNS do `bcmtech.com.br` (Registro.br ou outro):
+- Criar registro **CNAME**: `luana` → `cname.vercel-dns.com.`
+
+Espera 5-30 min pra propagação, testa HTTPS.
+
+### QR code
+
 ```bash
 npx qrcode "https://luana.bcmtech.com.br" -o qr.png -t png --color.dark "#ff5e8a" --color.light "#1a0a2e"
 ```
-Ou usar https://qrcode-monkey.com pra QR com logo/coração no meio.
+
+Ou usa https://qrcode-monkey.com pra QR com logo/coração no meio.
 
 ---
 
 ## Decisões técnicas
 
-- **Sem framework:** mais leve, carrega instantâneo no 4G, fácil de hospedar em qualquer lugar
-- **Sem build step:** edita e abre — funciona igual no Linux, Windows, Mac
-- **Mobile-first com `max-width: 480px`:** garante experiência consistente; abrir no desktop também funciona, fica centralizado
-- **`100dvh` em vez de `100vh`:** evita o bug da barra do Safari/Chrome mobile
-- **Autoplay de áudio só após clique:** navegadores bloqueiam autoplay sem interação — por isso a música só começa quando ela clica "Sim 💛"
-- **`prefers-reduced-motion`:** respeita se o sistema dela tiver animações reduzidas
-
----
-
-## Tarefas pendentes do Bruno
-
-- [ ] Juntar fotos em `assets/img/`
-- [ ] Escolher e colocar música em `assets/audio/musica.mp3`
-- [ ] Listar momentos marcantes do último ano (viagens, primeiras vezes, datas)
-- [ ] Listar piadas internas / referências que só vocês entendem
-- [ ] Listar 3-10 coisas que você ama nela
-- [ ] Escrever a mensagem final secreta (aparece no fim do mini-jogo)
-- [ ] Configurar DNS do subdomínio (dia 19)
+- **Sem framework** — mais leve, carrega instantâneo no 4G, sem build step
+- **ES modules** — código modular, importa direto no browser. **Exige servidor HTTP**, não funciona via `file://`
+- **Mobile-first** com `max-width: 480px` (mobile) / `520px` (tablet) / `560px` (desktop) — experiência consistente
+- **`100dvh`** em vez de `100vh` — evita bug da barra do Safari mobile
+- **`prefers-reduced-motion`** — respeitado em sakura, pets, transições anime (desabilita)
+- **Autoplay de áudio** — só dispara após clique do usuário (navegadores bloqueiam autoplay)
+- **Backdrop blur** com fallback gracioso — funciona em Safari/Chrome/Firefox modernos
+- **SVG inline em data URIs** — sakura e lanternas sem requisição extra

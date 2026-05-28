@@ -166,6 +166,41 @@ export const setupEggKonami = (spawnConfetti) => {
   });
 };
 
+// ===== EGG 5 (BONUS): konami code real (↑↑↓↓←→←→BA) =====
+
+const KONAMI_SEQ = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+export const setupKonamiCode = (spawnConfetti, onUnlock) => {
+  let pos = 0;
+  let timer;
+
+  document.addEventListener('keydown', (e) => {
+    const expected = KONAMI_SEQ[pos];
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (key === expected) {
+      pos++;
+      clearTimeout(timer);
+      timer = setTimeout(() => { pos = 0; }, 3000);
+      if (pos >= KONAMI_SEQ.length) {
+        pos = 0;
+        triggerKonamiUnlock(spawnConfetti, onUnlock);
+      }
+    } else {
+      pos = 0;
+    }
+  });
+};
+
+const triggerKonamiUnlock = (spawnConfetti, onUnlock) => {
+  showBigMessage('🎮 KONAMI CODE 🎮');
+  spawnConfetti?.(100);
+  onUnlock?.();
+
+  // efeito visual: tela treme + invert
+  document.body.classList.add('konami-flash');
+  setTimeout(() => document.body.classList.remove('konami-flash'), 1200);
+};
+
 const showBigMessage = (text) => {
   const m = document.createElement('div');
   m.className = 'egg-big-message';

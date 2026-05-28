@@ -34,8 +34,15 @@ await page.screenshot({ path: `${OUT_DIR}/03-welcome-typing.png` });
 await page.waitForTimeout(2500);
 await page.screenshot({ path: `${OUT_DIR}/04-welcome-final.png` });
 
-// Avança pra tela 3 (timeline)
+// Avança pra hanami
 await page.locator('#btn-start').click();
+await page.waitForTimeout(2500);
+await page.screenshot({ path: `${OUT_DIR}/04b-hanami-mid.png` });
+await page.waitForTimeout(2000);
+await page.screenshot({ path: `${OUT_DIR}/04c-hanami-full.png` });
+
+// Avança pra timeline
+await page.locator('#btn-hanami-next').click();
 await page.waitForTimeout(800);
 await page.screenshot({ path: `${OUT_DIR}/05-timeline-card1.png` });
 
@@ -97,8 +104,13 @@ await page.evaluate(() => {
 await page.waitForTimeout(500);
 await page.screenshot({ path: `${OUT_DIR}/13-game-win.png` });
 
-// Vai pra tela final
+// Vai pra carta TCG
 await page.locator('#btn-to-final').click();
+await page.waitForTimeout(900);
+await page.screenshot({ path: `${OUT_DIR}/13b-card-tcg.png` });
+
+// Vai pra tela final
+await page.locator('#btn-card-next').click();
 await page.waitForTimeout(1500);
 await page.screenshot({ path: `${OUT_DIR}/14-final-header.png` });
 
