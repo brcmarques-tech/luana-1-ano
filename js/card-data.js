@@ -134,8 +134,6 @@ export const BONUS_CARDS = [
     ],
     flavor: '"nem sempre sabe o que tá fazendo. sempre sabe que te ama."',
   },
-];
-
   {
     id: 'momoa',
     name: 'Momoa',
@@ -183,6 +181,7 @@ export const BONUS_CARDS = [
     ],
     flavor: '"agitada. querendo fazer arte. nada a para."',
   },
+];
 
 // carta secreta do Bruno — desbloqueada ao encontrar todos os easter eggs
 export const SPECIAL_CARD = {
