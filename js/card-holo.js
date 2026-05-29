@@ -16,7 +16,7 @@ export const applyHoloTilt = (cardEl, withGyro = false) => {
     cardEl.style.setProperty('--foil-hue',  (x * 180).toFixed(1));
     cardEl.style.setProperty('--shine-x',   `${(x * 100).toFixed(1)}%`);
     cardEl.style.setProperty('--shine-y',   `${(y * 100).toFixed(1)}%`);
-    cardEl.style.setProperty('--holo-opacity', '1');
+    cardEl.style.setProperty('--holo-opacity', '0.5');
   };
 
   const reset = () => {
@@ -24,7 +24,7 @@ export const applyHoloTilt = (cardEl, withGyro = false) => {
     cardEl.style.setProperty('--holo-opacity', '0');
   };
 
-  cardEl.addEventListener('mouseenter', () => cardEl.style.setProperty('--holo-opacity', '1'));
+  cardEl.addEventListener('mouseenter', () => cardEl.style.setProperty('--holo-opacity', '0.5'));
   cardEl.addEventListener('mouseleave', reset);
   cardEl.addEventListener('pointermove', (e) => update(e.clientX, e.clientY));
 
@@ -32,7 +32,7 @@ export const applyHoloTilt = (cardEl, withGyro = false) => {
   cardEl.addEventListener('touchstart', () => {
     document.querySelectorAll('.card--gyro').forEach((el) => el.classList.remove('card--gyro'));
     cardEl.classList.add('card--gyro');
-    cardEl.style.setProperty('--holo-opacity', '1');
+    cardEl.style.setProperty('--holo-opacity', '0.5');
   }, { passive: true });
 
   if (withGyro && window.DeviceOrientationEvent) {

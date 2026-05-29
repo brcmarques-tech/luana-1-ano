@@ -543,7 +543,7 @@ const initPets = () => {
         popup.style.fontFamily = 'var(--font-body, sans-serif)';
         const r = pet.getBoundingClientRect();
         popup.style.left = (r.left + r.width / 2) + 'px';
-        popup.style.top  = (r.top  + r.height / 2) + 'px';
+        popup.style.top  = (r.top  + r.height * 0.15) + 'px';
         document.body.appendChild(popup);
         setTimeout(() => popup.remove(), 1200);
         if (navigator.vibrate) navigator.vibrate(30);
@@ -569,7 +569,7 @@ const initPets = () => {
       popup.className = 'pet-heart-pop';
       const r = pet.getBoundingClientRect();
       popup.style.left = (r.left + r.width / 2) + 'px';
-      popup.style.top  = (r.top  + r.height / 2) + 'px';
+      popup.style.top  = (r.top  + r.height * 0.15) + 'px';
 
       if (pokeCount <= 4) {
         popup.textContent = ['💛', '🌸', '💕', '✨'][Math.floor(Math.random() * 4)];
