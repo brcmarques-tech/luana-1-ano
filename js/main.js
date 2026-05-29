@@ -134,13 +134,26 @@ const wireTypingCards = () => {
 
 const wireAvatarLongPress = () => {
   let timer = null;
-  const trigger = () => revealCard(BONUS_CARDS.find(c => c.id === 'jairo'));
+  let didLongPress = false;
+
+  const trigger = () => {
+    didLongPress = true;
+    revealCard(BONUS_CARDS.find(c => c.id === 'jairo'));
+  };
+
   document.addEventListener('pointerdown', (e) => {
     if (!e.target.closest('#hud-avatar')) return;
-    timer = setTimeout(trigger, 1200);
+    didLongPress = false;
+    timer = setTimeout(trigger, 1500);
   });
-  document.addEventListener('pointerup',    () => { clearTimeout(timer); timer = null; });
-  document.addEventListener('pointercancel',() => { clearTimeout(timer); timer = null; });
+
+  document.addEventListener('pointerup', () => { clearTimeout(timer); timer = null; });
+  document.addEventListener('pointercancel', () => { clearTimeout(timer); timer = null; });
+
+  // bloqueia o click que vem após o long press
+  document.getElementById('hud-avatar')?.addEventListener('click', (e) => {
+    if (didLongPress) { didLongPress = false; e.stopImmediatePropagation(); }
+  }, true);
 };
 
 const wireEasterEggs = () => {
