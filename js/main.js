@@ -24,7 +24,9 @@ import { initLoves, resetLoves } from './screens/loves.js';
 import { initMemoryGame } from './screens/memory-game.js';
 import { initCard, resetCard } from './screens/card.js';
 import { initFinal } from './screens/final.js';
+import { initConstellationScreen } from './screens/constellation.js';
 import { showLockedScreen } from './screens/locked.js';
+import { initSkyButton } from './constellation/sky-button.js';
 
 'use strict';
 
@@ -145,6 +147,8 @@ initSession().then((access) => {
       resetCard();
     },
   });
+  initConstellationScreen();
+  initSkyButton();
 
   wireEasterEggs();
   watchProfilePanel();

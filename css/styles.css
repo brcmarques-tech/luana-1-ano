@@ -297,8 +297,8 @@ body.screen-loading .hud {
 
 .btn-mute {
   position: fixed;
-  top: env(safe-area-inset-top, 16px);
-  right: 16px;
+  top: calc(max(env(safe-area-inset-top, 14px), 14px) + 52px);
+  right: 14px;
   background: rgba(0, 0, 0, 0.4);
   border: none;
   color: var(--text);
@@ -3571,4 +3571,436 @@ body.skull-mode .screen.active {
 .skull-message.show {
   opacity: 1;
   transform: translateX(-50%) scale(1);
+}
+
+/* ===== Constelação ===== */
+
+#screen-constellation {
+  padding: 0;
+  align-items: stretch;
+  justify-content: stretch;
+  background: #000;
+  overflow: hidden;
+}
+
+.cn-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.cn-back {
+  position: absolute;
+  top: max(env(safe-area-inset-top, 14px), 14px);
+  left: 14px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text);
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.cn-panel {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: max(env(safe-area-inset-bottom, 24px), 24px);
+  z-index: 5;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.cn-panel.cn-panel--hidden {
+  opacity: 0;
+  transform: translateY(40px);
+  pointer-events: none;
+}
+
+.cn-question, .cn-wait, .cn-complete, .cn-flash {
+  background: rgba(10, 5, 24, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 217, 61, 0.25);
+  border-radius: 18px;
+  padding: 20px 18px;
+  color: var(--text);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55);
+}
+
+.cn-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 10px;
+  opacity: 0.85;
+}
+
+.cn-text {
+  font-size: 1.05rem;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.cn-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.cn-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.cn-option:has(input:checked) {
+  background: rgba(255, 217, 61, 0.12);
+  border-color: var(--yellow);
+}
+
+.cn-option input {
+  accent-color: var(--yellow);
+  margin: 0;
+}
+
+.cn-option-label {
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.cn-textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: none;
+  margin-bottom: 14px;
+}
+
+.cn-textarea:focus {
+  outline: none;
+  border-color: var(--yellow);
+}
+
+.cn-textarea--free {
+  margin-top: 4px;
+}
+
+.cn-submit {
+  background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dark) 100%);
+  color: var(--text);
+  width: 100%;
+  font-weight: 700;
+}
+
+.cn-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.cn-wait, .cn-complete, .cn-flash {
+  text-align: center;
+}
+
+.cn-wait-title, .cn-complete-title, .cn-flash-title {
+  font-size: 0.9rem;
+  letter-spacing: 1.5px;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.cn-countdown {
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--yellow);
+  letter-spacing: 3px;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 10px;
+}
+
+.cn-wait-sub, .cn-complete-sub, .cn-flash-sub {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  opacity: 0.85;
+}
+
+.cn-complete-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--yellow);
+  text-transform: none;
+  letter-spacing: 0;
+  margin-bottom: 8px;
+}
+
+.cn-reveal-btn {
+  background: transparent;
+  border: 1.5px solid var(--yellow);
+  color: var(--yellow);
+  margin-top: 16px;
+}
+
+.cn-flash-title {
+  color: var(--yellow);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* reveal final */
+
+.cn-reveal-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.92) 100%);
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  padding: 32px;
+}
+
+.cn-reveal-overlay.show {
+  opacity: 1;
+}
+
+.cn-reveal-content {
+  text-align: center;
+  max-width: 380px;
+}
+
+.cn-reveal-coords {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: 'Courier New', monospace;
+  color: var(--yellow);
+  padding: 28px 18px;
+  background: rgba(255, 217, 61, 0.06);
+  border: 1px solid rgba(255, 217, 61, 0.35);
+  border-radius: 12px;
+  margin-bottom: 28px;
+  letter-spacing: 1.5px;
+}
+
+.cn-coord-line {
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(255, 217, 61, 0.35);
+}
+
+.cn-coord-dec {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  opacity: 0.75;
+  letter-spacing: 1px;
+}
+
+.cn-reveal-close {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--text-soft);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.cn-reveal-close.cn-reveal-close--show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cn-typed::after {
+  content: '▍';
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--yellow);
+  animation: cn-caret-blink 0.7s steps(2) infinite;
+}
+
+@keyframes cn-caret-blink {
+  50% { opacity: 0; }
+}
+
+/* botão flutuante ✦ */
+
+.btn-sky {
+  position: fixed;
+  top: max(env(safe-area-inset-top, 14px), 14px);
+  right: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(10, 5, 24, 0.75);
+  border: 1.5px solid rgba(255, 217, 61, 0.5);
+  color: var(--yellow);
+  font-size: 1.4rem;
+  cursor: pointer;
+  z-index: 80;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.btn-sky .sky-icon {
+  line-height: 1;
+  display: block;
+  filter: drop-shadow(0 0 6px rgba(255, 217, 61, 0.6));
+}
+
+.btn-sky--pulse {
+  animation: sky-pulse 2s ease-in-out infinite;
+}
+
+@keyframes sky-pulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 0 0 rgba(255, 217, 61, 0.5); }
+  50% { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 0 12px rgba(255, 217, 61, 0); }
+}
+
+.btn-sky--done {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.sky-badge {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  background: var(--pink);
+  color: var(--text);
+  font-size: 0.55rem;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 999px;
+  min-width: 22px;
+  text-align: center;
+  border: 1.5px solid #1a0a2e;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== reveal cinematográfico: céu → mapa ===== */
+
+.cn-canvas {
+  transition: opacity 1.5s ease;
+}
+
+.cn-canvas--dim {
+  opacity: 0.18;
+}
+
+.cn-map-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+  overflow: hidden;
+  z-index: 6;
+}
+
+.cn-map-stage--show {
+  opacity: 1;
+}
+
+.cn-map-svg {
+  width: 100%;
+  height: 100%;
+  max-width: min(100vw, 100vh);
+  transform: scale(1) translate(0, 0);
+  transform-origin: center center;
+  transition: transform 2s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
+}
+
+.cn-map-outline {
+  fill: none;
+  stroke: rgba(255, 217, 61, 0.65);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 6px rgba(255, 217, 61, 0.5));
+  stroke-dashoffset: 1200;
+  animation: cn-outline-draw 2.4s ease-out forwards;
+}
+
+@keyframes cn-outline-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.cn-pin-group {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.cn-pin-group--active {
+  opacity: 1;
+}
+
+.cn-pin-glow {
+  animation: cn-pin-pulse 1.6s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes cn-pin-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50%      { transform: scale(1.35); opacity: 1; }
+}
+
+.cn-pin-ring {
+  vector-effect: non-scaling-stroke;
+  animation: cn-pin-ring 2s ease-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes cn-pin-ring {
+  0%   { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+.cn-pin-core {
+  filter: drop-shadow(0 0 4px rgba(255, 217, 61, 0.9));
+}
+
+/* enquanto mapa está visível, o painel inferior some */
+#screen-constellation .cn-panel.cn-panel--hidden {
+  opacity: 0;
+  pointer-events: none;
 }

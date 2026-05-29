@@ -16,11 +16,12 @@ const SCREEN_IDS = [
   'game',
   'card',
   'final',
+  'constellation',
   'locked',
 ];
 
 const ANIME_TRANSITION_SCREENS = new Set([
-  'welcome', 'hanami', 'journey', 'serendipity', 'loves', 'game', 'card', 'final',
+  'welcome', 'hanami', 'journey', 'serendipity', 'loves', 'game', 'card', 'final', 'constellation',
 ]);
 
 // música padrão por tela (algumas calculam dinamicamente, override no main)

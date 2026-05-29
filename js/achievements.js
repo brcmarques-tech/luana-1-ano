@@ -21,6 +21,7 @@ export const ACHIEVEMENTS = {
   'animal-killer':  { icon: '☠️',  name: 'Assassina de bichinho', desc: 'Matou um animal inocente' },
   'animal-forgiver':{ icon: '🕊️', name: 'Redentora',             desc: 'Pediu desculpa pros bichinhos' },
   'genocide':       { icon: '💀',  name: 'Endiabrada',              desc: 'Matou todos os bichinhos inocentes' },
+  'beginning':      { icon: '🌌',  name: 'Início de tudo',         desc: 'Acendeu todas as estrelas — e descobriu onde tudo começou' },
 };
 
 // restaura conquistas salvas
