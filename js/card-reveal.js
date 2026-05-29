@@ -3,6 +3,7 @@
 import { CARD, BONUS_CARDS, SPECIAL_CARD } from './card-data.js';
 import { imgBase } from './utils.js';
 import { haptic, HAPTIC } from './haptic.js';
+import { applyHoloTilt } from './card-holo.js';
 
 const DECK_KEY = 'luana_deck';
 const collected = new Set(JSON.parse(localStorage.getItem(DECK_KEY) || '[]'));
@@ -34,13 +35,14 @@ const buildCardEl = (card) => {
     </li>`).join('');
 
   const el = document.createElement('div');
-  el.className = 'cr-card';
-  el.style.cssText = `background:${card.gradient || '#1a0a2e'};border:2px solid transparent;`;
+  const isSpecial = card.id === 'bruno';
+  el.className = `cr-card card-holo${isSpecial ? ' card-holo--dark' : ''}`;
+  el.style.cssText = `background:${card.gradient || '#1a0a2e'};border:2px solid transparent;transform-style:preserve-3d;`;
   el.innerHTML = `
     <div class="cr-border-glow" style="background:${card.border || 'var(--pink)'}"></div>
     <div class="cr-rarity">${card.rarity || '★★★'}</div>
     <div class="cr-portrait">
-      ${photoUrl ? `<img src="${photoUrl}" alt="" class="cr-portrait-img" onerror="this.style.display='none'">` : ''}
+      ${photoUrl ? `<img src="${photoUrl}" alt="" class="cr-portrait-img" draggable="false" onerror="this.style.display='none'">` : ''}
       <div class="cr-portrait-emoji" ${photoUrl ? 'style="display:none"' : ''}>${card.emoji || '✨'}</div>
     </div>
     <div class="cr-name">${card.name}</div>
@@ -78,7 +80,10 @@ export const revealCard = (card) => {
   overlay.appendChild(stage);
   document.body.appendChild(overlay);
 
-  requestAnimationFrame(() => overlay.classList.add('cr-show'));
+  requestAnimationFrame(() => {
+    overlay.classList.add('cr-show');
+    applyHoloTilt(cardEl, true);
+  });
 
   updateDeckBadge();
 
