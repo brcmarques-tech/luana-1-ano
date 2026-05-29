@@ -20,6 +20,12 @@ let revealActive = false;
 
 export const isCardCollected = (id) => collected.has(id);
 
+export const unlockAllCards = () => {
+  ALL_CARDS.forEach(c => collected.add(c.id));
+  saveCollected();
+  updateDeckBadge();
+};
+
 // ===== render card =====
 
 const buildCardEl = (card) => {
@@ -47,7 +53,7 @@ const buildCardEl = (card) => {
     <div class="${isSpecial ? 'card-holo card-holo--dark' : 'card-holo'}"></div>
     <div class="cr-rarity">${card.rarity || '★★★'}</div>
     <div class="cr-portrait">
-      ${photoUrl ? `<img src="${photoUrl}" alt="" class="cr-portrait-img" draggable="false" onerror="this.style.display='none'">` : ''}
+      ${photoUrl ? `<img src="${photoUrl}" alt="" class="cr-portrait-img" draggable="false" onerror="this.style.display='none'"${card.photoPosition ? ` style="object-position:${card.photoPosition}"` : ''}>` : ''}
       <div class="cr-portrait-emoji" ${photoUrl ? 'style="display:none"' : ''}>${card.emoji || '✨'}</div>
     </div>
     <div class="cr-name">${card.name}</div>
@@ -152,7 +158,7 @@ const buildMiniCard = (card) => {
       <div class="${isSpecial ? 'card-holo card-holo--dark' : 'card-holo'}"></div>
       <div class="deck-mini-rarity">${card.rarity || '★★★'}</div>
       <div class="deck-mini-portrait">
-        ${photoUrl ? `<img src="${photoUrl}" class="deck-mini-img" draggable="false" onerror="this.style.display='none'">` : `<div class="deck-mini-emoji">${card.emoji}</div>`}
+        ${photoUrl ? `<img src="${photoUrl}" class="deck-mini-img" draggable="false" onerror="this.style.display='none'"${card.photoPosition ? ` style="object-position:${card.photoPosition}"` : ''}>` : `<div class="deck-mini-emoji">${card.emoji}</div>`}
       </div>
       <div class="deck-mini-info">
         <div class="deck-mini-name">${card.name}</div>

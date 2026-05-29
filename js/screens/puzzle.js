@@ -2,6 +2,7 @@
 // Foto dividida em SxS peças. Toque numa peça adjacente à vazia pra mover.
 
 import { PUZZLE } from '../puzzle-data.js';
+import { PAIRS } from '../game-data.js';
 import { goToScreen, registerScreenEnter } from '../nav.js';
 import { unlock } from '../achievements.js';
 import { haptic, HAPTIC } from '../haptic.js';
@@ -11,6 +12,16 @@ import { imgBase } from '../utils.js';
 let boardEl, movesEl, completeOverlay;
 let state = null;
 let rendered = false;
+let puzzlePhotoUrl = null;
+
+const pickPuzzlePhoto = () => {
+  const usedInMemory = new Set(PAIRS.map(p => p.photo));
+  const pool = Array.from({ length: 30 }, (_, i) =>
+    `assets/img/game-${String(i + 1).padStart(2, '0')}.jpg`
+  ).filter(p => !usedInMemory.has(p));
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  puzzlePhotoUrl = `${imgBase()}/${pick.replace('assets/img/', '')}`;
+};
 
 // ===== utilitários =====
 
@@ -49,6 +60,7 @@ const isSolved = (tiles) => tiles.every((v, i) => v === i);
 const render = () => {
   if (!rendered) {
     rendered = true;
+    pickPuzzlePhoto();
     setupBoard();
   }
   newGame();
@@ -92,7 +104,7 @@ const newGame = () => {
   movesEl.textContent = '0';
   completeOverlay.hidden = true;
 
-  const photoUrl = `${imgBase()}/${PUZZLE.photoKey}.jpg`;
+  const photoUrl = puzzlePhotoUrl || `${imgBase()}/${PUZZLE.photoKey}.jpg`;
 
   boardEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
   boardEl.style.gridTemplateRows    = `repeat(${size}, 1fr)`;

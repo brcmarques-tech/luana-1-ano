@@ -2,6 +2,7 @@
 // Edite as mensagens/frases pra customizar o que cada um revela.
 
 import { unlock } from './achievements.js';
+import { unlockAllCards } from './card-reveal.js';
 import { haptic, HAPTIC } from './haptic.js';
 import { API_URL } from './config.js';
 import { getToken, getSessionInfo } from './progress.js';
@@ -185,6 +186,12 @@ export const setupEggKonami = (spawnConfetti, onDesculpa) => {
     buffer += char.toLowerCase();
     clearTimeout(timer);
     timer = setTimeout(() => { buffer = ''; }, 2500);
+
+    if (buffer.endsWith('liberarcards')) {
+      buffer = '';
+      unlockAllCards();
+      showBigMessage('🃏 todas as cartas desbloqueadas!');
+    }
 
     if (buffer.endsWith('hardreset')) {
       buffer = '';

@@ -9,6 +9,7 @@ export const CARD = {
   level: 'Lv. 1 ano',
   emoji: '🌸',
   photoKey: 'card-luana',
+  photoPosition: 'center 20%',
   gradient: 'linear-gradient(135deg, #2a1448 0%, #1a0a2e 50%, #3a1f5c 100%)',
   border: 'linear-gradient(135deg, #ffd93d 0%, #ff5e8a 50%, #ffd93d 100%)',
 
@@ -193,6 +194,7 @@ export const SPECIAL_CARD = {
   rarity: '★★★★★★',
   emoji: '😂',
   photoKey: 'card-bruno',
+  photoPosition: 'center 20%',
   gradient: 'linear-gradient(135deg, #1a1000 0%, #2a1a00 50%, #1a1000 100%)',
   border: 'linear-gradient(135deg, #ffd700 0%, #ffec6e 25%, #ffd700 50%, #ffec6e 75%, #ffd700 100%)',
   isSpecial: true,
