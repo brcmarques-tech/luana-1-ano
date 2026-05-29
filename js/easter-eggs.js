@@ -186,14 +186,6 @@ export const setupEggKonami = (spawnConfetti, onDesculpa) => {
     clearTimeout(timer);
     timer = setTimeout(() => { buffer = ''; }, 2500);
 
-    if (buffer.endsWith(KONAMI_WORD)) {
-      buffer = '';
-      if (markFound('konami', 3)) {
-        showBigMessage(KONAMI_MESSAGE);
-        spawnConfetti?.(50);
-      }
-    }
-
     if (buffer.endsWith('hardreset')) {
       buffer = '';
       localStorage.clear();
