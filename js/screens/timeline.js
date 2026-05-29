@@ -143,6 +143,24 @@ const wireScroll = () => {
   requestAnimationFrame(applyBookTilt);
 };
 
+const wireLightbox = () => {
+  let overlay = null;
+  timelineEl.addEventListener('click', (e) => {
+    if (e.target.id === 'btn-to-loves') return;
+    const img = e.target.closest('.card-photo')?.querySelector('img');
+    if (!img || !img.src) return;
+    if (overlay) return;
+    overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
+    const full = document.createElement('img');
+    full.src = img.src;
+    full.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;';
+    overlay.appendChild(full);
+    overlay.addEventListener('click', () => { overlay.remove(); overlay = null; });
+    document.body.appendChild(overlay);
+  });
+};
+
 const wireFinalButton = () => {
   timelineEl.addEventListener('click', (e) => {
     if (e.target.id === 'btn-to-loves') goToScreen('serendipity');
@@ -156,6 +174,7 @@ const render = () => {
   wireDots();
   wireMouseDrag();
   wireScroll();
+  wireLightbox();
   wireFinalButton();
 };
 
