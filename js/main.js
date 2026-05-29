@@ -2,7 +2,7 @@
 // opcional. A navegação é centralizada em nav.js.
 
 import { initSession } from './progress.js';
-import { initNav, goToScreen } from './nav.js';
+import { initNav, goToScreen, goBack, canGoBack } from './nav.js';
 import { initHUD } from './hud.js';
 import { initMusic, toggleMute, isMuted } from './music.js';
 import { initAmbient, allKilled, triggerSkullMode, resumePets } from './ambient.js';
@@ -34,10 +34,16 @@ import { initSkyButton } from './constellation/sky-button.js';
 // ===== Service Worker (PWA offline) =====
 
 if ('serviceWorker' in navigator) {
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (reloading) return;
+    reloading = true;
+    location.reload();
+  });
+
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then((reg) => {
-        // detecta atualização e troca automaticamente
         reg.addEventListener('updatefound', () => {
           const sw = reg.installing;
           if (!sw) return;
@@ -64,6 +70,20 @@ btnMute.textContent = isMuted() ? '🔇' : '🔊';
 btnMute.addEventListener('click', () => {
   btnMute.textContent = toggleMute() ? '🔇' : '🔊';
 });
+
+// ===== botão de voltar global =====
+
+const btnBack = document.createElement('button');
+btnBack.id = 'btn-back-global';
+btnBack.className = 'btn-back-global';
+btnBack.type = 'button';
+btnBack.setAttribute('aria-label', 'voltar');
+btnBack.innerHTML = '<span class="back-arrow">←</span><span class="back-label">voltar</span>';
+btnBack.addEventListener('click', () => {
+  if (!canGoBack()) return;
+  goBack();
+});
+document.body.appendChild(btnBack);
 
 // ===== preloader (tela loading) =====
 

@@ -67,14 +67,28 @@ export const registerScreenExit = (name, fn) => {
 };
 
 let currentScreen = null;
+const _history = [];
 
-export const goToScreen = async (name) => {
+// telas que NÃO entram no histórico (ela não "volta" pra elas)
+const NO_HISTORY = new Set(['loading', 'locked']);
+
+export const goToScreen = async (name, { fromHistory = false } = {}) => {
   document.body.classList.toggle('screen-loading', name === 'loading');
 
   const isFirstLoad = !document.querySelector('.screen.active');
   if (ANIME_TRANSITION_SCREENS.has(name) && !isFirstLoad) {
     await animeTransition(name);
   }
+
+  // empilha a tela atual antes de mudar (a menos que viemos do goBack)
+  if (!fromHistory && currentScreen && currentScreen !== name && !NO_HISTORY.has(currentScreen)) {
+    _history.push(currentScreen);
+    // limita histórico (evita loops/memória)
+    if (_history.length > 50) _history.shift();
+  }
+
+  // se voltou pra gate, zera o histórico (é "reset")
+  if (name === 'gate') _history.length = 0;
 
   Object.entries(screens).forEach(([key, el]) => {
     if (!el) return;
@@ -85,7 +99,6 @@ export const goToScreen = async (name) => {
     exitHandlers.get(currentScreen)(name);
   }
 
-  // troca música default (screens com track dinâmico fazem override no enter)
   if (SCREEN_TRACK[name]) playTrack(SCREEN_TRACK[name]);
   if (NEXT_TRACK[name]) preloadTrack(NEXT_TRACK[name]);
 
@@ -93,6 +106,15 @@ export const goToScreen = async (name) => {
 
   updateHUDForScreen(name);
   currentScreen = name;
+  document.body.dataset.screen = name;
 };
 
+export const goBack = () => {
+  const prev = _history.pop();
+  if (!prev) return false;
+  goToScreen(prev, { fromHistory: true });
+  return true;
+};
+
+export const canGoBack = () => _history.length > 0;
 export const getCurrentScreen = () => currentScreen;

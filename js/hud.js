@@ -1,5 +1,4 @@
-import { saveXP, loadXP, loadAchievements, getSessionInfo } from './progress.js';
-import { ACHIEVEMENTS } from './achievements.js';
+import { saveXP, loadXP, getSessionInfo } from './progress.js';
 import { CARD } from './card-data.js';
 import { applyHoloTilt } from './card-holo.js';
 import { openAchievementsDrawer } from './achievements-drawer.js';
@@ -97,20 +96,9 @@ const cardSeenKey = 'luana_card_seen';
 const openProfilePanel = () => {
   if (document.getElementById('profile-panel')) return;
 
-  const unlocked = loadAchievements();
   const session  = getSessionInfo();
   const level    = currentXP >= 100 ? 2 : 1;
   const cardSeen = localStorage.getItem(cardSeenKey) === '1';
-
-  const achHTML = Object.entries(ACHIEVEMENTS).map(([id, ach]) => {
-    const done = unlocked.has(id);
-    return `
-      <div class="pach ${done ? 'pach--on' : 'pach--off'}">
-        <span class="pach-icon">${ach.icon}</span>
-        <span class="pach-name">${ach.name}</span>
-        <span class="pach-desc">${done ? ach.desc : '???'}</span>
-      </div>`;
-  }).join('');
 
   const statsHTML = CARD.stats.map(
     (s) => `<div class="pcard-stat"><span class="pcard-stat-label">${s.label}</span><span class="pcard-stat-val" style="color:${s.color}">${s.value}</span></div>`
@@ -151,10 +139,6 @@ const openProfilePanel = () => {
       </div>
       ${daysHTML}
 
-      <p class="profile-ach-title">conquistas</p>
-      <div class="profile-ach-grid">${achHTML}</div>
-      <p class="profile-ach-title" style="margin-top:12px">easter eggs</p>
-      <p class="profile-eggs-count">${(()=>{ try{ const n=JSON.parse(localStorage.getItem('luana_eggs_found')||'[]').length; return n===5?'🥚 5 / 5 — todos encontrados! 🏆':`🥚 ${n} / 5 encontrados`; }catch{return '🥚 0 / 5 encontrados';} })()}</p>
       <button class="profile-trophy-btn" id="profile-trophy-btn">🏆 ver sala de troféus</button>
     </div>
   `;
