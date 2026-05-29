@@ -135,6 +135,54 @@ export const BONUS_CARDS = [
   },
 ];
 
+  {
+    achievementKey: 'animal-killer',
+    name: 'Momoa',
+    title: 'Momoa, a Assombração Ressentida',
+    subtitle: 'A que Foi Embora Mas Não Esqueceu',
+    type: 'Espectro · Felina · Abandonada · Rancorosa',
+    rarity: '★★★☆☆',
+    emoji: '👻',
+    photoKey: 'card-momoa',
+    gradient: 'linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 100%)',
+    border: 'linear-gradient(135deg, #9b59b6 0%, #2c0a3a 100%)',
+    stats: [
+      { label: 'RANCOR',  value:  99, color: '#9b59b6' },
+      { label: 'DOÇURA',  value:  85, color: '#ffd93d' },
+      { label: 'PERDÃO',  value:   2, color: '#6bcb77' },
+      { label: 'ASSOMBRA',value:  90, color: '#3da5d9' },
+    ],
+    abilities: [
+      { icon: '👻', name: 'Assombração Noturna', desc: 'Aparece nos sonhos da Luana todo dia 17. Sem aviso. Sem motivo.' },
+      { icon: '🐾', name: 'Era Doce, Era', desc: 'Ronronava. Amava. E foi mandada embora assim mesmo. Passiva permanente de culpa.' },
+    ],
+    flavor: '"ela era filha. mas não de vocês, segundo a Luana."',
+  },
+  {
+    achievementKey: 'genocide',
+    name: 'Luana',
+    title: 'Luana Endiabrada, a Caçadora',
+    subtitle: 'Destruidora de Inocentes — Modo Ativado',
+    type: 'Lendária · Humana · Caótica · Imparável',
+    rarity: '★★★★★★',
+    emoji: '😈',
+    photoKey: 'card-endiabrada',
+    gradient: 'linear-gradient(135deg, #1a0000 0%, #3a0000 50%, #1a0000 100%)',
+    border: 'linear-gradient(135deg, #ff0000 0%, #ff5e00 25%, #ff0000 50%, #ff5e00 75%, #ff0000 100%)',
+    stats: [
+      { label: 'CAOS',    value: 999, color: '#ff0000' },
+      { label: 'ENERGIA', value: 999, color: '#ff5e00' },
+      { label: 'PIEDADE', value:   0, color: '#6bcb77' },
+      { label: 'ARTE',    value: 999, color: '#ffd93d' },
+    ],
+    abilities: [
+      { icon: '😈', name: 'Modo Endiabrado', desc: 'Quando ativado, nada a para. Nenhum animal sobrevive. Nenhum aliado é poupado.' },
+      { icon: '⚡', name: 'Arte do Caos', desc: 'Transforma destruição em criatividade pura. Dano: ∞. Consequências: nenhuma pra ela.' },
+      { icon: '🔥', name: 'Imparável', desc: 'Matou todos os bichinhos inocentes. Conquistou o título mais improvável do universo.' },
+    ],
+    flavor: '"agitada. querendo fazer arte. nada a para."',
+  },
+
 // carta secreta do Bruno — desbloqueada ao encontrar todos os easter eggs
 export const SPECIAL_CARD = {
   achievementKey: 'all-eggs',
