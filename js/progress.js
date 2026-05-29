@@ -67,6 +67,21 @@ export const initSession = async () => {
     _achievements  = new Set([...lsAchievements(), ...(data.achievements ?? [])]);
     _daysRemaining = data.daysRemaining ?? null;
 
+    // merge eggs/pets/card da API com localStorage
+    if (data.eggsFound?.length) {
+      const local = new Set(JSON.parse(localStorage.getItem('luana_eggs_found') || '[]'));
+      const merged = [...new Set([...local, ...data.eggsFound])];
+      try { localStorage.setItem('luana_eggs_found', JSON.stringify(merged)); } catch {}
+    }
+    if (data.petsKilled?.length) {
+      const local = new Set(JSON.parse(localStorage.getItem('luana_killed_pets') || '[]'));
+      const merged = [...new Set([...local, ...data.petsKilled])];
+      try { localStorage.setItem('luana_killed_pets', JSON.stringify(merged)); } catch {}
+    }
+    if (data.cardSeen) {
+      try { localStorage.setItem('luana_card_seen', '1'); } catch {}
+    }
+
     // cache local para quando a API estiver offline
     try { localStorage.setItem(LS_XP, String(_xp)); } catch {}
     try { localStorage.setItem(LS_ACH, JSON.stringify([..._achievements])); } catch {}
@@ -101,6 +116,16 @@ export const saveXP = (xp) => {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ xp }),
+    }).catch(() => {});
+  }
+};
+
+export const saveLevel = (level) => {
+  if (_apiOk && _token) {
+    fetch(`${API_URL}/session/${_token}/progress`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ level }),
     }).catch(() => {});
   }
 };

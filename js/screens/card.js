@@ -4,7 +4,8 @@
 
 import { CARD, BONUS_CARDS, SPECIAL_CARD } from '../card-data.js';
 import { goToScreen, registerScreenEnter } from '../nav.js';
-import { loadAchievements } from '../progress.js';
+import { loadAchievements, getToken, getSessionInfo } from '../progress.js';
+import { API_URL } from '../config.js';
 import { onAllEggsUnlocked } from '../achievements.js';
 import { haptic, HAPTIC } from '../haptic.js';
 import { applyHoloTilt } from '../card-holo.js';
@@ -204,7 +205,17 @@ const showMainCard = () => {
 
   const wasAlreadySeen = localStorage.getItem('luana_card_seen') === '1';
   localStorage.setItem('luana_card_seen', '1');
-  if (!wasAlreadySeen) setTimeout(flyCardToProfile, 1800);
+  if (!wasAlreadySeen) {
+    setTimeout(flyCardToProfile, 1800);
+    const { apiOk } = getSessionInfo();
+    if (apiOk && API_URL) {
+      fetch(`${API_URL}/session/${getToken()}/progress`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cardSeen: true }),
+      }).catch(() => {});
+    }
+  }
 
   document.getElementById('btn-card-next').addEventListener('click', () => goToScreen('final'));
 };

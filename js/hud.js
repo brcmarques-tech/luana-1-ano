@@ -1,4 +1,4 @@
-import { saveXP, loadXP, getSessionInfo } from './progress.js';
+import { saveXP, loadXP, saveLevel, getSessionInfo } from './progress.js';
 import { CARD } from './card-data.js';
 import { applyHoloTilt } from './card-holo.js';
 import { openAchievementsDrawer } from './achievements-drawer.js';
@@ -64,6 +64,8 @@ export const updateHUDForScreen = (screenName) => {
 
   if (currentXP >= 100 && !leveledUp) {
     leveledUp = true;
+    saveXP(currentXP);
+    saveLevel(2);
     setTimeout(triggerLevelUp, 1200);
   }
 };

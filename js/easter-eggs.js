@@ -3,6 +3,8 @@
 
 import { unlock } from './achievements.js';
 import { haptic, HAPTIC } from './haptic.js';
+import { API_URL } from './config.js';
+import { getToken, getSessionInfo } from './progress.js';
 
 export const EGG_HINTS = [
   '🤫 achou o primeiro segredo',
@@ -25,7 +27,17 @@ export const KONAMI_MESSAGE = 'você digitou a palavra certa 💛';
 
 const EGGS_KEY = 'luana_eggs_found';
 const loadEggs = () => { try { return new Set(JSON.parse(localStorage.getItem(EGGS_KEY) || '[]')); } catch { return new Set(); } };
-const saveEggs = (s) => { try { localStorage.setItem(EGGS_KEY, JSON.stringify([...s])); } catch {} };
+const saveEggs = (s) => {
+  try { localStorage.setItem(EGGS_KEY, JSON.stringify([...s])); } catch {}
+  const { apiOk } = getSessionInfo();
+  if (apiOk && API_URL) {
+    fetch(`${API_URL}/session/${getToken()}/progress`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ eggsFound: [...s] }),
+    }).catch(() => {});
+  }
+};
 
 let eggsFound = loadEggs();
 let eggCounter = null;

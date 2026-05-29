@@ -1,6 +1,8 @@
 // Camadas ambientais: sakura caindo, lanternas balançando, pets animados andando.
 
 import { unlock } from './achievements.js';
+import { API_URL } from './config.js';
+import { getToken, getSessionInfo } from './progress.js';
 
 // ===== sakura caindo no fundo =====
 
@@ -352,6 +354,14 @@ const killedIds = () => new Set(JSON.parse(localStorage.getItem(KILLED_KEY) || '
 const killId = (id) => {
   const s = killedIds(); s.add(id);
   localStorage.setItem(KILLED_KEY, JSON.stringify([...s]));
+  const { apiOk } = getSessionInfo();
+  if (apiOk && API_URL) {
+    fetch(`${API_URL}/session/${getToken()}/progress`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ petsKilled: [...s] }),
+    }).catch(() => {});
+  }
 };
 
 let _petsActive = !localStorage.getItem(PETS_STOPPED_KEY);
