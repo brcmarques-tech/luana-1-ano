@@ -14,6 +14,10 @@ const ALL_CARDS = [CARD, ...BONUS_CARDS, SPECIAL_CARD];
 let deckBtn = null;
 let deckBadge = null;
 
+// fila de reveals — se um card já está visível, o próximo espera o X ser fechado
+const revealQueue = [];
+let revealActive = false;
+
 export const isCardCollected = (id) => collected.has(id);
 
 // ===== render card =====
@@ -58,12 +62,24 @@ const buildCardEl = (card) => {
 
 // ===== reveal overlay =====
 
+const processQueue = () => {
+  if (revealActive || revealQueue.length === 0) return;
+  showReveal(revealQueue.shift());
+};
+
 export const revealCard = (card) => {
   if (!card?.id) return;
   if (isCardCollected(card.id)) return;
   collected.add(card.id);
   saveCollected();
   haptic(HAPTIC.special);
+  updateDeckBadge();
+  if (revealActive) { revealQueue.push(card); return; }
+  showReveal(card);
+};
+
+const showReveal = (card) => {
+  revealActive = true;
 
   const overlay = document.createElement('div');
   overlay.className = 'cr-overlay';
@@ -88,8 +104,6 @@ export const revealCard = (card) => {
     applyHoloTilt(cardEl, true);
   }));
 
-  updateDeckBadge();
-
   header.querySelector('.cr-close').addEventListener('click', () => flyToDeck(overlay, cardEl));
   overlay.addEventListener('click', (e) => { if (e.target === overlay) flyToDeck(overlay, cardEl); });
 };
@@ -110,6 +124,8 @@ const flyToDeck = (overlay, cardEl) => {
     overlay.remove();
     deckBtn.classList.add('btn-deck--pulse');
     setTimeout(() => deckBtn.classList.remove('btn-deck--pulse'), 700);
+    revealActive = false;
+    setTimeout(processQueue, 400);
   }, 550);
 };
 
