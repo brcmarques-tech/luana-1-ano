@@ -1,8 +1,11 @@
 // Botão ✦ flutuante: leva pra tela da Constelação.
 // Pulsa quando há pergunta nova disponível pro dia atual.
 
-import { goToScreen } from '../nav.js';
+import { goToScreen, getCurrentScreen } from '../nav.js';
 import { initConstellation, getStatus } from './data.js';
+
+let _previousScreen = null;
+export const getPreviousScreen = () => _previousScreen || 'gate';
 
 export const initSkyButton = async () => {
   const btn = document.createElement('button');
@@ -13,7 +16,11 @@ export const initSkyButton = async () => {
   btn.innerHTML = '<span class="sky-icon">✦</span><span class="sky-badge" id="sky-badge" hidden></span>';
   document.body.appendChild(btn);
 
-  btn.addEventListener('click', () => goToScreen('constellation'));
+  btn.addEventListener('click', () => {
+    const cur = getCurrentScreen();
+    if (cur && cur !== 'constellation') _previousScreen = cur;
+    goToScreen('constellation');
+  });
 
   await initConstellation();
   const refresh = () => {

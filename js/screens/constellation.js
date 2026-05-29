@@ -16,6 +16,7 @@ import {
 } from '../constellation/data.js';
 import { createSky } from '../constellation/sky.js';
 import { PIN_STARS } from '../constellation/star-positions.js';
+import { getPreviousScreen } from '../constellation/sky-button.js';
 
 let canvas, panel, sky;
 let initialized = false;
@@ -257,7 +258,7 @@ export const initConstellationScreen = () => {
   sky = createSky(canvas);
 
   document.getElementById('btn-cn-back')?.addEventListener('click', () => {
-    goToScreen('gate');
+    goToScreen(getPreviousScreen());
   });
 
   registerScreenEnter('constellation', onEnter);

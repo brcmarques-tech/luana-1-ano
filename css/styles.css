@@ -18,6 +18,25 @@
   padding: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* exceção: as coordenadas do reveal da Constelação precisam ser copiáveis */
+.cn-coord-line,
+.cn-coord-line * {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+  cursor: text;
+}
+
+/* inputs e textareas precisam continuar selecionáveis */
+input, textarea {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
 }
 
 html, body {
@@ -1602,11 +1621,15 @@ body.screen-loading .hud {
 .sp5 { bottom: 10%; left: 20%; animation-delay: 2.8s; font-size: 0.65rem; }
 
 .btn-serendipity-next {
+  background: transparent;
+  border: 1.5px solid var(--pink);
+  color: var(--pink);
   opacity: 0;
   animation: srd-up 1s ease 4s forwards;
 }
 
-.btn-serendipity-next:hover {
+.btn-serendipity-next:hover,
+.btn-serendipity-next:active {
   background: var(--pink);
   color: var(--text);
 }
@@ -2030,6 +2053,47 @@ body.screen-loading .hud {
   overflow: hidden;
 }
 
+/* dots indicadores das cartas do deck */
+.deck-dots {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+  padding: 6px 0 2px;
+  flex-shrink: 0;
+}
+
+.deck-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.deck-dot.active {
+  background: var(--pink);
+  transform: scale(1.4);
+}
+
+/* hint "← deslize →" pulsando */
+.deck-hint {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  opacity: 0.6;
+  flex-shrink: 0;
+  animation: hint-pulse 2s ease-in-out infinite;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  letter-spacing: 1px;
+}
+
+.deck-hint--hidden {
+  opacity: 0 !important;
+  transform: translateY(8px);
+  animation: none;
+  pointer-events: none;
+}
+
 .deck-intro {
   text-align: center;
   flex-shrink: 0;
@@ -2059,6 +2123,12 @@ body.screen-loading .hud {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   flex-shrink: 0;
+  /* impede seleção de texto e callouts no swipe */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-x;
   width: 100%;
 }
 
@@ -2067,6 +2137,10 @@ body.screen-loading .hud {
 .deck-card {
   flex-shrink: 0;
   min-width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
   height: 400px;
   display: flex;
   align-items: center;
@@ -2765,6 +2839,11 @@ body.screen-loading .hud {
   gap: 18px;
 }
 
+/* impede que os itens encolham dentro do flex column do profile */
+.profile-sheet > * {
+  flex-shrink: 0;
+}
+
 .profile-sheet::-webkit-scrollbar { width: 3px; }
 .profile-sheet::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
@@ -2772,16 +2851,26 @@ body.screen-loading .hud {
 
 .profile-close {
   position: absolute;
-  top: 14px;
-  right: 16px;
-  background: none;
-  border: none;
-  color: #555;
-  font-size: 1rem;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s, transform 0.15s;
 }
-.profile-close:hover { color: #fff; }
+.profile-close:hover  { background: var(--pink); border-color: var(--pink); }
+.profile-close:active { transform: scale(0.92); }
 
 /* mini carta */
 .pcard {
@@ -2792,6 +2881,7 @@ body.screen-loading .hud {
   text-align: center;
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
 }
 .pcard::before {
   content: '';
@@ -2887,9 +2977,19 @@ body.screen-loading .hud {
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 360px;
+  max-height: 100dvh;
   opacity: 0;
   transform: scale(0.85);
   transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#card-modal .luana-card {
+  width: min(268px, calc((100dvh - 130px) * 5 / 7.6), 80vw);
+  height: auto;
 }
 
 #card-modal.open .card-modal-overlay {
@@ -3583,6 +3683,39 @@ body.skull-mode .screen.active {
   overflow: hidden;
 }
 
+/* esconde HUD/lanternas/mute/sky-button enquanto a Constelação está ativa */
+body:has(#screen-constellation.active) .hud,
+body:has(#screen-constellation.active) .lantern-layer,
+body:has(#screen-constellation.active) .btn-mute,
+body:has(#screen-constellation.active) .btn-sky,
+body:has(#screen-constellation.active) .pet-layer,
+body:has(#screen-constellation.active) .sakura-layer {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+/* sky-button (✦) só aparece em gate e final */
+body:not(:has(#screen-gate.active)):not(:has(#screen-final.active)) .btn-sky {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+/* bichinhos mortos só aparecem em gate/welcome/loading; somem a partir da hanami */
+body:has(#screen-hanami.active) .pet--dead,
+body:has(#screen-journey.active) .pet--dead,
+body:has(#screen-serendipity.active) .pet--dead,
+body:has(#screen-loves.active) .pet--dead,
+body:has(#screen-game.active) .pet--dead,
+body:has(#screen-card.active) .pet--dead,
+body:has(#screen-final.active) .pet--dead,
+body:has(#screen-constellation.active) .pet--dead {
+  opacity: 0 !important;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
 .cn-canvas {
   position: absolute;
   inset: 0;
@@ -3595,17 +3728,37 @@ body.skull-mode .screen.active {
   position: absolute;
   top: max(env(safe-area-inset-top, 14px), 14px);
   left: 14px;
-  width: 38px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   height: 38px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0 16px 0 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 217, 61, 0.3);
   color: var(--text);
-  font-size: 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
   z-index: 10;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cn-back:active {
+  transform: scale(0.96);
+}
+
+.cn-back-arrow {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.cn-back-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
 }
 
 .cn-panel {

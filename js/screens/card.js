@@ -74,13 +74,17 @@ const renderDeck = () => {
       </div>`;
   }).join('');
 
+  const dotsHtml = BONUS_CARDS.map((_, i) => `<span class="deck-dot${i === 0 ? ' active' : ''}"></span>`).join('');
+
   stage.className = 'card-stage card-stage--deck';
   stage.innerHTML = `
     <div class="deck-intro">
       <p class="deck-title">suas cartas</p>
       <p class="deck-sub">escolha uma para revelar</p>
     </div>
-    <div class="card-deck">${deckCardsHtml}</div>
+    <div class="card-deck" id="card-deck-scroll">${deckCardsHtml}</div>
+    <div class="deck-dots">${dotsHtml}</div>
+    <div class="deck-hint" id="deck-hint"><span>← deslize →</span></div>
     <button class="btn btn-card-next deck-hidden" id="btn-deck-next">ver sua carta principal →</button>`;
 
   const nextBtn = stage.querySelector('#btn-deck-next');
@@ -101,6 +105,20 @@ const renderDeck = () => {
   });
 
   nextBtn.addEventListener('click', showMainCard);
+
+  // atualiza dots conforme scroll + esconde hint após primeiro swipe
+  const scrollEl = document.getElementById('card-deck-scroll');
+  const dotsEls  = stage.querySelectorAll('.deck-dot');
+  const hintEl   = document.getElementById('deck-hint');
+  let hintHidden = false;
+  scrollEl?.addEventListener('scroll', () => {
+    const idx = Math.round(scrollEl.scrollLeft / scrollEl.clientWidth);
+    dotsEls.forEach((d, i) => d.classList.toggle('active', i === idx));
+    if (!hintHidden && idx > 0) {
+      hintHidden = true;
+      hintEl?.classList.add('deck-hint--hidden');
+    }
+  }, { passive: true });
 };
 
 const flyCardToProfile = () => {
