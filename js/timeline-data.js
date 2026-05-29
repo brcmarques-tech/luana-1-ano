@@ -10,27 +10,27 @@ export const TIMELINE = [
   },
   {
     date: 'JUL 2025',
-    caption: 'mês 2 — já tava virando vício',
+    caption: 'o mês que você me fez um aniversário pífio 😂',
     photo: 'assets/img/timeline-02.jpg',
   },
   {
     date: 'AGO 2025',
-    caption: 'aquele mês que rolou aquilo',
+    caption: 'nosso amor não para de crescer 💛',
     photo: 'assets/img/timeline-03.jpg',
   },
   {
     date: 'SET 2025',
-    caption: 'descobri que você ronca 😂',
+    caption: 'pensei que seu cérebro ficaria formado aos 25 — mas ainda tenho esperanças 😂',
     photo: 'assets/img/timeline-04.jpg',
   },
   {
     date: 'OUT 2025',
-    caption: 'primeiro outubro juntos',
+    caption: 'planejamos gastar muito mais do que podíamos — e fizemos isso com estilo 💸',
     photo: 'assets/img/timeline-05.jpg',
   },
   {
     date: 'NOV 2025',
-    caption: 'a saideira virou rotina',
+    caption: 'Black Friday — uhul! 🛍️',
     photo: 'assets/img/timeline-06.jpg',
   },
   {
@@ -40,27 +40,27 @@ export const TIMELINE = [
   },
   {
     date: 'JAN 2026',
-    caption: 'ano novo, mesma louca 💛',
+    caption: 'o melhor início de ano de todos — porque foi com você 💛',
     photo: 'assets/img/timeline-08.jpg',
   },
   {
     date: 'FEV 2026',
-    caption: 'o mês mais curto pareceu o mais longo',
+    caption: 'primeiro carnaval juntos 🎉',
     photo: 'assets/img/timeline-09.jpg',
   },
   {
     date: 'MAR 2026',
-    caption: 'o mês das brigas bobas',
+    caption: 'é o nosso jeito — as pessoas vão ter que nos entender. vai ser assim por 10 anos, e a gente já dobrou a meta 💛',
     photo: 'assets/img/timeline-10.jpg',
   },
   {
     date: 'ABR 2026',
-    caption: 'tudo voltando ao normal (que bom)',
+    caption: 'te ensinei a andar a cavalo 🐴',
     photo: 'assets/img/timeline-11.jpg',
   },
   {
     date: 'MAI 2026',
-    caption: 'a contagem regressiva começou',
+    caption: 'obrigado por atravessar esse mês difícil comigo 💛',
     photo: 'assets/img/timeline-12.jpg',
   },
   {
