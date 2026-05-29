@@ -160,8 +160,26 @@ const submitAnswer = async (day, payload) => {
 
 // ===== reveal: linhas conectam estrelas, depois aparecem só as coordenadas =====
 
+const enterFullscreen = async () => {
+  const el = document.getElementById('screen-constellation');
+  if (!el) return;
+  try {
+    if (el.requestFullscreen) await el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+  } catch { /* alguns iOS não permitem */ }
+};
+
+const exitFullscreen = async () => {
+  try {
+    if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen();
+    else if (document.webkitFullscreenElement && document.webkitExitFullscreen) await document.webkitExitFullscreen();
+  } catch {}
+};
+
 const startReveal = () => {
   panel.classList.add('cn-panel--hidden');
+  // tenta entrar em fullscreen real pra modo cinema
+  enterFullscreen();
   sky.startReveal(() => {
     setTimeout(showRevealText, 600);
   });
@@ -220,6 +238,7 @@ const showRevealText = async () => {
 const dismissReveal = () => {
   const overlay = document.getElementById('cn-reveal-overlay');
   overlay?.classList.remove('show');
+  exitFullscreen();
   setTimeout(() => {
     overlay?.remove();
     panel.classList.remove('cn-panel--hidden');
@@ -258,6 +277,7 @@ export const initConstellationScreen = () => {
   sky = createSky(canvas);
 
   document.getElementById('btn-cn-back')?.addEventListener('click', () => {
+    exitFullscreen();
     goToScreen(getPreviousScreen());
   });
 

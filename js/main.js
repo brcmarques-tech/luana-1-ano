@@ -24,11 +24,33 @@ import { initLoves, resetLoves } from './screens/loves.js';
 import { initMemoryGame } from './screens/memory-game.js';
 import { initCard, resetCard } from './screens/card.js';
 import { initFinal } from './screens/final.js';
+import { initPuzzle } from './screens/puzzle.js';
 import { initConstellationScreen } from './screens/constellation.js';
 import { showLockedScreen } from './screens/locked.js';
 import { initSkyButton } from './constellation/sky-button.js';
 
 'use strict';
+
+// ===== Service Worker (PWA offline) =====
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((reg) => {
+        // detecta atualização e troca automaticamente
+        reg.addEventListener('updatefound', () => {
+          const sw = reg.installing;
+          if (!sw) return;
+          sw.addEventListener('statechange', () => {
+            if (sw.state === 'installed' && navigator.serviceWorker.controller) {
+              sw.postMessage({ type: 'SKIP_WAITING' });
+            }
+          });
+        });
+      })
+      .catch(() => {});
+  });
+}
 
 // ===== boot global (não depende de sessão) =====
 
@@ -137,6 +159,7 @@ initSession().then((access) => {
   initSerendipity();
   initLoves();
   initMemoryGame();
+  initPuzzle();
   initCard();
   initFinal({
     onFullRestart: () => {

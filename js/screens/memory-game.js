@@ -98,7 +98,7 @@ export const initMemoryGame = () => {
   winOverlay = document.getElementById('game-win');
 
   document.getElementById('btn-game-restart')?.addEventListener('click', render);
-  document.getElementById('btn-to-final')?.addEventListener('click', () => goToScreen('card'));
+  document.getElementById('btn-to-final')?.addEventListener('click', () => goToScreen('puzzle'));
 
   registerScreenEnter('game', render);
 };

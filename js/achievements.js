@@ -22,6 +22,7 @@ export const ACHIEVEMENTS = {
   'animal-forgiver':{ icon: '🕊️', name: 'Redentora',             desc: 'Pediu desculpa pros bichinhos' },
   'genocide':       { icon: '💀',  name: 'Endiabrada',              desc: 'Matou todos os bichinhos inocentes' },
   'beginning':      { icon: '🌌',  name: 'Início de tudo',         desc: 'Acendeu todas as estrelas — e descobriu onde tudo começou' },
+  'puzzle-master':  { icon: '🧩',  name: 'Montadora',              desc: 'Montou a foto inteira' },
 };
 
 // restaura conquistas salvas

@@ -6,6 +6,7 @@ const IMPACT_TEXTS = {
   journey: 'go!',
   loves: '♡♡♡',
   game: 'play!',
+  puzzle: 'fit!',
   card: 'ssr!',
   final: 'fim?',
 };

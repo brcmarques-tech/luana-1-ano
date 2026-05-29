@@ -2,6 +2,7 @@ import { saveXP, loadXP, loadAchievements, getSessionInfo } from './progress.js'
 import { ACHIEVEMENTS } from './achievements.js';
 import { CARD } from './card-data.js';
 import { applyHoloTilt } from './card-holo.js';
+import { openAchievementsDrawer } from './achievements-drawer.js';
 
 const SCREEN_XP = {
   gate: 0,
@@ -154,6 +155,7 @@ const openProfilePanel = () => {
       <div class="profile-ach-grid">${achHTML}</div>
       <p class="profile-ach-title" style="margin-top:12px">easter eggs</p>
       <p class="profile-eggs-count">${(()=>{ try{ const n=JSON.parse(localStorage.getItem('luana_eggs_found')||'[]').length; return n===5?'🥚 5 / 5 — todos encontrados! 🏆':`🥚 ${n} / 5 encontrados`; }catch{return '🥚 0 / 5 encontrados';} })()}</p>
+      <button class="profile-trophy-btn" id="profile-trophy-btn">🏆 ver sala de troféus</button>
     </div>
   `;
 
@@ -162,6 +164,10 @@ const openProfilePanel = () => {
 
   document.getElementById('profile-close').addEventListener('click', closeProfilePanel);
   document.getElementById('profile-overlay').addEventListener('click', closeProfilePanel);
+  document.getElementById('profile-trophy-btn').addEventListener('click', () => {
+    closeProfilePanel();
+    setTimeout(openAchievementsDrawer, 350);
+  });
 
   if (cardSeen) {
     document.getElementById('pcard-preview').addEventListener('click', openCardModal);
