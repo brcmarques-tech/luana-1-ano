@@ -50,8 +50,9 @@ export const initSession = async () => {
 
   // modo offline: API não configurada ou sem token
   if (!API_URL || !_token) {
-    _xp           = lsXP();
-    _achievements = lsAchievements();
+    _xp = lsXP();
+    _achievements.clear();
+    lsAchievements().forEach(id => _achievements.add(id));
     const hasAccess = lsAccess();
     return { hasAccess, nextUnlock: hasAccess ? null : NEXT_ANNIVERSARY };
   }
@@ -61,10 +62,12 @@ export const initSession = async () => {
     if (!res.ok) throw new Error('session not found');
     const data = await res.json();
 
-    _apiOk         = true;
-    _xp            = data.xp ?? 0;
-    // merge: conquistas locais + da API — nunca descarta o que já foi ganho
-    _achievements  = new Set([...lsAchievements(), ...(data.achievements ?? [])]);
+    _apiOk = true;
+    _xp    = data.xp ?? 0;
+    // merge: conquistas locais + da API — muta o Set existente (não cria novo)
+    // pois achievements.js já guarda referência ao mesmo objeto
+    _achievements.clear();
+    [...lsAchievements(), ...(data.achievements ?? [])].forEach(id => _achievements.add(id));
     _daysRemaining = data.daysRemaining ?? null;
 
     // merge eggs/pets/card da API com localStorage
@@ -97,8 +100,9 @@ export const initSession = async () => {
     return { hasAccess: data.hasAccess, nextUnlock: data.nextUnlock ?? null };
   } catch {
     // API offline → fallback localStorage
-    _xp           = lsXP();
-    _achievements = lsAchievements();
+    _xp = lsXP();
+    _achievements.clear();
+    lsAchievements().forEach(id => _achievements.add(id));
     const hasAccess = lsAccess();
     return { hasAccess, nextUnlock: hasAccess ? null : NEXT_ANNIVERSARY };
   }
