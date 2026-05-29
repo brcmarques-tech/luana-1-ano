@@ -162,7 +162,7 @@ const onTileClick = (pos) => {
   state.moves++;
   movesEl.textContent = String(state.moves);
 
-  rerenderTiles(state.imgOk !== false ? `${imgBase()}/${PUZZLE.photoKey}.jpg` : null);
+  rerenderTiles(state.imgOk !== false ? (puzzlePhotoUrl || `${imgBase()}/${PUZZLE.photoKey}.jpg`) : null);
 
   if (isSolved(state.tiles)) {
     setTimeout(showWin, 350);
