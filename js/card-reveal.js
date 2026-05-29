@@ -58,7 +58,8 @@ const buildCardEl = (card) => {
 // ===== reveal overlay =====
 
 export const revealCard = (card) => {
-  if (!card || isCardCollected(card.id)) return;
+  if (!card?.id) return;
+  if (isCardCollected(card.id)) return;
   collected.add(card.id);
   saveCollected();
   haptic(HAPTIC.special);
