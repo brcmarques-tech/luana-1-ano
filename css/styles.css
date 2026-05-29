@@ -4756,7 +4756,7 @@ body:has(#screen-constellation.active) .pet--dead {
   border-radius: 16px;
   overflow: hidden;
   position: relative;
-  animation: cr-flipin 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: cr-flipin 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   box-shadow:
     0 0 0 1.5px rgba(255,255,255,0.25),
     0 0 60px rgba(255, 93, 138, 0.5),

@@ -81,10 +81,11 @@ export const revealCard = (card) => {
   overlay.appendChild(stage);
   document.body.appendChild(overlay);
 
-  requestAnimationFrame(() => {
+  // duplo-frame garante que o browser pintou o estado inicial antes da transição
+  requestAnimationFrame(() => requestAnimationFrame(() => {
     overlay.classList.add('cr-show');
     applyHoloTilt(cardEl, true);
-  });
+  }));
 
   updateDeckBadge();
 
