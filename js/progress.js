@@ -63,7 +63,8 @@ export const initSession = async () => {
 
     _apiOk         = true;
     _xp            = data.xp ?? 0;
-    _achievements  = new Set(data.achievements ?? []);
+    // merge: conquistas locais + da API — nunca descarta o que já foi ganho
+    _achievements  = new Set([...lsAchievements(), ...(data.achievements ?? [])]);
     _daysRemaining = data.daysRemaining ?? null;
 
     // cache local para quando a API estiver offline

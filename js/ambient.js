@@ -1,5 +1,7 @@
 // Camadas ambientais: sakura caindo, lanternas balançando, pets animados andando.
 
+import { unlock } from './achievements.js';
+
 // ===== sakura caindo no fundo =====
 
 // 4 formatos de pétala individual de cerejeira
@@ -208,48 +210,223 @@ const BUNNY_SVG = `
     @keyframes bla { from { transform: rotate(-12deg); } to { transform: rotate(12deg); } }
   </style>
   <g class="bb">
-    <!-- corpo -->
     <ellipse cx="23" cy="38" rx="14" ry="12" fill="#f3e5f5"/>
-    <!-- rabinho -->
     <circle cx="35" cy="40" r="4.5" fill="white"/>
-    <!-- cabeça -->
     <circle cx="18" cy="25" r="10" fill="#f3e5f5"/>
-    <!-- orelha esquerda -->
     <g class="bel">
       <ellipse cx="16" cy="10" rx="4.5" ry="10" fill="#f3e5f5"/>
       <ellipse cx="16" cy="10" rx="2.2" ry="7"   fill="#ce93d8" opacity=".6"/>
     </g>
-    <!-- orelha direita -->
     <g class="ber">
       <ellipse cx="24" cy="10" rx="4.5" ry="10" fill="#f3e5f5"/>
       <ellipse cx="24" cy="10" rx="2.2" ry="7"   fill="#ce93d8" opacity=".6"/>
     </g>
-    <!-- olhos -->
     <circle cx="14" cy="24" r="2.5" fill="#ab47bc"/>
     <circle cx="22" cy="24" r="2.5" fill="#ab47bc"/>
     <circle cx="14.8" cy="23.2" r=".9" fill="white"/>
     <circle cx="22.8" cy="23.2" r=".9" fill="white"/>
-    <!-- nariz -->
     <ellipse cx="18" cy="27" rx="1.8" ry="1.2" fill="#ce93d8"/>
-    <!-- boca -->
     <path d="M16 28 Q18 30 20 28" stroke="#ccc" stroke-width=".8" fill="none"/>
-    <!-- pernas -->
     <rect class="bla" x="12" y="44" width="7" height="9" rx="3.5" fill="#e1bee7"/>
     <rect class="blb" x="21" y="44" width="7" height="9" rx="3.5" fill="#e1bee7"/>
   </g>
 </svg>`;
 
-const PET_SVGS = [CAT_SVG, CAT_SVG, DOG_SVG, DOG_SVG, BUNNY_SVG];
+const SEAL_SVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 66 46" width="66" height="46">
+  <style>
+    .skb { animation: skb .55s ease-in-out infinite alternate; }
+    .skt { animation: skt .38s ease-in-out infinite alternate; transform-origin: 56px 26px; }
+    .skfa { animation: skf .42s ease-in-out infinite alternate; transform-origin: 20px 36px; }
+    .skfb { animation: skf .42s ease-in-out infinite alternate .21s; transform-origin: 30px 37px; }
+    @keyframes skb  { to { transform: translateY(-2px); } }
+    @keyframes skt  { from { transform: rotate(-22deg); } to { transform: rotate(22deg); } }
+    @keyframes skf  { from { transform: rotate(-20deg); } to { transform: rotate(20deg); } }
+  </style>
+  <!-- cauda bifurcada -->
+  <g class="skt">
+    <ellipse cx="54" cy="22" rx="9" ry="3.5" fill="#90a4ae" transform="rotate(-18 54 22)"/>
+    <ellipse cx="56" cy="32" rx="9" ry="3.5" fill="#90a4ae" transform="rotate(18 56 32)"/>
+  </g>
+  <g class="skb">
+    <!-- corpo torpedo -->
+    <ellipse cx="33" cy="29" rx="21" ry="12" fill="#b0bec5"/>
+    <!-- barriga clara -->
+    <ellipse cx="30" cy="31" rx="13" ry="8" fill="#eceff1"/>
+    <!-- cabeça -->
+    <circle cx="14" cy="21" r="11" fill="#b0bec5"/>
+    <!-- olhos grandes -->
+    <ellipse cx="10" cy="19" rx="2.8" ry="3.2" fill="#1a2533"/>
+    <ellipse cx="19" cy="19" rx="2.8" ry="3.2" fill="#1a2533"/>
+    <circle cx="11" cy="18" r="1.1" fill="white"/>
+    <circle cx="20" cy="18" r="1.1" fill="white"/>
+    <!-- nariz -->
+    <ellipse cx="14" cy="23.5" rx="3.5" ry="2.5" fill="#78909c"/>
+    <ellipse cx="12.5" cy="23.5" rx="1.2" ry=".9" fill="#546e7a"/>
+    <ellipse cx="15.5" cy="23.5" rx="1.2" ry=".9" fill="#546e7a"/>
+    <!-- boca -->
+    <path d="M11.5 25.5 Q14 27.5 16.5 25.5" stroke="#9e9e9e" stroke-width=".8" fill="none"/>
+    <!-- bigodes -->
+    <line x1="2" y1="23" x2="10" y2="23.5" stroke="#cfd8dc" stroke-width=".8" opacity=".9"/>
+    <line x1="2" y1="25" x2="10" y2="24.5" stroke="#cfd8dc" stroke-width=".8" opacity=".9"/>
+    <line x1="18" y1="23.5" x2="26" y2="23" stroke="#cfd8dc" stroke-width=".8" opacity=".9"/>
+    <line x1="18" y1="24.5" x2="26" y2="25" stroke="#cfd8dc" stroke-width=".8" opacity=".9"/>
+    <!-- nadadeiras (agem como pernas) -->
+    <ellipse class="skfa" cx="20" cy="37" rx="9" ry="3.5" fill="#90a4ae" transform="rotate(-20 20 37)"/>
+    <ellipse class="skfb" cx="30" cy="38" rx="9" ry="3.5" fill="#90a4ae" transform="rotate(8 30 38)"/>
+  </g>
+</svg>`;
+
+const GOAT_SVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 50" width="62" height="50">
+  <style>
+    .gkb  { animation: gkb  .5s  ease-in-out infinite alternate; }
+    .gkt  { animation: gkt  .35s ease-in-out infinite alternate; transform-origin: 47px 24px; }
+    .gkel { animation: gkel 1.3s ease-in-out infinite alternate; transform-origin: 5px 19px; }
+    .gker { animation: gkel 1.3s ease-in-out infinite alternate .4s; transform-origin: 24px 19px; }
+    .gkla { animation: gkl  .42s ease-in-out infinite alternate;      transform-origin: 21px 36px; }
+    .gklb { animation: gkl  .42s ease-in-out infinite alternate .21s; transform-origin: 27px 36px; }
+    .gklc { animation: gkl  .42s ease-in-out infinite alternate .11s; transform-origin: 35px 36px; }
+    .gkld { animation: gkl  .42s ease-in-out infinite alternate .32s; transform-origin: 41px 36px; }
+    @keyframes gkb  { to { transform: translateY(-2px); } }
+    @keyframes gkt  { from { transform: rotate(-25deg); } to { transform: rotate(25deg); } }
+    @keyframes gkel { from { transform: rotate(-10deg); } to { transform: rotate(10deg); } }
+    @keyframes gkl  { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
+  </style>
+  <!-- rabinho fofo -->
+  <g class="gkt">
+    <circle cx="47" cy="22" r="5" fill="white"/>
+    <circle cx="47" cy="22" r="3.2" fill="#f0e8d8"/>
+  </g>
+  <g class="gkb">
+    <!-- corpo -->
+    <ellipse cx="33" cy="29" rx="14" ry="9" fill="#f5f0e8"/>
+    <!-- cabeça redonda (filhote = cabeça grande) -->
+    <circle cx="14" cy="20" r="11" fill="#f5f0e8"/>
+    <!-- corninos pequeninos -->
+    <path d="M10 10 Q8 4 11 7" stroke="#c8a464" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <path d="M18 10 Q20 4 17 7" stroke="#c8a464" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <!-- orelhas caídas -->
+    <ellipse class="gkel" cx="5"  cy="19" rx="4.5" ry="8" fill="#f5f0e8" transform="rotate(-22 5 19)"/>
+    <ellipse            cx="5.5" cy="19" rx="2.2" ry="5.5" fill="#f4c4cc" opacity=".6" transform="rotate(-22 5 19)"/>
+    <ellipse class="gker" cx="24" cy="19" rx="4.5" ry="8" fill="#f5f0e8" transform="rotate(22 24 19)"/>
+    <ellipse            cx="23.5" cy="19" rx="2.2" ry="5.5" fill="#f4c4cc" opacity=".6" transform="rotate(22 24 19)"/>
+    <!-- olhos -->
+    <ellipse cx="10" cy="19" rx="2.5" ry="2.8" fill="#2d2d2d"/>
+    <ellipse cx="18" cy="19" rx="2.5" ry="2.8" fill="#2d2d2d"/>
+    <circle cx="10.9" cy="18" r="1" fill="white"/>
+    <circle cx="18.9" cy="18" r="1" fill="white"/>
+    <!-- nariz rosinha -->
+    <ellipse cx="14" cy="23" rx="2.8" ry="2" fill="#f4a0b0"/>
+    <circle cx="12.8" cy="23" r=".8" fill="#e07090"/>
+    <circle cx="15.2" cy="23" r=".8" fill="#e07090"/>
+    <!-- boca -->
+    <path d="M12 24.5 Q14 26.5 16 24.5" stroke="#d0a0b0" stroke-width=".8" fill="none"/>
+    <!-- barbinha de cabrito -->
+    <path d="M13 27 Q14 31 15 27" stroke="#e0d0b8" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- pernas com casquinhos -->
+    <rect class="gkla" x="19" y="36" width="5" height="10" rx="2.5" fill="#e8d8c0"/>
+    <rect class="gklb" x="25" y="36" width="5" height="10" rx="2.5" fill="#e8d8c0"/>
+    <rect class="gklc" x="33" y="36" width="5" height="10" rx="2.5" fill="#e8d8c0"/>
+    <rect class="gkld" x="39" y="36" width="5" height="10" rx="2.5" fill="#e8d8c0"/>
+    <!-- casquinhos escuros -->
+    <rect x="19" y="43" width="5" height="4" rx="2" fill="#8d6e4a"/>
+    <rect x="25" y="43" width="5" height="4" rx="2" fill="#8d6e4a"/>
+    <rect x="33" y="43" width="5" height="4" rx="2" fill="#8d6e4a"/>
+    <rect x="39" y="43" width="5" height="4" rx="2" fill="#8d6e4a"/>
+  </g>
+</svg>`;
+
+const PET_POOL = [
+  { id: 'cat',   svg: CAT_SVG,   name: 'o gatinho'    },
+  { id: 'dog',   svg: DOG_SVG,   name: 'o cachorro'   },
+  { id: 'bunny', svg: BUNNY_SVG, name: 'o coelhinho'  },
+  { id: 'seal',  svg: SEAL_SVG,  name: 'a foquinha'   },
+  { id: 'goat',  svg: GOAT_SVG,  name: 'o cabritinho' },
+];
+
+const KILLED_KEY  = 'luana_killed_pets';
+const PETS_STOPPED_KEY = 'luana_pets_stopped';
+
+const killedIds = () => new Set(JSON.parse(localStorage.getItem(KILLED_KEY) || '[]'));
+const killId = (id) => {
+  const s = killedIds(); s.add(id);
+  localStorage.setItem(KILLED_KEY, JSON.stringify([...s]));
+};
+
+let _petsActive = !localStorage.getItem(PETS_STOPPED_KEY);
+let _petTimers = null;
+let _sendPet = null;
+
+export const resumePets = () => {
+  _petsActive = true;
+  localStorage.removeItem(PETS_STOPPED_KEY);
+  // KILLED_KEY não é limpo — animais mortos não voltam, só com hardreset
+  if (!_petTimers && _sendPet) {
+    const t0 = setTimeout(_sendPet, 2000);
+    const iv = setInterval(_sendPet, 12000 + Math.random() * 8000);
+    _petTimers = { t0, iv };
+  }
+};
+
+const restoreDeadPet = () => {
+  const saved = localStorage.getItem('luana_dead_pet');
+  if (!saved) return;
+  try {
+    const { html, bottom, left, right } = JSON.parse(saved);
+    const pet = document.createElement('div');
+    pet.className = 'pet pet--dead';
+    pet.style.position = 'fixed';
+    pet.style.bottom = bottom;
+    if (left)  pet.style.left  = left;
+    if (right) pet.style.right = right;
+    pet.style.transform = 'rotate(90deg) translateY(10px)';
+    pet.style.filter = 'drop-shadow(0 3px 6px rgba(0,0,0,0.35))';
+    pet.innerHTML = html;
+    const xEyes = document.createElement('div');
+    xEyes.style.cssText = 'position:absolute;left:18%;top:22%;transform:translate(-50%,-50%);font-size:1rem;pointer-events:none;z-index:2;line-height:1;';
+    xEyes.textContent = '😵';
+    document.body.appendChild(pet);
+    pet.appendChild(xEyes);
+  } catch {}
+};
+
+// para permanentemente (kill mechanic)
+export const stopPets = () => {
+  _petsActive = false;
+  localStorage.setItem(PETS_STOPPED_KEY, '1');
+  if (_petTimers) { clearTimeout(_petTimers.t0); clearInterval(_petTimers.iv); _petTimers = null; }
+  document.querySelectorAll('.pet:not(.pet--dead)').forEach((p) => {
+    p.style.transition = 'opacity 0.6s';
+    p.style.opacity = '0';
+    setTimeout(() => p.remove(), 600);
+  });
+};
+
+// remove os pets visíveis sem cancelar o interval (para transição de tela)
+export const hidePets = () => {
+  document.querySelectorAll('.pet:not(.pet--dead)').forEach((p) => {
+    p.style.transition = 'opacity 0.4s';
+    p.style.opacity = '0';
+    setTimeout(() => p.remove(), 400);
+  });
+};
 
 const initPets = () => {
   const layer = document.createElement('div');
   layer.className = 'pet-layer';
   document.body.appendChild(layer);
 
-  const sendPet = () => {
+  _sendPet = () => {
+    if (!_petsActive) return;
+    const activeId = document.querySelector('.screen.active')?.id;
+    if (!['screen-gate', 'screen-loading', 'screen-welcome'].includes(activeId)) return;
+    const alive = PET_POOL.filter(p => !killedIds().has(p.id));
+    if (!alive.length) return;
+    const chosen = alive[Math.floor(Math.random() * alive.length)];
     const pet = document.createElement('div');
     pet.className = 'pet';
-    pet.innerHTML = PET_SVGS[Math.floor(Math.random() * PET_SVGS.length)];
+    pet.innerHTML = chosen.svg;
 
     const fromLeft = Math.random() > 0.5;
     pet.style.bottom = (2 + Math.random() * 8) + 'px';
@@ -258,35 +435,188 @@ const initPets = () => {
     if (fromLeft) {
       pet.style.left = '-70px';
       pet.style.animationName = 'pet-walk-right';
+      pet.style.setProperty('--flip', '1');
     } else {
       pet.style.right = '-70px';
       pet.style.animationName = 'pet-walk-left';
       pet.style.transform = 'scaleX(-1)';
+      pet.style.setProperty('--flip', '-1');
     }
 
+    let pokeCount = 0;
+    let dead = false;
+
+    const killPet = () => {
+      killId(chosen.id);
+      dead = true;
+      clearTimeout(pet._autoRemove);
+
+      // tira do pet-layer (overflow:hidden) e vai pro body com posição fixada
+      const pr = pet.getBoundingClientRect();
+      pet.classList.add('pet--dead'); // CSS: animation:none !important em .pet--dead *
+      pet.style.position = 'fixed';
+      pet.style.left   = pr.left + 'px';
+      pet.style.bottom = (window.innerHeight - pr.bottom) + 'px';
+      pet.style.top    = 'auto';
+      pet.style.right  = 'auto';
+      document.body.appendChild(pet);
+      stopPets();
+
+      pet.style.transition = 'transform 0.5s cubic-bezier(0.36,0.07,0.19,0.97)';
+      requestAnimationFrame(() => {
+        pet.style.transform = `${fromLeft ? 'scaleX(1)' : 'scaleX(-1)'} rotate(90deg) translateY(10px)`;
+      });
+
+      const xEyes = document.createElement('div');
+      xEyes.style.cssText = 'position:absolute;left:18%;top:22%;transform:translate(-50%,-50%);font-size:1rem;pointer-events:none;z-index:2;line-height:1;';
+      xEyes.textContent = '😵';
+      pet.appendChild(xEyes);
+
+      if (navigator.vibrate) navigator.vibrate([80, 40, 80, 40, 200]);
+      unlock('animal-killer');
+
+      localStorage.setItem('luana_dead_pet', JSON.stringify({
+        html: pet.querySelector('svg')?.outerHTML || '',
+        bottom: pet.style.bottom,
+        left: pet.style.left || null,
+        right: null,
+      }));
+
+      const showToastSequence = (msg, delay, duration, next) => {
+        setTimeout(() => {
+          const t = document.createElement('div');
+          t.className = 'egg-toast';
+          t.textContent = msg;
+          document.body.appendChild(t);
+          requestAnimationFrame(() => t.classList.add('show'));
+          setTimeout(() => {
+            t.classList.remove('show');
+            setTimeout(() => { t.remove(); next?.(); }, 500);
+          }, duration);
+        }, delay);
+      };
+
+      const remaining = PET_POOL.filter(p => !killedIds().has(p.id)).length;
+      if (remaining === 0) unlock('genocide');
+      const fearMsg = remaining > 0
+        ? '🐾 os outros animais estão com medo de você...'
+        : '🐾 você matou todos os animais. parabéns. 💀';
+
+      showToastSequence('parabéns você matou 😡', 400, 3000, () => {
+        showToastSequence(fearMsg, 600, 3500, null);
+      });
+    };
+
+    const CORPSE_MSGS = [
+      'ele tá morto... 💀',
+      'para de mexer no corpinho 😤',
+      'deixa ele descansar em paz',
+      'isso é perturbação de cadáver 👮',
+      'ele não vai acordar',
+      'tá morto memo',
+      'respeita o finado 🕯️',
+      'ele morreu inocente',
+      'você fez isso. você.',
+      'o trauma é seu 🫵',
+    ];
+    let corpsePokeCount = 0;
+
+    pet.addEventListener('pointerdown', (e) => {
+      if (dead) {
+        e.stopPropagation();
+        const msg = CORPSE_MSGS[corpsePokeCount % CORPSE_MSGS.length];
+        corpsePokeCount++;
+        const popup = document.createElement('div');
+        popup.className = 'pet-heart-pop';
+        popup.textContent = msg;
+        popup.style.fontSize = '0.8rem';
+        popup.style.fontFamily = 'var(--font-body, sans-serif)';
+        const r = pet.getBoundingClientRect();
+        popup.style.left = (r.left + r.width / 2) + 'px';
+        popup.style.top  = (r.top  + r.height / 2) + 'px';
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 1200);
+        if (navigator.vibrate) navigator.vibrate(30);
+        return;
+      }
+      e.stopPropagation();
+      pokeCount++;
+
+      if (pokeCount >= 10) { killPet(); return; }
+
+      const base = fromLeft ? 'scaleX(1)' : 'scaleX(-1)';
+      pet.style.animationPlayState = 'paused';
+      pet.style.transition = 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)';
+      pet.style.transform = `${base} translateY(-8px)`;
+      setTimeout(() => {
+        pet.style.transform = `${base} translateY(0)`;
+        setTimeout(() => { pet.style.transition = ''; }, 250);
+      }, 200);
+      setTimeout(() => { pet.style.animationPlayState = 'running'; }, 1000);
+
+      const PAIN_MSGS = ['ai 🥺', 'aaai...', 'para por favor!!', 'PARA!! 😭', '😰'];
+      const popup = document.createElement('div');
+      popup.className = 'pet-heart-pop';
+      const r = pet.getBoundingClientRect();
+      popup.style.left = (r.left + r.width / 2) + 'px';
+      popup.style.top  = (r.top  + r.height / 2) + 'px';
+
+      if (pokeCount <= 4) {
+        popup.textContent = ['💛', '🌸', '💕', '✨'][Math.floor(Math.random() * 4)];
+      } else {
+        popup.textContent = PAIN_MSGS[Math.min(pokeCount - 5, PAIN_MSGS.length - 1)];
+        popup.style.fontSize = '0.85rem';
+        popup.style.fontFamily = 'var(--font-body, sans-serif)';
+      }
+      document.body.appendChild(popup);
+      setTimeout(() => popup.remove(), 900);
+
+      if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
+    }, { passive: true });
+
     layer.appendChild(pet);
-    setTimeout(() => pet.remove(), 28000);
+    const autoRemove = setTimeout(() => pet.remove(), 28000);
+    pet._autoRemove = autoRemove;
   };
 
-  setTimeout(sendPet, 4000);
-  setInterval(sendPet, 12000 + Math.random() * 8000);
+  const t0 = setTimeout(_sendPet, 4000);
+  const iv = setInterval(_sendPet, 12000 + Math.random() * 8000);
+  _petTimers = { t0, iv };
 };
 
 // ===== patinhas ao clicar (mobile + desktop) =====
 
 const PAW_EMOJI = '🐾';
+const SKULL_EMOJIS = ['💀', '☠️', '👻', '🦴', '💀'];
 
 const initClickPaws = () => {
   const trailLayer = document.createElement('div');
   trailLayer.className = 'paw-trail-layer';
   document.body.appendChild(trailLayer);
 
+  const PETAL_EMOJIS   = ['🌸', '🌸', '🌺', '🌼', '🌸'];
+  const SPARKLE_EMOJIS = ['✨', '⭐', '🌟', '💫', '✨', '✨'];
+
   const burstAt = (cx, cy) => {
+    const skullMode     = document.body.classList.contains('skull-mode');
+    const isHanami      = document.getElementById('screen-hanami')?.classList.contains('active');
+    const isSerendipity = document.getElementById('screen-serendipity')?.classList.contains('active');
+    const isGate        = document.getElementById('screen-gate')?.classList.contains('active');
+    const isWelcome     = document.getElementById('screen-welcome')?.classList.contains('active');
+
+    const emoji = skullMode     ? SKULL_EMOJIS[Math.floor(Math.random() * SKULL_EMOJIS.length)]
+                : isHanami      ? PETAL_EMOJIS[Math.floor(Math.random() * PETAL_EMOJIS.length)]
+                : isSerendipity ? SPARKLE_EMOJIS[Math.floor(Math.random() * SPARKLE_EMOJIS.length)]
+                : (isGate || isWelcome) ? PAW_EMOJI
+                : null;
+
+    if (!emoji) return;
+
     const count = 7 + Math.floor(Math.random() * 3);
     for (let i = 0; i < count; i++) {
       const paw = document.createElement('div');
       paw.className = 'paw-burst';
-      paw.textContent = PAW_EMOJI;
+      paw.textContent = emoji;
       const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
       const distance = 50 + Math.random() * 40;
       paw.style.left = cx + 'px';
@@ -305,6 +635,56 @@ const initClickPaws = () => {
   }, { passive: true });
 };
 
+// ===== skull mode =====
+
+export const allKilled = () => PET_POOL.every(p => killedIds().has(p.id));
+
+export const clearSkullMode = () => {
+  document.body.classList.remove('skull-mode');
+  document.querySelectorAll('.skull-fog, .skull-particle, .skull-message').forEach(el => el.remove());
+};
+
+export const triggerSkullMode = () => {
+  document.body.classList.add('skull-mode');
+
+  // fundo escuro com névoa
+  const fog = document.createElement('div');
+  fog.className = 'skull-fog';
+  document.body.appendChild(fog);
+
+  // chuva de caveiras flutuando
+  const SKULLS = ['💀', '☠️', '🕯️', '👻', '🦴'];
+  let count = 0;
+  const rain = setInterval(() => {
+    if (count++ > 40) { clearInterval(rain); return; }
+    const s = document.createElement('div');
+    s.className = 'skull-particle';
+    s.textContent = SKULLS[Math.floor(Math.random() * SKULLS.length)];
+    s.style.left = (Math.random() * 100) + '%';
+    s.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+    s.style.animationDuration = (4 + Math.random() * 5) + 's';
+    s.style.animationDelay = (Math.random() * 2) + 's';
+    s.style.opacity = (0.4 + Math.random() * 0.5).toString();
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 10000);
+  }, 150);
+
+  // mensagem central
+  setTimeout(() => {
+    const msg = document.createElement('div');
+    msg.className = 'skull-message';
+    msg.innerHTML = '💀<br>você pediu desculpa<br>mas já era tarde demais';
+    document.body.appendChild(msg);
+    requestAnimationFrame(() => msg.classList.add('show'));
+    setTimeout(() => {
+      msg.classList.remove('show');
+      setTimeout(() => msg.remove(), 600);
+    }, 4000);
+  }, 800);
+
+  if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 400]);
+};
+
 // ===== boot =====
 
 export const initAmbient = () => {
@@ -312,4 +692,5 @@ export const initAmbient = () => {
   initLanterns();
   initPets();
   initClickPaws();
+  restoreDeadPet();
 };

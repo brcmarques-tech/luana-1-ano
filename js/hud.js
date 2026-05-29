@@ -152,6 +152,8 @@ const openProfilePanel = () => {
 
       <p class="profile-ach-title">conquistas</p>
       <div class="profile-ach-grid">${achHTML}</div>
+      <p class="profile-ach-title" style="margin-top:12px">easter eggs</p>
+      <p class="profile-eggs-count">${(()=>{ try{ const n=JSON.parse(localStorage.getItem('luana_eggs_found')||'[]').length; return n===5?'🥚 5 / 5 — todos encontrados! 🏆':`🥚 ${n} / 5 encontrados`; }catch{return '🥚 0 / 5 encontrados';} })()}</p>
     </div>
   `;
 

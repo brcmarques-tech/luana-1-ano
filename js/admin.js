@@ -1,7 +1,7 @@
-// Modo admin oculto: digitar "love" em qualquer tela (sem feedback visual).
+// Modo admin oculto: digitar "admin" em qualquer tela (sem feedback visual).
 // Abre painel para upload de músicas e fotos direto na luana-api.
 
-const SECRET = 'loveadmin';
+const SECRET = 'admin';
 let buffer = '';
 let adminAuthenticated = false;
 let adminApiUrl = '';

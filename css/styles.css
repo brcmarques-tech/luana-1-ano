@@ -65,16 +65,6 @@ body {
   transition: opacity 0.6s ease, transform 0.6s ease, visibility 0s;
 }
 
-/* ===== canvas shader de fundo ===== */
-
-.shader-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  display: block;
-}
 
 /* ===== TELA: loading ===== */
 
@@ -386,6 +376,10 @@ body.screen-loading .hud {
   padding: 0 20px 12px;
   gap: 16px;
   perspective: 1200px;
+  cursor: grab;
+}
+.timeline:active {
+  cursor: grabbing;
 }
 
 .timeline::-webkit-scrollbar {
@@ -540,6 +534,7 @@ body.screen-loading .hud {
   background: var(--pink);
   transform: scale(1.4);
 }
+
 
 .journey-hint {
   text-align: center;
@@ -1296,10 +1291,18 @@ body.screen-loading .hud {
   animation-fill-mode: forwards;
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
   line-height: 0;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .pet svg {
   display: block;
+}
+
+.pet--dead,
+.pet--dead * {
+  animation: none !important;
+  animation-play-state: paused !important;
 }
 
 @keyframes pet-walk-right {
@@ -1310,6 +1313,22 @@ body.screen-loading .hud {
 @keyframes pet-walk-left {
   0%   { right: -70px; }
   100% { right: calc(100% + 70px); }
+}
+
+
+.pet-heart-pop {
+  position: fixed;
+  pointer-events: none;
+  font-size: 1rem;
+  z-index: 9999;
+  animation: pet-heart-rise 1.2s ease-out forwards;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes pet-heart-rise {
+  0%   { opacity: 0.9; transform: translate(-50%, -50%) scale(0.7); }
+  30%  { opacity: 0.9; transform: translate(-50%, -100%) scale(1); }
+  100% { opacity: 0;   transform: translate(-50%, -180%) scale(0.8); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1684,11 +1703,83 @@ body.screen-loading .hud {
   background-blend-mode: soft-light;
   mix-blend-mode: color-dodge;
 
-  /* Hue shift acompanha posição horizontal do mouse */
   filter:
     hue-rotate(calc(var(--foil-hue, 0) * 1deg))
     brightness(1.12)
     saturate(1.45);
+}
+
+/* Versão dark para carta do Bruno — foil escuro e valioso */
+.card-holo--dark {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  z-index: 10;
+  pointer-events: none;
+  opacity: calc(var(--holo-opacity, 0) * 0.45);
+  transition: opacity 0.45s ease;
+
+  background:
+    repeating-linear-gradient(
+      var(--foil-rot, 55deg),
+      #3a0060 0%, #8b1a2a 16%, #9d6000 32%,
+      #004488 48%, #2a0070 64%, #6a0030 80%,
+      #003366 100%
+    ),
+    radial-gradient(
+      ellipse 70% 70% at var(--shine-x, 50%) var(--shine-y, 50%),
+      rgba(220, 160, 0, 0.4) 0%,
+      transparent 60%
+    );
+  background-blend-mode: screen;
+  mix-blend-mode: overlay;
+
+  filter:
+    hue-rotate(calc(var(--foil-hue, 0) * 0.6deg))
+    brightness(1.1)
+    saturate(1.8);
+}
+
+.card-holo--dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--shine-x, 50%) var(--shine-y, 50%),
+    rgba(255, 200, 50, 0.25) 0%,
+    rgba(150, 50, 200, 0.08) 25%,
+    transparent 55%
+  );
+  mix-blend-mode: soft-light;
+}
+
+/* Versão sutil para cartas do baralho — shimmer pérola sem arco-íris */
+.card-holo--subtle {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  z-index: 10;
+  pointer-events: none;
+  opacity: calc(var(--holo-opacity, 0) * 0.6);
+  transition: opacity 0.45s ease;
+
+  background:
+    repeating-linear-gradient(
+      var(--foil-rot, 55deg),
+      rgba(200,190,255,0.4) 0%,
+      rgba(255,255,255,0.5) 35%,
+      rgba(190,220,255,0.4) 65%,
+      rgba(200,190,255,0.4) 100%
+    ),
+    radial-gradient(
+      ellipse 70% 70% at var(--shine-x, 50%) var(--shine-y, 50%),
+      rgba(255,255,255,0.3) 0%,
+      transparent 60%
+    );
+  background-blend-mode: soft-light;
+  mix-blend-mode: overlay;
+  filter: brightness(1.05) saturate(0.7);
 }
 
 /* Especular — ponto de luz branco seguindo o mouse */
@@ -1961,22 +2052,25 @@ body.screen-loading .hud {
 
 .card-deck {
   display: flex;
-  gap: 14px;
+  gap: 0;
   overflow-x: auto;
-  padding: 16px 32px 20px;
+  padding: 0;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   flex-shrink: 0;
-  max-width: 100%;
+  width: 100%;
 }
 
 .card-deck::-webkit-scrollbar { display: none; }
 
 .deck-card {
   flex-shrink: 0;
-  width: 168px;
-  height: 254px;
+  min-width: 100%;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   perspective: 1000px;
   scroll-snap-align: center;
   transition: transform 0.2s ease, filter 0.2s ease;
@@ -1997,8 +2091,8 @@ body.screen-loading .hud {
 }
 
 .deck-card-inner {
-  width: 100%;
-  height: 100%;
+  width: 220px;
+  height: 334px;
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
@@ -2869,6 +2963,13 @@ body.screen-loading .hud {
   text-transform: uppercase;
   margin: 0;
 }
+.profile-eggs-count {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  margin: 4px 0 0;
+  text-align: center;
+}
+
 .profile-ach-grid {
   display: flex;
   flex-direction: column;
@@ -3408,4 +3509,66 @@ body.screen-loading .hud {
 
 @media (orientation: landscape) and (max-height: 500px) {
   .landscape-warning { display: flex; }
+}
+
+/* ===== skull mode ===== */
+
+body.skull-mode {
+  background: radial-gradient(ellipse at center, #0d0005 0%, #000 100%) !important;
+  transition: background 1.5s ease;
+}
+
+body.skull-mode .screen.active {
+  background: transparent;
+}
+
+.skull-fog {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(80,0,0,0.35) 0%, rgba(0,0,0,0.7) 100%);
+  pointer-events: none;
+  z-index: 1;
+  animation: skull-fog-pulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes skull-fog-pulse {
+  from { opacity: 0.6; }
+  to   { opacity: 1; }
+}
+
+.skull-particle {
+  position: fixed;
+  bottom: -40px;
+  pointer-events: none;
+  z-index: 2;
+  animation: skull-rise linear forwards;
+}
+
+@keyframes skull-rise {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+  80%  { opacity: 0.8; }
+  100% { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+}
+
+.skull-message {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.8);
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: #cc0000;
+  line-height: 1.8;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  text-shadow: 0 0 20px rgba(200,0,0,0.8);
+}
+
+.skull-message.show {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
 }

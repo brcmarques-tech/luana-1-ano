@@ -9,6 +9,7 @@ export const EGG_HINTS = [
   '👀 outro escondidinho',
   '💘 modo cupido ativado',
   '✨ tá ficando boa nisso',
+  '🌸 o kanji guardava um segredo',
 ];
 
 export const TIMELINE_STATS = [
@@ -22,8 +23,14 @@ export const TIMELINE_STATS = [
 export const KONAMI_WORD = 'amor';
 export const KONAMI_MESSAGE = 'você digitou a palavra certa 💛';
 
-let eggsFound = new Set();
+const EGGS_KEY = 'luana_eggs_found';
+const loadEggs = () => { try { return new Set(JSON.parse(localStorage.getItem(EGGS_KEY) || '[]')); } catch { return new Set(); } };
+const saveEggs = (s) => { try { localStorage.setItem(EGGS_KEY, JSON.stringify([...s])); } catch {} };
+
+let eggsFound = loadEggs();
 let eggCounter = null;
+
+export const getEggsFound = () => eggsFound;
 
 const ensureCounter = () => {
   if (eggCounter) return eggCounter;
@@ -36,7 +43,7 @@ const ensureCounter = () => {
 
 const updateCounter = () => {
   const c = ensureCounter();
-  c.textContent = `🥚 ${eggsFound.size}/4`;
+  c.textContent = `🥚 ${eggsFound.size}/5`;
   c.hidden = false;
   c.classList.add('show');
   clearTimeout(c._hideTimer);
@@ -58,11 +65,12 @@ const showToast = (text) => {
 const markFound = (id, hintIdx) => {
   if (eggsFound.has(id)) return false;
   eggsFound.add(id);
+  saveEggs(eggsFound);
   showToast(EGG_HINTS[hintIdx] || '🥚 achou um segredo');
   haptic(HAPTIC.egg);
   updateCounter();
   unlock('egg-hunter');
-  if (eggsFound.size >= 4) unlock('all-eggs');
+  if (eggsFound.size >= 5) unlock('all-eggs');
   return true;
 };
 
@@ -147,15 +155,16 @@ const spawnHeart = (layer, mega = false) => {
 
 // ===== EGG 4: digitar "luana" em qualquer tela (konami-like) =====
 
-// fallback mobile: chamar direto via triple-tap
+// egg 4: digitar "amor" no teclado
+// egg 5: triplo toque no kanji 偶然の美
 export const triggerEgg4Mobile = (spawnConfetti) => {
-  if (markFound('konami', 3)) {
-    showBigMessage(KONAMI_MESSAGE);
-    spawnConfetti?.(50);
+  if (markFound('kanji', 4)) {
+    showBigMessage('🌸 偶然の美 — até os segredos chegam por acidente');
+    spawnConfetti?.(40);
   }
 };
 
-export const setupEggKonami = (spawnConfetti) => {
+export const setupEggKonami = (spawnConfetti, onDesculpa) => {
   let buffer = '';
   let timer;
 
@@ -163,7 +172,7 @@ export const setupEggKonami = (spawnConfetti) => {
     if (!char || char.length !== 1) return;
     buffer += char.toLowerCase();
     clearTimeout(timer);
-    timer = setTimeout(() => { buffer = ''; }, 1500);
+    timer = setTimeout(() => { buffer = ''; }, 2500);
 
     if (buffer.endsWith(KONAMI_WORD)) {
       buffer = '';
@@ -171,6 +180,28 @@ export const setupEggKonami = (spawnConfetti) => {
         showBigMessage(KONAMI_MESSAGE);
         spawnConfetti?.(50);
       }
+    }
+
+    if (buffer.endsWith('hardreset')) {
+      buffer = '';
+      localStorage.clear();
+      location.reload();
+    }
+
+    if (buffer.endsWith('desculpa')) {
+      buffer = '';
+      const killed = JSON.parse(localStorage.getItem('luana_killed_pets') || '[]');
+      if (killed.length > 0) onDesculpa?.();
+    }
+
+    if (buffer.endsWith('luana')) {
+      buffer = '';
+      showBigMessage('esse é o nome da melhor esposa do mundo 💛');
+    }
+
+    if (buffer.endsWith('bruno')) {
+      buffer = '';
+      showBigMessage('obrigado por pensar em mim, mas isso não tem a ver comigo — é para ti, aproveite 🌸');
     }
   };
 

@@ -9,7 +9,8 @@ let _allEggsCallback = null;
 export const onAllEggsUnlocked = (cb) => { _allEggsCallback = cb; };
 
 export const ACHIEVEMENTS = {
-  'first-step':    { icon: '👣', name: 'Primeiro passo',      desc: 'Você passou pelo portão' },
+  'first-step':    { icon: '👣', name: 'Primeiro passo',       desc: 'Você passou pelo portão' },
+  'stubborn':      { icon: '😤', name: 'Chata insistente',     desc: 'Clicou no Não até ele sumir' },
   'all-cards-seen':{ icon: '📅', name: 'Memória do ano',       desc: 'Viu todos os 13 meses' },
   'loves-read':    { icon: '💌', name: 'Coleção do amor',      desc: 'Leu todas as coisas que ele ama' },
   'memory-master': { icon: '🧠', name: 'Memorizadora pro',     desc: 'Completou o memory game' },
@@ -17,6 +18,9 @@ export const ACHIEVEMENTS = {
   'egg-hunter':    { icon: '🥚', name: 'Caçadora de segredos', desc: 'Achou um easter egg' },
   'all-eggs':      { icon: '🏆', name: 'Lendária',             desc: 'Achou os 4 easter eggs' },
   'konami-master': { icon: '🎮', name: 'Hardcore gamer',       desc: 'Konami code, sério mesmo?' },
+  'animal-killer':  { icon: '☠️',  name: 'Assassina de bichinho', desc: 'Matou um animal inocente' },
+  'animal-forgiver':{ icon: '🕊️', name: 'Redentora',             desc: 'Pediu desculpa pros bichinhos' },
+  'genocide':       { icon: '💀',  name: 'Endiabrada',              desc: 'Matou todos os bichinhos inocentes' },
 };
 
 // restaura conquistas salvas
