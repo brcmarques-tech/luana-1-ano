@@ -50,7 +50,7 @@ export const TIMELINE = [
   },
   {
     date: 'MAR 2026',
-    caption: 'é o nosso jeito — as pessoas vão ter que nos entender. vai ser assim por 10 anos, e a gente já dobrou a meta 💛',
+    caption: 'todo mundo fala "é porque ainda é o início" — um ano depois, a gente ainda prova que estão errados 💛',
     photo: 'assets/img/timeline-10.jpg',
   },
   {
