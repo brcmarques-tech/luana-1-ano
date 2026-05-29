@@ -34,12 +34,13 @@ const buildCardEl = (card) => {
       <div><strong>${a.name}</strong> — ${a.desc}</div>
     </li>`).join('');
 
-  const el = document.createElement('div');
   const isSpecial = card.id === 'bruno';
-  el.className = `cr-card card-holo${isSpecial ? ' card-holo--dark' : ''}`;
+  const el = document.createElement('div');
+  el.className = 'cr-card';
   el.style.cssText = `background:${card.gradient || '#1a0a2e'};border:2px solid transparent;transform-style:preserve-3d;`;
   el.innerHTML = `
     <div class="cr-border-glow" style="background:${card.border || 'var(--pink)'}"></div>
+    <div class="${isSpecial ? 'card-holo card-holo--dark' : 'card-holo'}"></div>
     <div class="cr-rarity">${card.rarity || '★★★'}</div>
     <div class="cr-portrait">
       ${photoUrl ? `<img src="${photoUrl}" alt="" class="cr-portrait-img" draggable="false" onerror="this.style.display='none'">` : ''}
@@ -127,11 +128,12 @@ const buildMiniCard = (card) => {
   const isSpecial = card.id === 'bruno';
 
   const el = document.createElement('div');
-  el.className = `deck-mini ${has ? `deck-mini--unlocked card-holo${isSpecial ? ' card-holo--dark' : ''}` : 'deck-mini--locked'}`;
+  el.className = `deck-mini ${has ? 'deck-mini--unlocked' : 'deck-mini--locked'}`;
   if (has) el.style.background = card.gradient || '#1a0a2e';
 
   if (has) {
     el.innerHTML = `
+      <div class="${isSpecial ? 'card-holo card-holo--dark' : 'card-holo'}"></div>
       <div class="deck-mini-rarity">${card.rarity || '★★★'}</div>
       <div class="deck-mini-portrait">
         ${photoUrl ? `<img src="${photoUrl}" class="deck-mini-img" draggable="false" onerror="this.style.display='none'">` : `<div class="deck-mini-emoji">${card.emoji}</div>`}

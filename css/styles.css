@@ -4793,6 +4793,7 @@ body:has(#screen-constellation.active) .pet--dead {
   z-index: 1;
   height: 200px;
   overflow: hidden;
+  isolation: isolate;
 }
 .cr-portrait-img {
   width: 100%;
@@ -4937,6 +4938,7 @@ body:has(#screen-constellation.active) .pet--dead {
   display: flex;
   flex-direction: column;
   position: relative;
+  position: relative;
   box-shadow: 0 4px 16px rgba(0,0,0,0.6);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -4970,6 +4972,7 @@ body:has(#screen-constellation.active) .pet--dead {
   flex: 1;
   overflow: hidden;
   min-height: 0;
+  isolation: isolate;
 }
 .deck-mini-img {
   width: 100%;
