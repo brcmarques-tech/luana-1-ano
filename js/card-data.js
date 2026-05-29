@@ -159,7 +159,7 @@ export const BONUS_CARDS = [
     flavor: '"ela era filha. mas não de vocês, segundo a Luana."',
   },
   {
-    achievementKey: 'genocide',
+    achievementKey: 'happy-ending',
     name: 'Luana',
     title: 'Luana Endiabrada, a Caçadora',
     subtitle: 'Destruidora de Inocentes — Modo Ativado',
