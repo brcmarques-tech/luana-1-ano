@@ -1,6 +1,7 @@
 // Carta principal da Luana + baralho de pets + carta secreta do Bruno
 
 export const CARD = {
+  id: 'luana',
   name: 'Luana Telles Melgarejo',
   title: 'A Deusa Acidental',
   type: 'Criatura · Humana · Divina · Confusa',
@@ -42,7 +43,7 @@ export const CARD = {
 // 4 cartas de pets — 1 por conquista
 export const BONUS_CARDS = [
   {
-    achievementKey: 'first-step',
+    id: 'wolf',
     name: 'Wolf',
     title: 'Sir Wolf, o Parceiro Alfa',
     subtitle: 'Guardião do Sofá e da Brotherhood',
@@ -65,7 +66,7 @@ export const BONUS_CARDS = [
     flavor: '"ele não late pra nada. ele late pra você."',
   },
   {
-    achievementKey: 'all-cards-seen',
+    id: 'moira',
     name: 'Moira',
     title: 'Moira, a Tsundere Cósmica',
     subtitle: 'Guardiã do Afeto Relutante',
@@ -88,7 +89,7 @@ export const BONUS_CARDS = [
     flavor: '"ela briga. mas tá sempre perto."',
   },
   {
-    achievementKey: 'loves-read',
+    id: 'jairo',
     name: 'Jairo',
     title: 'Jairo, o Bonitão Existencial',
     subtitle: 'O Adolescente Eterno',
@@ -111,7 +112,7 @@ export const BONUS_CARDS = [
     flavor: '"não faz nada. faz tudo com estilo."',
   },
   {
-    achievementKey: 'memory-master',
+    id: 'winter',
     name: 'Winter',
     title: 'Winter, a Alma Pura da Família',
     subtitle: 'Campeã Olímpica do Tropeço',
@@ -136,7 +137,7 @@ export const BONUS_CARDS = [
 ];
 
   {
-    achievementKey: 'animal-killer',
+    id: 'momoa',
     name: 'Momoa',
     title: 'Momoa, a Assombração Ressentida',
     subtitle: 'A que Foi Embora Mas Não Esqueceu',
@@ -159,7 +160,7 @@ export const BONUS_CARDS = [
     flavor: '"ela era filha. mas não de vocês, segundo a Luana."',
   },
   {
-    achievementKey: 'genocide',
+    id: 'endiabrada',
     name: 'Luana',
     title: 'Luana Endiabrada, a Caçadora',
     subtitle: 'Destruidora de Inocentes — Modo Ativado',
@@ -185,7 +186,7 @@ export const BONUS_CARDS = [
 
 // carta secreta do Bruno — desbloqueada ao encontrar todos os easter eggs
 export const SPECIAL_CARD = {
-  achievementKey: 'all-eggs',
+  id: 'bruno',
   name: 'Bruno Marques',
   title: 'O Agraciado Involuntário',
   subtitle: 'Homem de Sorte Imerecida',

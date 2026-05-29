@@ -6,6 +6,8 @@ import { goToScreen, registerScreenEnter, registerScreenExit } from '../nav.js';
 import { unlock } from '../achievements.js';
 import { setupEggFinalHeart } from '../easter-eggs.js';
 import { spawnConfetti } from '../confetti.js';
+import { revealCard } from '../card-reveal.js';
+import { CARD } from '../card-data.js';
 
 let dateEl, badgeEl, bodyEl, sigEl, restartBtn, heartsEl;
 let rendered = false;
@@ -40,6 +42,7 @@ const render = () => {
   if (!rendered) {
     rendered = true;
     unlock('happy-ending');
+    setTimeout(() => revealCard(CARD), 2000);
 
     dateEl.textContent  = FINAL.date;
     badgeEl.textContent = FINAL.badge;

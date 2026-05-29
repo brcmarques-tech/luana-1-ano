@@ -4,6 +4,15 @@
 
 import { saveAchievements, loadAchievements } from './progress.js';
 import { haptic, HAPTIC } from './haptic.js';
+import { revealCard } from './card-reveal.js';
+import { SPECIAL_CARD, BONUS_CARDS } from './card-data.js';
+
+const CARD_BY_TRIGGER = {
+  'animal-killer': () => BONUS_CARDS.find(c => c.id === 'momoa'),
+  'genocide':      () => BONUS_CARDS.find(c => c.id === 'endiabrada'),
+  'beginning':     () => BONUS_CARDS.find(c => c.id === 'moira'),
+  'all-eggs':      () => SPECIAL_CARD,
+};
 
 let _allEggsCallback = null;
 export const onAllEggsUnlocked = (cb) => { _allEggsCallback = cb; };
@@ -37,6 +46,8 @@ export const unlock = (id) => {
   showAchievementToast(ach);
   haptic(id === 'all-eggs' ? HAPTIC.special : HAPTIC.achievement);
   if (id === 'all-eggs' && _allEggsCallback) setTimeout(_allEggsCallback, 700);
+  const cardGetter = CARD_BY_TRIGGER[id];
+  if (cardGetter) setTimeout(() => revealCard(cardGetter()), 1200);
   return true;
 };
 

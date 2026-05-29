@@ -42,8 +42,8 @@ const NEXT_TRACK = {
   hanami: 'loves',
   serendipity: 'loves',
   loves: 'game',
-  game: 'card',
-  card: 'final',
+  game: 'puzzle',
+  puzzle: 'final',
 };
 
 const screens = {};

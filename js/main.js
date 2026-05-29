@@ -14,6 +14,8 @@ import { unlock } from './achievements.js';
 import { spawnConfetti } from './confetti.js';
 import { wait } from './utils.js';
 import { runPreloader } from './preloader.js';
+import { initCardReveal, revealCard } from './card-reveal.js';
+import { BONUS_CARDS } from './card-data.js';
 
 import { initGate, resetGate } from './screens/gate.js';
 import { initWelcome, resetWelcome } from './screens/welcome.js';
@@ -110,6 +112,37 @@ const startPreloading = async () => {
 
 // ===== konami code com integração ao sistema de bichinhos =====
 
+// ===== gatilhos de digitação para cartas =====
+
+const wireTypingCards = () => {
+  const TRIGGERS = {
+    amor: () => BONUS_CARDS.find(c => c.id === 'wolf'),
+    love: () => BONUS_CARDS.find(c => c.id === 'winter'),
+  };
+  let buffer = '';
+  const maxLen = Math.max(...Object.keys(TRIGGERS).map(k => k.length));
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+    buffer = (buffer + e.key.toLowerCase()).slice(-maxLen);
+    for (const [word, getter] of Object.entries(TRIGGERS)) {
+      if (buffer.endsWith(word)) { revealCard(getter()); buffer = ''; break; }
+    }
+  });
+};
+
+// ===== long press no avatar → Jairo =====
+
+const wireAvatarLongPress = () => {
+  let timer = null;
+  const trigger = () => revealCard(BONUS_CARDS.find(c => c.id === 'jairo'));
+  document.addEventListener('pointerdown', (e) => {
+    if (!e.target.closest('#hud-avatar')) return;
+    timer = setTimeout(trigger, 1200);
+  });
+  document.addEventListener('pointerup',    () => { clearTimeout(timer); timer = null; });
+  document.addEventListener('pointercancel',() => { clearTimeout(timer); timer = null; });
+};
+
 const wireEasterEggs = () => {
   setupEggKonami(spawnConfetti, () => {
     if (allKilled()) { triggerSkullMode(); return; }
@@ -192,8 +225,11 @@ initSession().then((access) => {
   });
   initConstellationScreen();
   initSkyButton();
+  initCardReveal();
 
   wireEasterEggs();
+  wireTypingCards();
+  wireAvatarLongPress();
   watchProfilePanel();
 
   goToScreen('gate');

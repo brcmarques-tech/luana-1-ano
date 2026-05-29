@@ -81,7 +81,7 @@ const setupBoard = () => {
   completeOverlay = document.getElementById('puzzle-win');
 
   document.getElementById('puzzle-restart').addEventListener('click', newGame);
-  document.getElementById('puzzle-win-btn').addEventListener('click', () => goToScreen('card'));
+  document.getElementById('puzzle-win-btn').addEventListener('click', () => goToScreen('final'));
 };
 
 const newGame = () => {
