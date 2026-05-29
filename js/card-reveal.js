@@ -118,37 +118,86 @@ const updateDeckBadge = () => {
   deckBadge.hidden = collected.size === 0;
 };
 
+const buildMiniCard = (card) => {
+  const has = collected.has(card.id);
+  const base = imgBase();
+  const photoUrl = has && card.photoKey ? `${base}/${card.photoKey}.jpg` : null;
+  const isSpecial = card.id === 'bruno';
+
+  const el = document.createElement('div');
+  el.className = `deck-mini ${has ? `deck-mini--unlocked card-holo${isSpecial ? ' card-holo--dark' : ''}` : 'deck-mini--locked'}`;
+  if (has) el.style.background = card.gradient || '#1a0a2e';
+
+  if (has) {
+    el.innerHTML = `
+      <div class="deck-mini-rarity">${card.rarity || '★★★'}</div>
+      <div class="deck-mini-portrait">
+        ${photoUrl ? `<img src="${photoUrl}" class="deck-mini-img" draggable="false" onerror="this.style.display='none'">` : `<div class="deck-mini-emoji">${card.emoji}</div>`}
+      </div>
+      <div class="deck-mini-info">
+        <div class="deck-mini-name">${card.name}</div>
+        <div class="deck-mini-title">${card.title}</div>
+      </div>`;
+    el.addEventListener('click', () => viewCard(card));
+    applyHoloTilt(el);
+  } else {
+    el.innerHTML = `
+      <div class="deck-mini-lock">🔒</div>
+      <div class="deck-mini-name">???</div>`;
+  }
+
+  return el;
+};
+
+const viewCard = (card) => {
+  if (document.querySelector('.cr-overlay')) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'cr-overlay';
+
+  const header = document.createElement('div');
+  header.className = 'cr-header';
+  header.innerHTML = `<span class="cr-label">🃏 ${card.name}</span><button class="cr-close" aria-label="fechar">✕</button>`;
+
+  const stage = document.createElement('div');
+  stage.className = 'cr-stage';
+
+  const cardEl = buildCardEl(card);
+  stage.appendChild(cardEl);
+
+  overlay.appendChild(header);
+  overlay.appendChild(stage);
+  document.body.appendChild(overlay);
+
+  requestAnimationFrame(() => {
+    overlay.classList.add('cr-show');
+    applyHoloTilt(cardEl, true);
+  });
+
+  const close = () => { overlay.classList.remove('cr-show'); setTimeout(() => overlay.remove(), 400); };
+  header.querySelector('.cr-close').addEventListener('click', close);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+};
+
 const openDeck = () => {
   if (document.getElementById('deck-drawer')) return;
   const drawer = document.createElement('div');
   drawer.id = 'deck-drawer';
   drawer.className = 'deck-drawer';
 
-  const base = imgBase();
-  const cardsHtml = ALL_CARDS.map(card => {
-    const has = collected.has(card.id);
-    const photoUrl = has && card.photoKey ? `${base}/${card.photoKey}.jpg` : null;
-    return `
-      <div class="deck-mini ${has ? 'deck-mini--unlocked' : 'deck-mini--locked'}"
-           style="${has ? `background:${card.gradient}` : ''}">
-        ${has
-          ? (photoUrl ? `<img src="${photoUrl}" class="deck-mini-img" onerror="this.style.display='none'">` : `<div class="deck-mini-emoji">${card.emoji}</div>`)
-          : '<div class="deck-mini-lock">🔒</div>'}
-        <div class="deck-mini-name">${has ? card.name : '???'}</div>
-      </div>`;
-  }).join('');
+  const header = document.createElement('div');
+  header.className = 'deck-drawer-header';
+  header.innerHTML = `<span>baralho ${collected.size}/${ALL_CARDS.length}</span><button class="deck-drawer-close">✕</button>`;
 
-  drawer.innerHTML = `
-    <div class="deck-drawer-header">
-      <span>baralho ${collected.size}/${ALL_CARDS.length}</span>
-      <button class="deck-drawer-close">✕</button>
-    </div>
-    <div class="deck-drawer-grid">${cardsHtml}</div>`;
+  const grid = document.createElement('div');
+  grid.className = 'deck-drawer-grid';
+  ALL_CARDS.forEach(card => grid.appendChild(buildMiniCard(card)));
 
+  drawer.appendChild(header);
+  drawer.appendChild(grid);
   document.body.appendChild(drawer);
   requestAnimationFrame(() => drawer.classList.add('deck-drawer--show'));
 
-  drawer.querySelector('.deck-drawer-close').addEventListener('click', () => {
+  header.querySelector('.deck-drawer-close').addEventListener('click', () => {
     drawer.classList.remove('deck-drawer--show');
     setTimeout(() => drawer.remove(), 300);
   });

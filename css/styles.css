@@ -4927,54 +4927,83 @@ body:has(#screen-constellation.active) .pet--dead {
 }
 
 .deck-mini {
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   aspect-ratio: 2/3;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
   position: relative;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transform-style: preserve-3d;
+}
+.deck-mini--unlocked:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.7);
 }
 .deck-mini--locked {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.08);
+  cursor: default;
+  align-items: center;
+  justify-content: center;
 }
-.deck-mini--unlocked { border: 1px solid rgba(255,255,255,0.15); }
+.deck-mini--unlocked { border: 1px solid rgba(255,255,255,0.2); }
 
+.deck-mini-rarity {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  font-size: 0.45rem;
+  color: var(--yellow);
+  padding: 5px 4px 2px;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.deck-mini-portrait {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
 .deck-mini-img {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 .deck-mini-emoji {
-  position: absolute;
-  inset: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
+  font-size: 2rem;
 }
 .deck-mini-lock {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 1.8rem;
   opacity: 0.4;
 }
-.deck-mini-name {
+.deck-mini-info {
   position: relative;
   z-index: 1;
-  width: 100%;
-  background: rgba(0,0,0,0.65);
-  text-align: center;
-  font-size: 0.6rem;
+  background: rgba(0,0,0,0.7);
+  padding: 4px 6px;
+  flex-shrink: 0;
+}
+.deck-mini-name {
+  font-size: 0.58rem;
   color: white;
-  padding: 4px;
-  font-weight: 600;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.2;
+}
+.deck-mini-title {
+  font-size: 0.45rem;
+  color: var(--yellow);
+  text-align: center;
+  opacity: 0.8;
+  line-height: 1.2;
+  margin-top: 1px;
 }
