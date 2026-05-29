@@ -2496,7 +2496,7 @@ body.screen-loading .hud {
   display: none;
   position: fixed;
   bottom: max(env(safe-area-inset-bottom, 18px), 18px);
-  right: 16px;
+  left: 16px;
   width: 46px;
   height: 46px;
   border-radius: 50%;
