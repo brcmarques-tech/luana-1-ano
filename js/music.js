@@ -45,6 +45,7 @@ let _players = [null, null];
 let _current = 0;
 let _currentKey = null;
 let _muted = localStorage.getItem('luana_muted') === '1';
+const _positions = new Map();
 
 const FADE_MS = 1400;
 
@@ -68,15 +69,30 @@ export const initMusic = () => {
 
 export const playTrack = (key) => {
   if (key === _currentKey) return;
+
+  // salva posição da faixa atual antes de trocar
+  const curr = _players[_current];
+  if (_currentKey && curr?.src) {
+    _positions.set(_currentKey, curr.currentTime);
+  }
+
   _currentKey = key;
 
   const next = 1 - _current;
-  const curr = _players[_current];
   const nextP = _players[next];
 
   nextP.src = `${AUDIO_BASE}/${resolveKey(key)}.mp3`;
   nextP.loop = true;
   nextP.volume = 0;
+
+  // restaura posição salva ao carregar metadados
+  const savedPos = _positions.get(key) || 0;
+  if (savedPos > 0) {
+    nextP.addEventListener('loadedmetadata', () => {
+      nextP.currentTime = savedPos;
+    }, { once: true });
+  }
+
   nextP.play().catch(() => {});
 
   fadeVolume(nextP, 0, _muted ? 0 : 0.4, FADE_MS);
