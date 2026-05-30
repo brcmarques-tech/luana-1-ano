@@ -3280,6 +3280,60 @@ body.screen-loading .hud {
   cursor: default;
 }
 
+.puzzle-verses {
+  width: 100%;
+  max-width: 340px;
+  margin: 12px auto 0;
+  min-height: 48px;
+  text-align: center;
+  padding: 0 16px;
+}
+.puzzle-verses .verse-text {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.5;
+}
+.puzzle-verses .verse-ref {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.25);
+  display: block;
+  margin-top: 3px;
+}
+@keyframes verse-fade {
+  0%   { opacity: 0; transform: translateY(6px); }
+  15%  { opacity: 1; transform: translateY(0); }
+  85%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+.puzzle-verses.verse-in {
+  animation: verse-fade 6s ease forwards;
+}
+
+.puzzle-milestone-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: rgba(26, 10, 46, 0.95);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.85);
+  font-size: 0.82rem;
+  font-family: var(--font-body, sans-serif);
+  padding: 10px 18px;
+  border-radius: 20px;
+  max-width: 88vw;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  z-index: 8000;
+  pointer-events: none;
+}
+.puzzle-milestone-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .puzzle-500-msg {
   position: fixed;
   inset: 0;
