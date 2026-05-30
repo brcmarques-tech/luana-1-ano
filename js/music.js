@@ -39,7 +39,9 @@ const loadMap = () => {
 
 const TRACK_MAP = loadMap();
 
-const resolveKey = (key) => TRACK_MAP[key] || key;
+const PINNED = { 'timeline-12': 'ceilings' };
+
+const resolveKey = (key) => PINNED[key] ?? TRACK_MAP[key] ?? key;
 
 let _players = [null, null];
 let _current = 0;
