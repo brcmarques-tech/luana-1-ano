@@ -173,6 +173,7 @@ const VERSES = [
 let verseInterval = null;
 
 const startVersesTicker = () => {
+  stopVersesTicker(); // limpa interval anterior se houver
   const ticker = document.getElementById('puzzle-verses');
   if (!ticker) return;
   let idx = Math.floor(Math.random() * VERSES.length);
@@ -202,7 +203,10 @@ const render = () => {
     rendered = true;
     pickPuzzlePhoto();
     setupBoard();
+  } else {
+    startVersesTicker(); // reinicia ticker ao voltar para a tela
   }
+  totalMoves = 0;
   newGame();
 };
 
@@ -235,8 +239,8 @@ const setupBoard = () => {
   completeOverlay = document.getElementById('puzzle-win');
 
   document.getElementById('puzzle-restart').addEventListener('click', newGame);
-  document.getElementById('puzzle-win-btn').addEventListener('click', () => goToScreen('final'));
-  document.getElementById('puzzle-skip')?.addEventListener('click', () => goToScreen('final'));
+  document.getElementById('puzzle-win-btn').addEventListener('click', () => { stopVersesTicker(); goToScreen('final'); });
+  document.getElementById('puzzle-skip')?.addEventListener('click', () => { stopVersesTicker(); goToScreen('final'); });
   startVersesTicker();
 };
 

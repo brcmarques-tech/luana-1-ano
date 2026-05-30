@@ -365,11 +365,9 @@ function HoloCard({ card }) {
   );
 }
 
-const id = location.hash.slice(1) || 'luana';
-const card = CARDS[id];
-if (card) {
-  ReactDOM.createRoot(document.getElementById('root')).render(<HoloCard card={card} />);
-}
+const id = location.hash.slice(1);
+const card = CARDS[id] || CARDS['luana'];
+ReactDOM.createRoot(document.getElementById('root')).render(<HoloCard card={card} />);
 </script>
 </body>
 </html>
