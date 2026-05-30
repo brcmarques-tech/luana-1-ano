@@ -2,16 +2,14 @@
 // Cada task tem um label e uma fn() que retorna Promise.
 // runPreloader() chama onStep (awaitable) e onProgress para cada task.
 
-const audioBase = () => 'assets/audio';
+import { resolvedTrack } from './music.js';
 
 const imgBase = () => {
   const u = localStorage.getItem('luana_api_url');
   return u ? `${u}/assets/img` : 'assets/img';
 };
 
-const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-
-const preloadAudio = (key, timeout = 5000) =>
+const preloadAudio = (filename, timeout = 6000) =>
   new Promise((resolve) => {
     const a = new Audio();
     const done = () => { clearTimeout(t); resolve(); };
@@ -19,7 +17,7 @@ const preloadAudio = (key, timeout = 5000) =>
     a.preload = 'auto';
     a.oncanplaythrough = done;
     a.onerror = done;
-    a.src = `${audioBase()}/${key}.mp3`;
+    a.src = `assets/audio/${filename}.mp3`;
   });
 
 const preloadImg = (key, timeout = 6000) =>
@@ -35,27 +33,36 @@ const preloadImg = (key, timeout = 6000) =>
 export const LOAD_TASKS = [
   {
     label: 'abrindo o portal 💛',
-    fn: () => Promise.all([document.fonts.ready, wait(500)]),
+    fn: () => document.fonts.ready,
   },
   {
     label: 'reunindo as memórias 🌸',
-    fn: () => Promise.all([preloadImg('timeline-01'), wait(400)]),
+    fn: () => Promise.all([
+      preloadImg('timeline-01'),
+      preloadImg('timeline-02'),
+      preloadImg('timeline-03'),
+    ]),
   },
   {
     label: 'carregando as músicas 🎵',
-    fn: () => Promise.all([preloadAudio('gate'), preloadAudio('welcome')]),
+    fn: () => Promise.all([
+      preloadAudio(resolvedTrack('gate')),
+      preloadAudio(resolvedTrack('welcome')),
+    ]),
   },
   {
     label: 'preparando as surpresas ✨',
     fn: () => Promise.all([
-      preloadImg('timeline-02'),
-      preloadImg('timeline-03'),
-      wait(500),
+      preloadImg('card-luana'),
+      preloadImg('card-bruno'),
     ]),
   },
   {
     label: 'quase lá 💌',
-    fn: () => wait(700),
+    fn: () => Promise.all([
+      preloadImg('timeline-04'),
+      preloadImg('timeline-05'),
+    ]),
   },
 ];
 

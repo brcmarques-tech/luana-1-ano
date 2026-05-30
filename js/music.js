@@ -43,6 +43,8 @@ const PINNED = { 'timeline-12': 'ceilings' };
 
 const resolveKey = (key) => PINNED[key] ?? TRACK_MAP[key] ?? key;
 
+export const resolvedTrack = resolveKey;
+
 let _players = [null, null];
 let _current = 0;
 let _currentKey = null;
