@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card Viewer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%; background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  #root { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+
+<script type="text/babel">
+const CARDS = {
+  luana: {
+    id: 'luana', photo: 'assets/img/card-luana.jpg', photoPos: 'center 14%',
+    stars: { filled: 5, total: 5 }, name: 'Luana Telles Melgarejo',
+    title: 'A Deusa Acidental', tags: 'Criatura · Humana · Divina · Confusa',
+    tone: '#2a1740', accent: '#caa3ea',
+    stats: [{ label:'AMOR',value:'999'},{ label:'BELEZA',value:'100'},{ label:'CARINHO',value:'100'},{ label:'INT',value:'12'}],
+    abilities: [
+      { icon:'☕', title:'Café Salvador', text:'Traz café sem ser pedido. Restaura +50 HP do Bruno por turno.' },
+      { icon:'✨', title:'Sorriso Crítico', text:'Causa dano emocional fatal em quem olha. Sem contra.' },
+      { icon:'🤔', title:'Pergunta Filosófica', text:'Faz perguntas tipo "por que o céu é azul?" às 23h. Aliados confusos mas apaixonados.' },
+    ],
+    quote: 'perfeita em tudo, exceto em saber disso.',
+  },
+  wolf: {
+    id: 'wolf', photo: 'assets/img/card-wolf.jpg', photoPos: 'center 52%',
+    stars: { filled: 4, total: 5 }, name: 'Wolf',
+    title: 'Sir Wolf, o Parceiro Alfa', tags: 'Criatura · Canino · Alfa · Leal',
+    tone: '#16303a', accent: '#e3b45c',
+    stats: [{ label:'PARCERIA',value:'100'},{ label:'FORÇA',value:'95'},{ label:'LEAL',value:'99'},{ label:'FARO',value:'88'}],
+    abilities: [
+      { icon:'🐺', title:'Pacto de Irmandade', text:'Sente quando o Bruno tá mal-humorado antes de qualquer um. Buff de presença permanente.' },
+      { icon:'✊', title:'Postura de Alfa', text:'Só de existir, intimida. Passiva permanente.' },
+    ],
+    quote: 'ele não late pra nada. ele late pra você.',
+  },
+  moira: {
+    id: 'moira', photo: 'assets/img/card-moira.jpg', photoPos: 'center 32%',
+    stars: { filled: 4, total: 5 }, name: 'Moira',
+    title: 'Moira, a Tsundere Cósmica', tags: 'Criatura · Felina · Tsundere · Mandona',
+    tone: '#311626', accent: '#dca05e',
+    stats: [{ label:'BRIGA',value:'95'},{ label:'ORGULHO',value:'100'},{ label:'CARINHO',value:'95'},{ label:'RONRON',value:'80'}],
+    abilities: [
+      { icon:'🐱', title:'Ataque Não Solicitado', text:'Arranha sem aviso. Dano aleatório. Sem remorso.' },
+      { icon:'😼', title:'Carinho Secreto', text:'Deita do lado quando ninguém tá olhando. Efeito: aquece o coração.' },
+    ],
+    quote: 'ela briga mas tá sempre perto.',
+  },
+  jairo: {
+    id: 'jairo', photo: 'assets/img/card-jairo.jpg', photoPos: 'center 36%',
+    stars: { filled: 3, total: 5 }, name: 'Jairo',
+    title: 'Jairo, o Bonitão Existencial', tags: 'Criatura · Felino · Neutro · Estiloso',
+    tone: '#15243a', accent: '#e3b45c',
+    stats: [{ label:'ESTILO',value:'95'},{ label:'BELEZA',value:'90'},{ label:'PERS',value:'15'},{ label:'LIGA',value:'10'}],
+    abilities: [
+      { icon:'😎', title:'Indiferença Calculada', text:'Recebe carinho, pisca uma vez. Dano emocional: 0. Charme: 100.' },
+      { icon:'✨', title:'Beleza Sem Esforço', text:'Passiva. Só existe e já é bonito.' },
+    ],
+    quote: 'não faz nada. faz tudo com estilo.',
+  },
+  winter: {
+    id: 'winter', photo: 'assets/img/card-winter.jpg', photoPos: 'center 38%',
+    stars: { filled: 3, total: 5 }, name: 'Winter',
+    title: 'Winter, a Alma Pura da Família', tags: 'Criatura · Canina · Caótica · Felizardo',
+    tone: '#3a281c', accent: '#d6a05c',
+    stats: [{ label:'FELIZ',value:'999'},{ label:'AMOR',value:'100'},{ label:'ENERG',value:'98'},{ label:'INT',value:'10'}],
+    abilities: [
+      { icon:'⚡', title:'Corrida Sem Destino', text:'Corre em círculos por 30 segundos. Motivo desconhecido. Energia: infinita.' },
+      { icon:'🐶', title:'Animação Perpétua', text:'Fica feliz com absolutamente tudo. Habilidade passiva.' },
+    ],
+    quote: 'nem sempre sabe o que tá fazendo. sempre sabe que te ama.',
+  },
+  momoa: {
+    id: 'momoa', photo: 'assets/img/card-momoa.jpg', photoPos: '60% 38%',
+    stars: { filled: 3, total: 5 }, name: 'Momoa',
+    title: 'Momoa, a Assombração Ressentida', tags: 'Espectro · Felina · Abandonada · Rancorosa',
+    tone: '#2b1633', accent: '#c7a0e2',
+    stats: [{ label:'RANCOR',value:'99'},{ label:'DOÇURA',value:'85'},{ label:'PERDÃO',value:'2'},{ label:'ASSOMBRA',value:'90'}],
+    abilities: [
+      { icon:'👻', title:'Assombração Noturna', text:'Aparece nos sonhos da Luana todo dia 17. Sem aviso. Sem motivo.' },
+      { icon:'😿', title:'Era Doce, Era', text:'Ronronava. Amava. E foi mandada embora assim mesmo. Passiva permanente de culpa.' },
+    ],
+    quote: 'ela era filha. mas não de vocês, segundo a Luana.',
+  },
+  endiabrada: {
+    id: 'endiabrada', photo: 'assets/img/card-endiabrada.jpg', photoPos: 'center 20%',
+    stars: { filled: 6, total: 6 }, name: 'Luana',
+    title: 'Luana Endiabrada, a Caçadora', tags: 'Lendária · Humana · Caótica · Imparável',
+    tone: '#3a1014', accent: '#ecb24e',
+    stats: [{ label:'CAOS',value:'999'},{ label:'ENERGIA',value:'999'},{ label:'PIEDADE',value:'0'},{ label:'ARTE',value:'999'}],
+    abilities: [
+      { icon:'😈', title:'Modo Endiabrado', text:'Quando ativado, nada a para. Nenhum animal sobrevive. Nenhum aliado é poupado.' },
+      { icon:'⚡', title:'Arte do Caos', text:'Transforma destruição em criatividade pura. Dano: ∞. Consequências: nenhuma pra ela.' },
+      { icon:'🔥', title:'Imparável', text:'Matou todos os bichinhos inocentes. Conquistou o título mais improvável do universo.' },
+    ],
+    quote: 'agitada. querendo fazer arte. nada a para.',
+  },
+  bruno: {
+    id: 'bruno', photo: 'assets/img/card-bruno.jpg', photoPos: 'center 24%',
+    stars: { filled: 6, total: 6 }, name: 'Bruno Marques',
+    title: 'O Agraciado Involuntário', tags: 'Mítica · Humano · Comediante · Abençoado',
+    tone: '#34301a', accent: '#e7c45c',
+    stats: [{ label:'SORTE',value:'999'},{ label:'COMÉDIA',value:'100'},{ label:'INT',value:'100'},{ label:'ATQ',value:'5'},{ label:'DEF',value:'3'}],
+    abilities: [
+      { icon:'🍀', title:'Sortudo Demais', text:'Casou com a Luana. +999 em tudo só por isso. Habilidade inata e imerecida.' },
+      { icon:'😂', title:'Comédia Passiva', text:'Faz ela rir mesmo sem querer. Não tem controle disso.' },
+      { icon:'❤️', title:'Ruim em Tudo', text:'-95 em todas as habilidades técnicas. A Luana compensa.' },
+    ],
+    quote: 'a sorte? é por ter ela.',
+  },
+};
+
+// ── CardFace ──────────────────────────────────────────────────────────────────
+const CARD_CSS = `
+  .wolf-card{
+    position:relative; width:100%;
+    background:
+      linear-gradient(180deg,
+        color-mix(in oklab, var(--tone,#16303a) 86%, #3a5a66) 0%,
+        var(--tone,#16303a) 44%,
+        color-mix(in oklab, var(--tone,#16303a) 84%, #05080a) 100%);
+    color:#e9eff0;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    border-radius:22px; overflow:hidden;
+  }
+  .wc-stars{ text-align:center; padding:11px 0 9px; font-size:13px; letter-spacing:3px;
+    color: var(--accent,#e3b45c); }
+  .wc-stars .dim{ color: color-mix(in oklab, var(--accent,#e3b45c) 30%, transparent); }
+  .wc-photo{ position:relative; height:202px; overflow:hidden;
+    box-shadow: inset 0 -1px 0 rgba(255,255,255,.07); }
+  .wc-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .wc-photo::after{ content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 58%,
+      color-mix(in oklab, var(--tone,#16303a) 70%, #000) 100%); }
+  .wc-body{ padding:15px 20px 18px; display:flex; flex-direction:column; }
+  .wc-name{ text-align:center; font-family:Georgia,"Times New Roman",serif;
+    font-style:italic; font-weight:600; font-size:27px; line-height:1.08;
+    color:#f4f8f8; letter-spacing:.3px; text-wrap:balance; }
+  .wc-title{ text-align:center; font-size:14.5px; font-weight:600; margin-top:7px;
+    color: var(--accent,#e3b45c); letter-spacing:.2px; text-wrap:balance; }
+  .wc-tags{ text-align:center; font-size:11px; font-style:italic; margin-top:6px;
+    color: color-mix(in oklab, #fff 48%, var(--tone,#16303a)); letter-spacing:.4px; }
+  .wc-stats{ display:grid; margin-top:15px;
+    border:1px solid rgba(255,255,255,.14); border-radius:11px; overflow:hidden; }
+  .wc-stat{ padding:9px 3px 10px; text-align:center; }
+  .wc-stat + .wc-stat{ box-shadow: inset 1px 0 0 rgba(255,255,255,.09); }
+  .wc-stat span{ display:block; font-size:8px; letter-spacing:.9px; font-weight:600;
+    color: color-mix(in oklab, #fff 42%, var(--tone,#16303a)); }
+  .wc-stat b{ display:block; font-size:19px; font-weight:700; margin-top:3px;
+    color:#eef4f5; font-variant-numeric:tabular-nums; }
+  .wc-abilities{ display:flex; flex-direction:column; gap:8px; margin-top:13px; }
+  .wc-ab{ display:flex; gap:11px; align-items:flex-start;
+    background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.07);
+    border-radius:11px; padding:9px 12px; }
+  .wc-ab-ic{ flex:none; width:30px; height:30px; border-radius:9px;
+    display:flex; align-items:center; justify-content:center; font-size:15px;
+    background:rgba(255,255,255,.07); }
+  .wc-ab-tx{ font-size:11px; line-height:1.42; color:#aebcc1; text-wrap:pretty; }
+  .wc-ab-tx b{ color: var(--accent,#e3b45c); font-weight:700; }
+  .wc-quote{ text-align:center; font-style:italic; font-size:11px; margin-top:14px;
+    color: color-mix(in oklab, #fff 40%, var(--tone,#16303a)); letter-spacing:.2px; }
+`;
+
+function CardFace({ card }) {
+  const stars = [];
+  for (let i = 0; i < card.stars.total; i++)
+    stars.push(<span key={i} className={i < card.stars.filled ? '' : 'dim'}>★</span>);
+  return (
+    <div className="wolf-card" style={{ '--tone': card.tone, '--accent': card.accent }}>
+      <style>{CARD_CSS}</style>
+      <div className="wc-stars">{stars}</div>
+      <div className="wc-photo">
+        <img src={card.photo} alt={card.name} style={{ objectPosition: card.photoPos || 'center' }} />
+      </div>
+      <div className="wc-body">
+        <div className="wc-name">{card.name}</div>
+        <div className="wc-title">{card.title}</div>
+        <div className="wc-tags">{card.tags}</div>
+        <div className="wc-stats" style={{ gridTemplateColumns: `repeat(${card.stats.length}, 1fr)` }}>
+          {card.stats.map((s, i) => (
+            <div className="wc-stat" key={i}><span>{s.label}</span><b>{s.value}</b></div>
+          ))}
+        </div>
+        <div className="wc-abilities">
+          {card.abilities.map((a, i) => (
+            <div className="wc-ab" key={i}>
+              <div className="wc-ab-ic">{a.icon}</div>
+              <div className="wc-ab-tx"><b>{a.title}</b> — {a.text}</div>
+            </div>
+          ))}
+        </div>
+        <div className="wc-quote">"{card.quote}"</div>
+      </div>
+    </div>
+  );
+}
+
+// ── HoloCard ──────────────────────────────────────────────────────────────────
+function foilGradient(t) {
+  const n = t.bands, chroma = (t.saturation / 100) * 0.26, stops = [];
+  for (let i = 0; i <= n; i++) {
+    const hue = t.hueBase + (i / n) * t.hueSpread;
+    stops.push(`oklch(0.78 ${chroma.toFixed(3)} ${hue.toFixed(1)}) ${Math.round(i * t.bandSize)}px`);
+  }
+  return `repeating-linear-gradient(${t.bandAngle}deg, ${stops.join(', ')})`;
+}
+
+function glowGradient(t) {
+  const n = 6, chroma = (t.saturation / 100) * 0.3, stops = [];
+  for (let i = 0; i <= n; i++) {
+    const hue = t.hueBase + (i / n) * t.hueSpread;
+    stops.push(`oklch(0.66 ${chroma.toFixed(3)} ${hue.toFixed(1)}) ${Math.round((i / n) * 360)}deg`);
+  }
+  return `conic-gradient(from calc(var(--mxn) * 360deg), ${stops.join(', ')})`;
+}
+
+function noiseURL(freq) {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='${freq}' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(#n)'/></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+
+const T = {
+  tiltAmount:15, perspective:900, hoverScale:105, ease:420,
+  foilIntensity:50, foilBlend:'color-dodge', saturation:42,
+  hueBase:250, hueSpread:300, bands:11, bandSize:16, bandAngle:115,
+  hueTravel:55, foilFocus:78,
+  glareIntensity:50, glareSize:46, glareBlend:'soft-light',
+  noiseAmount:15, noiseScale:0.85, noiseBlend:'overlay',
+  glowIntensity:60, glowSize:70, idleShimmer:true,
+};
+
+const HOLO_CSS = `
+  .holo{ position:relative; z-index:1; perspective:${T.perspective}px; }
+  .card-root{
+    position:relative; transform-style:preserve-3d;
+    transition: transform ${T.ease}ms cubic-bezier(.22,.61,.36,1);
+    transform: rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))
+      scale(calc(1 + ${((T.hoverScale-100)/100).toFixed(3)} * var(--active,0)));
+    will-change:transform;
+  }
+  .glow{
+    position:absolute; inset:-9%; border-radius:30px;
+    background:var(--glow-bg);
+    filter:blur(${T.glowSize}px);
+    opacity:calc((0.22 + 0.78 * var(--active,0)) * ${(T.glowIntensity/100).toFixed(3)});
+    transform:translateZ(-60px) scale(calc(0.9 + 0.14 * var(--active,0)));
+    transition:opacity ${T.ease}ms ease, transform ${T.ease}ms ease; z-index:0;
+  }
+  .card{
+    position:relative; z-index:1; width:322px; border-radius:22px;
+    isolation:isolate; overflow:hidden; background:#0c0f12;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.10) inset,
+      0 0 0 1px rgba(255,255,255,.06),
+      0 40px 80px -28px rgba(0,0,0,.85),
+      0 12px 30px -14px rgba(0,0,0,.7);
+  }
+  .card-content{ position:relative; z-index:0; }
+  .layer{ position:absolute; inset:0; pointer-events:none; }
+  .layer.foil{
+    background:var(--foil-bg); background-size:115% 115%;
+    background-position:calc(var(--mx,50%) * 1.4) calc(var(--my,50%) * 1.4);
+    mix-blend-mode:${T.foilBlend};
+    opacity:${(T.foilIntensity/100).toFixed(3)};
+    filter:hue-rotate(calc((var(--mxn,.5) - 0.5) * ${T.hueTravel} * 1deg));
+    -webkit-mask-image:radial-gradient(circle at var(--mx,50%) var(--my,50%),
+      #000 0%, #000 calc(${T.foilFocus}% * 0.55), transparent ${T.foilFocus}%);
+    mask-image:radial-gradient(circle at var(--mx,50%) var(--my,50%),
+      #000 0%, #000 calc(${T.foilFocus}% * 0.55), transparent ${T.foilFocus}%);
+  }
+  .layer.glare{
+    background:radial-gradient(circle at var(--mx,50%) var(--my,50%),
+      rgba(255,255,255,${(T.glareIntensity/100).toFixed(3)}) 0%,
+      rgba(255,255,255,${(T.glareIntensity/100*0.35).toFixed(3)}) calc(${T.glareSize}% * 0.4),
+      transparent ${T.glareSize}%);
+    mix-blend-mode:${T.glareBlend};
+  }
+  .layer.noise{
+    background-image:var(--noise-bg); background-size:160px 160px;
+    opacity:${(T.noiseAmount/100).toFixed(3)}; mix-blend-mode:${T.noiseBlend};
+  }
+  .layer.rim{
+    border-radius:22px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.06), inset 0 1px 1px rgba(255,255,255,.12);
+    background:linear-gradient(calc(var(--ry,0deg) * -2 + 135deg),
+      rgba(255,255,255,calc(0.10 * var(--active,0))) 0%, transparent 40%);
+  }
+`;
+
+const VARS = {
+  '--foil-bg': foilGradient(T),
+  '--glow-bg': glowGradient(T),
+  '--noise-bg': noiseURL(T.noiseScale),
+};
+
+function HoloCard({ card }) {
+  const rootRef = React.useRef(null);
+  const holoRef = React.useRef(null);
+  const st = React.useRef({ tx:.5, ty:.5, x:.5, y:.5, active:0, ta:0, idle: Math.random() * 6 });
+
+  React.useEffect(() => {
+    let raf;
+    const tick = () => {
+      const s = st.current;
+      if (s.ta < 0.5) {
+        s.idle += 0.011;
+        s.tx = 0.5 + Math.cos(s.idle) * 0.3;
+        s.ty = 0.5 + Math.sin(s.idle * 0.8) * 0.24;
+      }
+      s.x += (s.tx - s.x) * 0.12;
+      s.y += (s.ty - s.y) * 0.12;
+      s.active += (s.ta - s.active) * 0.1;
+      const el = rootRef.current;
+      if (el) {
+        el.style.setProperty('--mx', (s.x * 100).toFixed(2) + '%');
+        el.style.setProperty('--my', (s.y * 100).toFixed(2) + '%');
+        el.style.setProperty('--mxn', s.x.toFixed(4));
+        el.style.setProperty('--myn', s.y.toFixed(4));
+        el.style.setProperty('--rx', ((0.5 - s.y) * T.tiltAmount * 2).toFixed(2) + 'deg');
+        el.style.setProperty('--ry', ((s.x - 0.5) * T.tiltAmount * 2).toFixed(2) + 'deg');
+        el.style.setProperty('--active', s.active.toFixed(3));
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  const onMove = (e) => {
+    const r = holoRef.current.getBoundingClientRect();
+    st.current.tx = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+    st.current.ty = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+    st.current.ta = 1;
+  };
+  const onLeave = () => { st.current.ta = 0; };
+
+  return (
+    <div className="holo" ref={holoRef} onPointerMove={onMove} onPointerLeave={onLeave}>
+      <style>{HOLO_CSS}</style>
+      <div className="card-root" ref={rootRef} style={VARS}>
+        <div className="glow" />
+        <div className="card">
+          <div className="card-content"><CardFace card={card} /></div>
+          <div className="layer foil" />
+          <div className="layer glare" />
+          <div className="layer noise" />
+          <div className="layer rim" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const id = location.hash.slice(1) || 'luana';
+const card = CARDS[id];
+if (card) {
+  ReactDOM.createRoot(document.getElementById('root')).render(<HoloCard card={card} />);
+}
+</script>
+</body>
+</html>

@@ -84,6 +84,15 @@ export const revealCard = (card) => {
   showReveal(card);
 };
 
+const makeIframe = (card) => {
+  const iframe = document.createElement('iframe');
+  iframe.className = 'cr-iframe';
+  iframe.src = `card-viewer.html#${card.id}`;
+  iframe.setAttribute('frameborder', '0');
+  iframe.setAttribute('scrolling', 'no');
+  return iframe;
+};
+
 const showReveal = (card) => {
   revealActive = true;
 
@@ -96,33 +105,30 @@ const showReveal = (card) => {
 
   const stage = document.createElement('div');
   stage.className = 'cr-stage';
-
-  const cardEl = buildCardEl(card);
-  stage.appendChild(cardEl);
+  const iframe = makeIframe(card);
+  stage.appendChild(iframe);
 
   overlay.appendChild(header);
   overlay.appendChild(stage);
   document.body.appendChild(overlay);
 
-  // duplo-frame garante que o browser pintou o estado inicial antes da transição
   requestAnimationFrame(() => requestAnimationFrame(() => {
     overlay.classList.add('cr-show');
-    applyHoloTilt(cardEl, true);
   }));
 
-  header.querySelector('.cr-close').addEventListener('click', () => flyToDeck(overlay, cardEl));
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) flyToDeck(overlay, cardEl); });
+  header.querySelector('.cr-close').addEventListener('click', () => flyToDeck(overlay, iframe));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) flyToDeck(overlay, iframe); });
 };
 
-const flyToDeck = (overlay, cardEl) => {
+const flyToDeck = (overlay, iframe) => {
   const deckRect = deckBtn.getBoundingClientRect();
-  const cardRect = cardEl.getBoundingClientRect();
-  const dx = deckRect.left + deckRect.width / 2 - (cardRect.left + cardRect.width / 2);
-  const dy = deckRect.top  + deckRect.height / 2 - (cardRect.top  + cardRect.height / 2);
+  const iframeRect = iframe.getBoundingClientRect();
+  const dx = deckRect.left + deckRect.width / 2 - (iframeRect.left + iframeRect.width / 2);
+  const dy = deckRect.top  + deckRect.height / 2 - (iframeRect.top  + iframeRect.height / 2);
 
-  cardEl.style.transition = 'transform 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease';
-  cardEl.style.transform  = `translate(${dx}px,${dy}px) scale(0.08)`;
-  cardEl.style.opacity    = '0';
+  iframe.style.transition = 'transform 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease';
+  iframe.style.transform  = `translate(${dx}px,${dy}px) scale(0.08)`;
+  iframe.style.opacity    = '0';
   overlay.style.transition = 'opacity 0.3s ease 0.2s';
   overlay.style.opacity   = '0';
 
@@ -186,18 +192,13 @@ const viewCard = (card) => {
 
   const stage = document.createElement('div');
   stage.className = 'cr-stage';
-
-  const cardEl = buildCardEl(card);
-  stage.appendChild(cardEl);
+  stage.appendChild(makeIframe(card));
 
   overlay.appendChild(header);
   overlay.appendChild(stage);
   document.body.appendChild(overlay);
 
-  requestAnimationFrame(() => {
-    overlay.classList.add('cr-show');
-    applyHoloTilt(cardEl, true);
-  });
+  requestAnimationFrame(() => overlay.classList.add('cr-show'));
 
   const close = () => { overlay.classList.remove('cr-show'); setTimeout(() => overlay.remove(), 400); };
   header.querySelector('.cr-close').addEventListener('click', close);
