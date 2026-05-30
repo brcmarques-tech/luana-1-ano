@@ -286,10 +286,6 @@ const showPateta = () => {
   };
   video.addEventListener('ended', close);
   el.querySelector('.pateta-close').addEventListener('click', close);
-  // delay para não fechar imediatamente com o keydown que abriu o overlay
-  setTimeout(() => {
-    el.addEventListener('click', (e) => { if (e.target === el) close(); });
-  }, 400);
 };
 
 const showBigMessage = (text) => {

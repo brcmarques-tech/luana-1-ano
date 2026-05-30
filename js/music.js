@@ -119,14 +119,21 @@ export const stopMusic = () => {
   _syncMuteBtn();
 };
 
+let _wasPlayingBeforeVideo = false;
+
 export const pauseForVideo = () => {
-  _players.forEach((p) => fadeVolume(p, p.volume, 0, 600, () => p.pause()));
+  _wasPlayingBeforeVideo = !!_currentKey && _players.some(p => p.src && !p.paused);
+  if (_wasPlayingBeforeVideo) {
+    _players.forEach((p) => fadeVolume(p, p.volume, 0, 600, () => p.pause()));
+  }
 };
 
 export const resumeAfterVideo = () => {
+  if (!_wasPlayingBeforeVideo) return;
   _players.forEach((p) => {
     if (p.src) { p.play().catch(() => {}); fadeVolume(p, 0, _muted ? 0 : 0.4, 600); }
   });
+  _wasPlayingBeforeVideo = false;
 };
 
 export const toggleMute = () => {
