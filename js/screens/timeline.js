@@ -39,14 +39,42 @@ const renderCards = () => {
              <div class="placeholder-icon">📷</div>
              <div class="placeholder-text">foto de ${item.date.toLowerCase()}</div>
            </div>`;
+      const hasQuote = item.quote ? 'has-quote' : '';
       card.innerHTML = `
         <div class="card-photo${item.photo ? ' card-photo--skeleton' : ''}">${photoContent}</div>
-        <div class="card-info">
+        <div class="card-info ${hasQuote}">
           <div class="card-date">${item.date}</div>
           <div class="card-caption">${item.caption}</div>
+          ${item.quote ? `
+          <button class="card-quote-toggle" aria-label="ver citação" aria-expanded="false">
+            <span class="card-quote-arrow">▼</span>
+          </button>
+          <div class="card-quote-panel" hidden>
+            <p class="card-quote-text">"${item.quote}"</p>
+            <p class="card-quote-source">— ${item.quoteSource}</p>
+          </div>` : ''}
         </div>
       `;
     }
+    // toggle citação
+    const toggleBtn = card.querySelector('.card-quote-toggle');
+    const panel = card.querySelector('.card-quote-panel');
+    if (toggleBtn && panel) {
+      toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = toggleBtn.getAttribute('aria-expanded') === 'true';
+        toggleBtn.setAttribute('aria-expanded', String(!open));
+        toggleBtn.classList.toggle('open', !open);
+        if (!open) {
+          panel.hidden = false;
+          requestAnimationFrame(() => panel.classList.add('card-quote-panel--open'));
+        } else {
+          panel.classList.remove('card-quote-panel--open');
+          panel.addEventListener('transitionend', () => { panel.hidden = true; }, { once: true });
+        }
+      });
+    }
+
     timelineEl.appendChild(card);
 
     const dot = document.createElement('span');
