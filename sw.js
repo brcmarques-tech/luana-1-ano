@@ -4,7 +4,7 @@
 //  - network-first pra API (com fallback cache se offline)
 //  - assets de mídia (audio/img) não cacheados aqui (servidos pela luana-api)
 
-const VERSION = 'v6';
+const VERSION = 'v7';
 const STATIC_CACHE = `luana-static-${VERSION}`;
 const RUNTIME_CACHE = `luana-runtime-${VERSION}`;
 
@@ -62,7 +62,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // estáticos do mesmo origin - cache-first
+  // JS e CSS: sempre network-first (atualizam com frequência)
+  if (url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
+    event.respondWith(networkFirst(req));
+    return;
+  }
+
+  // imagens, fontes e outros estáticos: cache-first
   event.respondWith(cacheFirst(req));
 });
 
