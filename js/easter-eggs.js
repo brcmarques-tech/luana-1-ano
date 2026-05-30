@@ -6,6 +6,7 @@ import { unlockAllCards } from './card-reveal.js';
 import { haptic, HAPTIC } from './haptic.js';
 import { API_URL } from './config.js';
 import { getToken, getSessionInfo } from './progress.js';
+import { pauseForVideo, resumeAfterVideo } from './music.js';
 
 export const EGG_HINTS = [
   '🤫 achou o primeiro segredo',
@@ -276,10 +277,11 @@ const showPateta = () => {
   if (navigator.vibrate) navigator.vibrate([50, 30, 80, 30, 120]);
 
   const video = el.querySelector('video');
+  pauseForVideo();
 
-  // fecha ao terminar o vídeo ou ao clicar
   const close = () => {
     el.classList.remove('show');
+    resumeAfterVideo();
     setTimeout(() => el.remove(), 400);
   };
   video.addEventListener('ended', close);

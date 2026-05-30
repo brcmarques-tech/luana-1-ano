@@ -92,6 +92,16 @@ export const stopMusic = () => {
   _players.forEach((p) => fadeVolume(p, p.volume, 0, 800, () => { p.pause(); p.src = ''; }));
 };
 
+export const pauseForVideo = () => {
+  _players.forEach((p) => fadeVolume(p, p.volume, 0, 600, () => p.pause()));
+};
+
+export const resumeAfterVideo = () => {
+  _players.forEach((p) => {
+    if (p.src) { p.play().catch(() => {}); fadeVolume(p, 0, _muted ? 0 : 0.4, 600); }
+  });
+};
+
 export const toggleMute = () => {
   _muted = !_muted;
   localStorage.setItem('luana_muted', _muted ? '1' : '0');
