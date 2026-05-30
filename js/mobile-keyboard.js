@@ -88,13 +88,19 @@ export const initMobileKeyboard = () => {
   const open = () => {
     kbEl = buildKeyboard();
     document.body.appendChild(kbEl);
-    requestAnimationFrame(() => kbEl.classList.add('show'));
+    requestAnimationFrame(() => {
+      kbEl.classList.add('show');
+      document.documentElement.style.setProperty('--kb-height', kbEl.offsetHeight + 'px');
+      document.body.classList.add('keyboard-open');
+    });
     toggleBtn.classList.add('kb-open');
   };
 
   const close = () => {
     if (!kbEl) return;
     kbEl.classList.remove('show');
+    document.body.classList.remove('keyboard-open');
+    document.documentElement.style.setProperty('--kb-height', '0px');
     const el = kbEl;
     kbEl = null;
     setTimeout(() => el.remove(), 300);
