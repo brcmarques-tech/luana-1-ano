@@ -4752,8 +4752,8 @@ body:has(#screen-constellation.active) .pet--dead {
 }
 
 .cr-iframe {
-  width: min(322px, 88vw);
-  height: min(620px, 82vh);
+  width: min(500px, 98vw);
+  height: min(820px, 94vh);
   border: none;
   border-radius: 22px;
   background: transparent;
