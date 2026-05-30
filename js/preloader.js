@@ -4,6 +4,8 @@
 
 import { resolvedTrack } from './music.js';
 
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
 const imgBase = () => {
   const u = localStorage.getItem('luana_api_url');
   return u ? `${u}/assets/img` : 'assets/img';
