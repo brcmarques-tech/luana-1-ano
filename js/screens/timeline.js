@@ -5,10 +5,20 @@ import { TIMELINE } from '../timeline-data.js';
 import { goToScreen, registerScreenEnter } from '../nav.js';
 import { unlock } from '../achievements.js';
 import { setupEggTimelineCounter } from '../easter-eggs.js';
+import { playDirect, TIMELINE_PLAYLIST } from '../music.js';
 
 let timelineEl, dotsEl, counterEl;
 let rendered = false;
 let lastIdx = 0;
+let tlIdx = 0;
+
+const playTimelineAt = (idx) => {
+  tlIdx = ((idx % TIMELINE_PLAYLIST.length) + TIMELINE_PLAYLIST.length) % TIMELINE_PLAYLIST.length;
+  playDirect(TIMELINE_PLAYLIST[tlIdx], {
+    loop: false,
+    onEnded: () => playTimelineAt(tlIdx + 1),
+  });
+};
 
 export const getLastTimelineIdx = () => lastIdx;
 
@@ -252,5 +262,12 @@ export const initTimeline = () => {
 
   setupEggTimelineCounter(counterEl);
 
-  registerScreenEnter('journey', render);
+  document.getElementById('btn-timeline-skip')?.addEventListener('click', () => {
+    playTimelineAt(tlIdx + 1);
+  });
+
+  registerScreenEnter('journey', () => {
+    render();
+    playTimelineAt(tlIdx); // inicia/retoma a música da timeline
+  });
 };

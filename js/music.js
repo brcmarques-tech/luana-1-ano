@@ -45,6 +45,11 @@ const resolveKey = (key) => PINNED[key] ?? TRACK_MAP[key] ?? key;
 
 export const resolvedTrack = resolveKey;
 
+// playlist das 13 faixas da timeline (já shuffled)
+export const TIMELINE_PLAYLIST = Array.from({ length: 13 }, (_, i) =>
+  resolveKey(`timeline-${String(i + 1).padStart(2, '0')}`)
+);
+
 let _players = [null, null];
 let _current = 0;
 let _currentKey = null;
@@ -78,8 +83,31 @@ export const initMusic = () => {
   _players[1] = document.getElementById('bg-music-b');
 };
 
-export const playTrack = (key) => {
-  if (key === _currentKey) return;
+// toca um arquivo por nome direto (sem passar pelo mapa de shuffle)
+export const playDirect = (filename, { loop = true, onEnded } = {}) => {
+  if (filename === _currentKey && loop) return;
+
+  const curr = _players[_current];
+  if (_currentKey && curr?.src) _positions.set(_currentKey, curr.currentTime);
+
+  _currentKey = filename;
+  const next = 1 - _current;
+  const nextP = _players[next];
+
+  nextP.src = `${AUDIO_BASE}/${filename}.mp3`;
+  nextP.loop = loop;
+  nextP.volume = 0;
+  if (onEnded) nextP.addEventListener('ended', onEnded, { once: true });
+  nextP.play().catch(() => {});
+
+  fadeVolume(nextP, 0, _muted ? 0 : 0.4, FADE_MS);
+  fadeVolume(curr, curr.volume, 0, FADE_MS, () => { curr.pause(); curr.src = ''; });
+  _current = next;
+  _syncMuteBtn();
+};
+
+export const playTrack = (key, { loop = true, onEnded } = {}) => {
+  if (key === _currentKey && loop) return;
 
   // salva posição da faixa atual antes de trocar
   const curr = _players[_current];
@@ -93,8 +121,9 @@ export const playTrack = (key) => {
   const nextP = _players[next];
 
   nextP.src = `${AUDIO_BASE}/${resolveKey(key)}.mp3`;
-  nextP.loop = true;
+  nextP.loop = loop;
   nextP.volume = 0;
+  if (onEnded) nextP.addEventListener('ended', onEnded, { once: true });
 
   // restaura posição salva ao carregar metadados
   const savedPos = _positions.get(key) || 0;

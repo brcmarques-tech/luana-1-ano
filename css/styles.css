@@ -694,7 +694,10 @@ body.screen-loading .hud {
 
 
 .journey-hint {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   padding: 8px 0 18px;
   font-size: 0.75rem;
   color: var(--text-soft);
@@ -702,6 +705,23 @@ body.screen-loading .hud {
   flex-shrink: 0;
   animation: hint-pulse 2s ease-in-out infinite;
 }
+
+.btn-timeline-skip {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-timeline-skip:hover { border-color: var(--pink); color: var(--pink); }
 
 @keyframes hint-pulse {
   0%, 100% { opacity: 0.4; }
