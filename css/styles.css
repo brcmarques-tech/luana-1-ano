@@ -3280,6 +3280,61 @@ body.screen-loading .hud {
   cursor: default;
 }
 
+.puzzle-500-msg {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(10, 5, 20, 0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 32px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  text-align: center;
+}
+.puzzle-500-msg.show { opacity: 1; }
+
+.p500-quote {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.38);
+  letter-spacing: 0.02em;
+}
+.p500-reveal {
+  margin-top: 18px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.04em;
+}
+.p500-praise {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--pink, #ff5e8a);
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}
+.p500-sub {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.5);
+  margin-top: 4px;
+}
+.p500-close {
+  margin-top: 28px;
+  background: var(--pink, #ff5e8a);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body, sans-serif);
+}
+
 .puzzle-win {
   position: absolute;
   inset: 0;

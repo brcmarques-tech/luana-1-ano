@@ -10,11 +10,36 @@ import { spawnConfetti } from '../confetti.js';
 import { imgBase } from '../utils.js';
 
 const PUZZLE_DONE_KEY = 'luana_puzzle_done';
+const PUZZLE_500_KEY  = 'luana_puzzle_500';
 
 let boardEl, movesEl, completeOverlay;
 let state = null;
 let rendered = false;
 let puzzlePhotoUrl = null;
+let totalMoves = 0;
+
+const show500Message = () => {
+  if (localStorage.getItem(PUZZLE_500_KEY)) return;
+  localStorage.setItem(PUZZLE_500_KEY, '1');
+  document.getElementById('puzzle-skip')?.removeAttribute('hidden');
+
+  const el = document.createElement('div');
+  el.className = 'puzzle-500-msg';
+  el.innerHTML = `
+    <p class="p500-quote">"ela só tem persistência..."</p>
+    <p class="p500-quote">"sem talento, nunca vai conseguir."</p>
+    <p class="p500-reveal">500 jogadas depois — olha ela.</p>
+    <p class="p500-praise">você já provou seu valor, Luana.</p>
+    <p class="p500-sub">pode avançar quando quiser. 🔥</p>
+    <button class="p500-close">entendi 💪</button>
+  `;
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  el.querySelector('.p500-close').addEventListener('click', () => {
+    el.classList.remove('show');
+    setTimeout(() => el.remove(), 400);
+  });
+};
 
 const pickPuzzlePhoto = () => {
   const usedInMemory = new Set(PAIRS.map(p => p.photo));
@@ -164,9 +189,12 @@ const onTileClick = (pos) => {
   [state.tiles[pos], state.tiles[state.empty]] = [state.tiles[state.empty], state.tiles[pos]];
   state.empty = pos;
   state.moves++;
+  totalMoves++;
   movesEl.textContent = String(state.moves);
 
   rerenderTiles(state.imgOk !== false ? (puzzlePhotoUrl || `${imgBase()}/${PUZZLE.photoKey}.jpg`) : null);
+
+  if (totalMoves >= 500 && !localStorage.getItem(PUZZLE_500_KEY)) show500Message();
 
   if (isSolved(state.tiles)) {
     setTimeout(showWin, 350);
