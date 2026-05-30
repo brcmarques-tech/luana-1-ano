@@ -25,7 +25,7 @@ export const initHUD = () => {
   hudEl = document.createElement('div');
   hudEl.className = 'hud';
   hudEl.innerHTML = `
-    <div class="hud-avatar" id="hud-avatar" title="ver perfil">🌸</div>
+    <div class="hud-avatar" id="hud-avatar" title="ver perfil">🐑</div>
     <div class="hud-info">
       <span class="hud-level" id="hud-level">Lv.1</span>
       <div class="hud-xp-track">

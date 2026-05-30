@@ -47,6 +47,13 @@ let _currentKey = null;
 let _muted = localStorage.getItem('luana_muted') === '1';
 const _positions = new Map();
 
+const _syncMuteBtn = () => {
+  const btn = document.getElementById('btn-mute');
+  if (!btn) return;
+  if (_currentKey) btn.removeAttribute('hidden');
+  else btn.setAttribute('hidden', '');
+};
+
 const FADE_MS = 1400;
 
 const fadeVolume = (el, from, to, ms, onDone) => {
@@ -101,11 +108,13 @@ export const playTrack = (key) => {
     curr.src = '';
   });
   _current = next;
+  _syncMuteBtn();
 };
 
 export const stopMusic = () => {
   _currentKey = null;
   _players.forEach((p) => fadeVolume(p, p.volume, 0, 800, () => { p.pause(); p.src = ''; }));
+  _syncMuteBtn();
 };
 
 export const pauseForVideo = () => {

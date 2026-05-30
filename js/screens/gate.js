@@ -61,7 +61,6 @@ export const initGate = ({ onConfirm }) => {
   btnYes.addEventListener('click', () => {
     haptic(HAPTIC.tap);
     playTrack('gate');
-    document.getElementById('btn-mute')?.removeAttribute('hidden');
     spawnConfetti(40);
     unlock('first-step');
     setTimeout(onConfirm, 350);
