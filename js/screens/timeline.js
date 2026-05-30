@@ -4,7 +4,6 @@
 import { TIMELINE } from '../timeline-data.js';
 import { goToScreen, registerScreenEnter } from '../nav.js';
 import { unlock } from '../achievements.js';
-import { playTrack, preloadTrack } from '../music.js';
 import { setupEggTimelineCounter } from '../easter-eggs.js';
 
 let timelineEl, dotsEl, counterEl;
@@ -199,11 +198,6 @@ const wireScroll = () => {
       if (seen.size === TIMELINE.length) unlock('all-cards-seen');
       if (closest !== lastIdx) {
         lastIdx = closest;
-        const key = `timeline-${String(closest + 1).padStart(2, '0')}`;
-        playTrack(key);
-        if (closest + 2 <= TIMELINE.length) {
-          preloadTrack(`timeline-${String(closest + 2).padStart(2, '0')}`);
-        }
       }
     }, 80);
   }, { passive: true });
@@ -258,8 +252,5 @@ export const initTimeline = () => {
 
   setupEggTimelineCounter(counterEl);
 
-  registerScreenEnter('journey', () => {
-    render();
-    playTrack(`timeline-${String(lastIdx + 1).padStart(2, '0')}`);
-  });
+  registerScreenEnter('journey', render);
 };

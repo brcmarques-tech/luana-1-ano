@@ -27,13 +27,14 @@ const ANIME_TRANSITION_SCREENS = new Set([
 
 // música padrão por tela (algumas calculam dinamicamente, override no main)
 const SCREEN_TRACK = {
-  gate: 'gate',
-  welcome: 'welcome',
-  hanami: 'welcome',
-  loves: 'loves',
-  game: 'game',
-  card: 'card',
-  final: 'final',
+  gate:     'gate',
+  welcome:  'welcome',
+  hanami:   'welcome',
+  timeline: 'timeline-01',
+  loves:    'loves',
+  game:     'game',
+  card:     'card',
+  final:    'final',
 };
 
 const NEXT_TRACK = {
