@@ -392,9 +392,29 @@ body.screen-loading .hud {
   justify-content: center;
 }
 
-.btn-mute[hidden] {
-  display: none;
+.btn-mute[hidden] { display: none; }
+
+.btn-skip-music {
+  position: fixed;
+  top: calc(max(env(safe-area-inset-top, 10px), 10px) + 50px);
+  left: 54px;
+  background: rgba(26, 10, 46, 0.78);
+  border: 1px solid rgba(255, 94, 138, 0.3);
+  color: var(--text);
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+.btn-skip-music[hidden] { display: none; }
 
 /* ===== placeholder ===== */
 

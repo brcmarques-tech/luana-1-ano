@@ -102,6 +102,7 @@ export const goToScreen = async (name, { fromHistory = false } = {}) => {
 
   if (SCREEN_TRACK[name]) playTrack(SCREEN_TRACK[name]);
   if (NEXT_TRACK[name]) preloadTrack(NEXT_TRACK[name]);
+  if (name !== 'journey') document.getElementById('btn-skip')?.setAttribute('hidden', '');
 
   if (enterHandlers.has(name)) enterHandlers.get(name)();
 

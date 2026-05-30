@@ -262,12 +262,12 @@ export const initTimeline = () => {
 
   setupEggTimelineCounter(counterEl);
 
-  document.getElementById('btn-timeline-skip')?.addEventListener('click', () => {
-    playTimelineAt(tlIdx + 1);
-  });
+  const skipBtn = document.getElementById('btn-skip');
+  if (skipBtn) skipBtn.addEventListener('click', () => playTimelineAt(tlIdx + 1));
 
   registerScreenEnter('journey', () => {
     render();
-    playTimelineAt(tlIdx); // inicia/retoma a música da timeline
+    document.getElementById('btn-skip')?.removeAttribute('hidden');
+    playTimelineAt(tlIdx);
   });
 };
