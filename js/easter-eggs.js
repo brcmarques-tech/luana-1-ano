@@ -207,7 +207,7 @@ export const setupEggKonami = (spawnConfetti, onDesculpa) => {
 
     if (buffer.endsWith('luana')) {
       buffer = '';
-      showBigMessage('esse é o nome da melhor esposa do mundo 💛');
+      showBigMessage('no futuro vai ser Luana Marques 💛');
     }
 
     if (buffer.endsWith('bruno')) {
