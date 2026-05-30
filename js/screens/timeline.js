@@ -12,12 +12,12 @@ let rendered = false;
 let lastIdx = 0;
 let tlGroup = -1;
 
-const GROUP_SIZE = 4;
-const NUM_GROUPS = Math.ceil(13 / GROUP_SIZE); // 4 grupos: 0-3, 4-7, 8-11, 12
+const GROUP_SIZE = 3;
+const NUM_GROUPS = Math.ceil(13 / GROUP_SIZE); // 5 grupos: 0-2, 3-5, 6-8, 9-11, 12
 
 const playGroupAt = (group) => {
   tlGroup = ((group % NUM_GROUPS) + NUM_GROUPS) % NUM_GROUPS;
-  const trackIdx = tlGroup * GROUP_SIZE; // 0, 4, 8, 12
+  const trackIdx = tlGroup * GROUP_SIZE; // 0, 3, 6, 9, 12
   playDirect(TIMELINE_PLAYLIST[Math.min(trackIdx, TIMELINE_PLAYLIST.length - 1)], {
     loop: false,
     onEnded: () => playGroupAt(tlGroup + 1),
