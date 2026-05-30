@@ -39,27 +39,51 @@ const renderCards = () => {
              <div class="placeholder-icon">📷</div>
              <div class="placeholder-text">foto de ${item.date.toLowerCase()}</div>
            </div>`;
-      const hasQuote = item.quote ? 'has-quote' : '';
+      const hasQuote = item.quotes?.length ? 'has-quote' : '';
+      const quotesHtml = item.quotes?.length ? `
+        <button class="card-quote-toggle" aria-label="ver citação" aria-expanded="false">
+          <span class="card-quote-arrow">▼</span>
+        </button>
+        <div class="card-quote-panel" hidden>
+          <div class="card-quote-slide">
+            <p class="card-quote-text"></p>
+            <p class="card-quote-source"></p>
+          </div>
+          <div class="card-quote-dots">${item.quotes.map((_, i) => `<span class="cq-dot${i === 0 ? ' active' : ''}"></span>`).join('')}</div>
+        </div>` : '';
       card.innerHTML = `
         <div class="card-photo${item.photo ? ' card-photo--skeleton' : ''}">${photoContent}</div>
         <div class="card-info ${hasQuote}">
           <div class="card-date">${item.date}</div>
           <div class="card-caption">${item.caption}</div>
-          ${item.quote ? `
-          <button class="card-quote-toggle" aria-label="ver citação" aria-expanded="false">
-            <span class="card-quote-arrow">▼</span>
-          </button>
-          <div class="card-quote-panel" hidden>
-            <p class="card-quote-text">"${item.quote}"</p>
-            <p class="card-quote-source">— ${item.quoteSource}</p>
-          </div>` : ''}
+          ${quotesHtml}
         </div>
       `;
     }
-    // toggle citação
-    const toggleBtn = card.querySelector('.card-quote-toggle');
-    const panel = card.querySelector('.card-quote-panel');
-    if (toggleBtn && panel) {
+    // carrossel de citações
+    if (item.quotes?.length) {
+      const toggleBtn = card.querySelector('.card-quote-toggle');
+      const panel     = card.querySelector('.card-quote-panel');
+      const textEl    = card.querySelector('.card-quote-text');
+      const sourceEl  = card.querySelector('.card-quote-source');
+      const dots      = card.querySelectorAll('.cq-dot');
+      let qIdx = 0;
+
+      const showQuote = (i) => {
+        qIdx = (i + item.quotes.length) % item.quotes.length;
+        const q = item.quotes[qIdx];
+        const slide = card.querySelector('.card-quote-slide');
+        slide.classList.add('cq-fade-out');
+        setTimeout(() => {
+          textEl.textContent   = `"${q.text}"`;
+          sourceEl.textContent = `— ${q.source}`;
+          dots.forEach((d, di) => d.classList.toggle('active', di === qIdx));
+          slide.classList.remove('cq-fade-out');
+        }, 200);
+      };
+
+      showQuote(0);
+
       toggleBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         const open = toggleBtn.getAttribute('aria-expanded') === 'true';
@@ -71,6 +95,22 @@ const renderCards = () => {
         } else {
           panel.classList.remove('card-quote-panel--open');
           panel.addEventListener('transitionend', () => { panel.hidden = true; }, { once: true });
+        }
+      });
+
+      // tap nos dots para navegar
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', (e) => { e.stopPropagation(); showQuote(i); });
+      });
+
+      // auto-avança a cada 5s quando painel aberto
+      let autoTimer;
+      panel.addEventListener('transitionend', () => {
+        if (!panel.hidden && panel.classList.contains('card-quote-panel--open')) {
+          clearInterval(autoTimer);
+          autoTimer = setInterval(() => showQuote(qIdx + 1), 5000);
+        } else {
+          clearInterval(autoTimer);
         }
       });
     }

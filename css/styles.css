@@ -609,6 +609,31 @@ body.screen-loading .hud {
   padding-bottom: 4px;
 }
 
+.card-quote-slide {
+  transition: opacity 0.2s ease;
+}
+.card-quote-slide.cq-fade-out { opacity: 0; }
+
+.card-quote-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding-bottom: 2px;
+}
+.cq-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: background 0.25s, transform 0.25s;
+}
+.cq-dot.active {
+  background: rgba(255,255,255,0.75);
+  transform: scale(1.25);
+}
+
 .timeline-card.is-final {
   background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dark) 100%);
   text-align: center;
