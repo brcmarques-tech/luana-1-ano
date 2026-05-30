@@ -2644,9 +2644,13 @@ body.screen-loading .hud {
   cursor: pointer;
   z-index: 7000;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   align-items: center;
   justify-content: center;
+}
+
+body.keyboard-open .btn-keyboard {
+  bottom: calc(var(--kb-height, 0px) + 8px);
 }
 
 @media (pointer: coarse) {
