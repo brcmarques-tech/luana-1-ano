@@ -4,7 +4,7 @@
 //  - network-first pra API (com fallback cache se offline)
 //  - assets de mídia (audio/img) não cacheados aqui (servidos pela luana-api)
 
-const VERSION = 'v7';
+const VERSION = 'v8';
 const STATIC_CACHE = `luana-static-${VERSION}`;
 const RUNTIME_CACHE = `luana-runtime-${VERSION}`;
 
@@ -33,10 +33,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(
-        keys.filter((k) => k !== STATIC_CACHE && k !== RUNTIME_CACHE)
-            .map((k) => caches.delete(k))
-      ))
+      .then((keys) => Promise.all(keys.map((k) => caches.delete(k))))
       .then(() => self.clients.claim()),
   );
 });
@@ -62,9 +59,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // JS e CSS: sempre network-first (atualizam com frequência)
+  // JS e CSS: nunca cacheados pelo SW — sempre direto da rede
   if (url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
-    event.respondWith(networkFirst(req));
+    event.respondWith(fetch(req));
     return;
   }
 
