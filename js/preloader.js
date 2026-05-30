@@ -2,10 +2,7 @@
 // Cada task tem um label e uma fn() que retorna Promise.
 // runPreloader() chama onStep (awaitable) e onProgress para cada task.
 
-const audioBase = () => {
-  const u = localStorage.getItem('luana_api_url');
-  return u ? `${u}/assets/audio` : 'assets/audio';
-};
+const audioBase = () => 'assets/audio';
 
 const imgBase = () => {
   const u = localStorage.getItem('luana_api_url');

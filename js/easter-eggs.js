@@ -268,7 +268,7 @@ const showPateta = () => {
   const el = document.createElement('div');
   el.id = 'pateta-overlay';
   el.innerHTML = `
-    <video class="pateta-video" src="assets/video/melgarejo.mp4" autoplay playsinline muted></video>
+    <video class="pateta-video" src="assets/video/melgarejo.mp4" autoplay playsinline></video>
     <button class="pateta-close" aria-label="fechar">✕</button>
   `;
   document.body.appendChild(el);

@@ -1,6 +1,6 @@
 import { API_URL } from './config.js';
 
-const AUDIO_BASE = API_URL ? `${API_URL}/assets/audio` : 'assets/audio';
+const AUDIO_BASE = 'assets/audio';
 
 // ── Pool de músicas e shuffle por sessão ──────────────────────────────────────
 const POOL = [
