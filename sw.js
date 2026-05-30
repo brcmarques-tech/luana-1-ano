@@ -4,7 +4,7 @@
 //  - network-first pra API (com fallback cache se offline)
 //  - assets de mídia (audio/img) não cacheados aqui (servidos pela luana-api)
 
-const VERSION = 'v8';
+const VERSION = 'v9';
 const STATIC_CACHE = `luana-static-${VERSION}`;
 const RUNTIME_CACHE = `luana-runtime-${VERSION}`;
 
@@ -76,7 +76,7 @@ const cacheFirst = async (req) => {
   if (cached) return cached;
   try {
     const fresh = await fetch(req);
-    if (fresh && fresh.ok) {
+    if (fresh && fresh.status === 200) {
       const cache = await caches.open(RUNTIME_CACHE);
       cache.put(req, fresh.clone());
     }
