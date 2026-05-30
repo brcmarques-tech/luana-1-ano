@@ -95,6 +95,7 @@ const makeIframe = (card) => {
 
 const showReveal = (card) => {
   revealActive = true;
+  document.body.style.overflow = 'hidden';
 
   const overlay = document.createElement('div');
   overlay.className = 'cr-overlay';
@@ -121,6 +122,7 @@ const showReveal = (card) => {
 };
 
 const flyToDeck = (overlay, iframe) => {
+  document.body.style.overflow = '';
   const deckRect = deckBtn.getBoundingClientRect();
   const iframeRect = iframe.getBoundingClientRect();
   const dx = deckRect.left + deckRect.width / 2 - (iframeRect.left + iframeRect.width / 2);
@@ -183,6 +185,7 @@ const buildMiniCard = (card) => {
 
 const viewCard = (card) => {
   if (document.querySelector('.cr-overlay')) return;
+  document.body.style.overflow = 'hidden';
   const overlay = document.createElement('div');
   overlay.className = 'cr-overlay';
 
@@ -200,7 +203,7 @@ const viewCard = (card) => {
 
   requestAnimationFrame(() => overlay.classList.add('cr-show'));
 
-  const close = () => { overlay.classList.remove('cr-show'); setTimeout(() => overlay.remove(), 400); };
+  const close = () => { overlay.classList.remove('cr-show'); document.body.style.overflow = ''; setTimeout(() => overlay.remove(), 400); };
   header.querySelector('.cr-close').addEventListener('click', close);
   overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
 };
