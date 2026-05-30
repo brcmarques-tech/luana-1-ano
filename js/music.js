@@ -53,7 +53,8 @@ export const TIMELINE_PLAYLIST = Array.from({ length: 13 }, (_, i) =>
 let _players = [null, null];
 let _current = 0;
 let _currentKey = null;
-let _muted = localStorage.getItem('luana_muted') === '1';
+// padrão é mudo — só toca com som se o usuário desmutar explicitamente
+let _muted = localStorage.getItem('luana_muted') !== '0';
 const _positions = new Map();
 
 const _syncMuteBtn = () => {
@@ -175,6 +176,7 @@ export const toggleMute = () => {
 };
 
 export const isMuted = () => _muted;
+export const isPlaying = () => !!_currentKey;
 
 const _preloadCache = new Set();
 
