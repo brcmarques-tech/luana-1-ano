@@ -63,7 +63,7 @@ const _syncMuteBtn = () => {
   else btn.setAttribute('hidden', '');
 };
 
-const FADE_MS = 1400;
+const FADE_MS = 2200;
 
 const fadeVolume = (el, from, to, ms, onDone) => {
   const steps = 20;

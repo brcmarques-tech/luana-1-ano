@@ -10,13 +10,17 @@ import { playDirect, TIMELINE_PLAYLIST } from '../music.js';
 let timelineEl, dotsEl, counterEl;
 let rendered = false;
 let lastIdx = 0;
-let tlIdx = 0;
+let tlGroup = -1;
 
-const playTimelineAt = (idx) => {
-  tlIdx = ((idx % TIMELINE_PLAYLIST.length) + TIMELINE_PLAYLIST.length) % TIMELINE_PLAYLIST.length;
-  playDirect(TIMELINE_PLAYLIST[tlIdx], {
+const GROUP_SIZE = 4;
+const NUM_GROUPS = Math.ceil(13 / GROUP_SIZE); // 4 grupos: 0-3, 4-7, 8-11, 12
+
+const playGroupAt = (group) => {
+  tlGroup = ((group % NUM_GROUPS) + NUM_GROUPS) % NUM_GROUPS;
+  const trackIdx = tlGroup * GROUP_SIZE; // 0, 4, 8, 12
+  playDirect(TIMELINE_PLAYLIST[Math.min(trackIdx, TIMELINE_PLAYLIST.length - 1)], {
     loop: false,
-    onEnded: () => playTimelineAt(tlIdx + 1),
+    onEnded: () => playGroupAt(tlGroup + 1),
   });
 };
 
@@ -208,6 +212,8 @@ const wireScroll = () => {
       if (seen.size === TIMELINE.length) unlock('all-cards-seen');
       if (closest !== lastIdx) {
         lastIdx = closest;
+        const group = Math.floor(closest / GROUP_SIZE);
+        if (group !== tlGroup) playGroupAt(group);
       }
     }, 80);
   }, { passive: true });
@@ -262,12 +268,9 @@ export const initTimeline = () => {
 
   setupEggTimelineCounter(counterEl);
 
-  const skipBtn = document.getElementById('btn-skip');
-  if (skipBtn) skipBtn.addEventListener('click', () => playTimelineAt(tlIdx + 1));
-
   registerScreenEnter('journey', () => {
     render();
-    document.getElementById('btn-skip')?.removeAttribute('hidden');
-    playTimelineAt(tlIdx);
+    const group = Math.floor(lastIdx / GROUP_SIZE);
+    playGroupAt(group);
   });
 };
