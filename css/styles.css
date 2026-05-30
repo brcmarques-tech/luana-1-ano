@@ -2677,8 +2677,8 @@ body.screen-loading .hud {
 }
 
 body.keyboard-open .screen.active {
-  padding-bottom: var(--kb-height, 0px);
-  transition: padding-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  bottom: var(--kb-height, 0px) !important;
+  transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .kb-row {

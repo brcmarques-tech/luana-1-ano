@@ -88,11 +88,12 @@ export const initMobileKeyboard = () => {
   const open = () => {
     kbEl = buildKeyboard();
     document.body.appendChild(kbEl);
-    requestAnimationFrame(() => {
-      kbEl.classList.add('show');
-      document.documentElement.style.setProperty('--kb-height', kbEl.offsetHeight + 'px');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const h = kbEl.offsetHeight;
+      document.documentElement.style.setProperty('--kb-height', h + 'px');
       document.body.classList.add('keyboard-open');
-    });
+      kbEl.classList.add('show');
+    }));
     toggleBtn.classList.add('kb-open');
   };
 
