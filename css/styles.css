@@ -1352,6 +1352,103 @@ body.screen-loading .hud {
   transform: scale(1);
 }
 
+/* ===== Pateta easter egg ===== */
+
+@keyframes pateta-enter {
+  0%   { transform: translateY(-120%) rotate(-15deg); opacity: 0; }
+  60%  { transform: translateY(8%) rotate(6deg);      opacity: 1; }
+  75%  { transform: translateY(-4%) rotate(-3deg); }
+  100% { transform: translateY(0)   rotate(0deg);     opacity: 1; }
+}
+@keyframes pateta-bye {
+  0%   { transform: translateY(0) rotate(0deg);   opacity: 1; }
+  40%  { transform: translateY(-8%) rotate(10deg); opacity: 1; }
+  100% { transform: translateY(120%) rotate(20deg); opacity: 0; }
+}
+@keyframes hat-spin {
+  0%   { transform: rotate(0deg)   translateY(0); }
+  25%  { transform: rotate(-20deg) translateY(-18px); }
+  50%  { transform: rotate(15deg)  translateY(-8px); }
+  75%  { transform: rotate(-10deg) translateY(-4px); }
+  100% { transform: rotate(0deg)   translateY(0); }
+}
+@keyframes legs-wobble {
+  0%,100% { transform: rotate(0deg); }
+  20%     { transform: rotate(-18deg) translateX(-6px); }
+  40%     { transform: rotate(14deg)  translateX(6px); }
+  60%     { transform: rotate(-10deg) translateX(-3px); }
+  80%     { transform: rotate(8deg)   translateX(3px); }
+}
+@keyframes pateta-text-pop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+#pateta-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(8, 3, 18, 0.88);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+}
+#pateta-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+#pateta-overlay.bye .pateta-stage {
+  animation: pateta-bye 0.6s ease forwards;
+}
+
+.pateta-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: pateta-enter 0.75s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  line-height: 1;
+}
+.pateta-hat  {
+  font-size: 3.2rem;
+  animation: hat-spin 1.8s ease-in-out 0.75s infinite;
+  display: block;
+}
+.pateta-face { font-size: 5rem; display: block; }
+.pateta-legs {
+  font-size: 2.4rem;
+  display: block;
+  margin-top: -8px;
+  animation: legs-wobble 0.9s ease-in-out 0.75s infinite;
+  transform-origin: top center;
+}
+
+.pateta-text {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.04em;
+  margin-top: 16px;
+  animation: pateta-text-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.4s both;
+}
+.pateta-sub {
+  font-size: 1.1rem;
+  color: #ffd93d;
+  font-weight: 700;
+  animation: pateta-text-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.65s both;
+}
+.pateta-caption {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.4);
+  font-style: italic;
+  margin-top: 6px;
+  animation: pateta-text-pop 0.5s ease 1s both;
+}
+
 /* ===== camadas ambientais ===== */
 
 /* sakura */

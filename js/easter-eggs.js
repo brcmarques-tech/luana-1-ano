@@ -214,6 +214,11 @@ export const setupEggKonami = (spawnConfetti, onDesculpa) => {
       buffer = '';
       showBigMessage('obrigado por pensar em mim, mas isso não tem a ver comigo — é para ti, aproveite 🌸');
     }
+
+    if (buffer.endsWith('melgarejo')) {
+      buffer = '';
+      showPateta();
+    }
   };
 
   // teclado físico
@@ -255,6 +260,30 @@ const triggerKonamiUnlock = (spawnConfetti, onUnlock) => {
   // efeito visual: tela treme + invert
   document.body.classList.add('konami-flash');
   setTimeout(() => document.body.classList.remove('konami-flash'), 1200);
+};
+
+const showPateta = () => {
+  if (document.getElementById('pateta-overlay')) return;
+
+  const el = document.createElement('div');
+  el.id = 'pateta-overlay';
+  el.innerHTML = `
+    <div class="pateta-stage">
+      <div class="pateta-hat">🎩</div>
+      <div class="pateta-face">🐶</div>
+      <div class="pateta-legs">🦵🦵</div>
+    </div>
+    <p class="pateta-text">Melgarejo?</p>
+    <p class="pateta-sub">a-hyuck! só tem Pateta aqui! 😂</p>
+    <p class="pateta-caption">— o Bruno, sobre o seu sobrenome</p>
+  `;
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  if (navigator.vibrate) navigator.vibrate([50, 30, 80, 30, 120]);
+  setTimeout(() => {
+    el.classList.add('bye');
+    setTimeout(() => el.remove(), 600);
+  }, 4000);
 };
 
 const showBigMessage = (text) => {
