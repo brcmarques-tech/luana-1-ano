@@ -9,6 +9,8 @@ import { haptic, HAPTIC } from '../haptic.js';
 import { spawnConfetti } from '../confetti.js';
 import { imgBase } from '../utils.js';
 
+const PUZZLE_DONE_KEY = 'luana_puzzle_done';
+
 let boardEl, movesEl, completeOverlay;
 let state = null;
 let rendered = false;
@@ -78,6 +80,7 @@ const setupBoard = () => {
         <span class="puzzle-stat">jogadas: <strong id="puzzle-moves">0</strong></span>
         <button class="puzzle-restart" id="puzzle-restart" type="button">↻</button>
       </div>
+      ${localStorage.getItem(PUZZLE_DONE_KEY) ? '<button id="puzzle-skip" class="btn-skip" type="button">pular jogo →</button>' : '<button id="puzzle-skip" class="btn-skip" type="button" hidden>pular jogo →</button>'}
     </header>
     <div class="puzzle-board" id="puzzle-board"></div>
     <div class="puzzle-win" id="puzzle-win" hidden>
@@ -94,6 +97,7 @@ const setupBoard = () => {
 
   document.getElementById('puzzle-restart').addEventListener('click', newGame);
   document.getElementById('puzzle-win-btn').addEventListener('click', () => goToScreen('final'));
+  document.getElementById('puzzle-skip')?.addEventListener('click', () => goToScreen('final'));
 };
 
 const newGame = () => {
@@ -173,6 +177,8 @@ const showWin = () => {
   completeOverlay.hidden = false;
   spawnConfetti(50);
   unlock('puzzle-master');
+  localStorage.setItem(PUZZLE_DONE_KEY, '1');
+  document.getElementById('puzzle-skip')?.removeAttribute('hidden');
 };
 
 // ===== boot =====

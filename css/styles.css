@@ -937,6 +937,21 @@ body.screen-loading .hud {
   color: var(--pink);
 }
 
+.btn-skip {
+  display: block;
+  margin: 10px auto 0;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.8rem;
+  font-family: var(--font-body, sans-serif);
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  padding: 6px 12px;
+  transition: color 0.2s;
+}
+.btn-skip:hover { color: rgba(255, 255, 255, 0.7); }
+
 .game-win {
   position: absolute;
   inset: 0;

@@ -6,6 +6,8 @@ import { unlock } from '../achievements.js';
 import { haptic, HAPTIC } from '../haptic.js';
 import { spawnConfetti } from '../confetti.js';
 
+const MEMORY_DONE_KEY = 'luana_memory_done';
+
 let boardEl, pairsEl, movesEl, winOverlay;
 let state = null;
 
@@ -27,6 +29,8 @@ const showWin = () => {
   winOverlay.hidden = false;
   spawnConfetti(60);
   unlock('memory-master');
+  localStorage.setItem(MEMORY_DONE_KEY, '1');
+  document.getElementById('btn-game-skip')?.removeAttribute('hidden');
 };
 
 const checkMatch = () => {
@@ -99,6 +103,12 @@ export const initMemoryGame = () => {
 
   document.getElementById('btn-game-restart')?.addEventListener('click', render);
   document.getElementById('btn-to-final')?.addEventListener('click', () => goToScreen('puzzle'));
+
+  const skipBtn = document.getElementById('btn-game-skip');
+  if (skipBtn) {
+    if (localStorage.getItem(MEMORY_DONE_KEY)) skipBtn.removeAttribute('hidden');
+    skipBtn.addEventListener('click', () => goToScreen('puzzle'));
+  }
 
   registerScreenEnter('game', render);
 };
