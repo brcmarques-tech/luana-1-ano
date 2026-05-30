@@ -196,6 +196,10 @@ export const setupEggKonami = (spawnConfetti, onDesculpa) => {
 
     if (buffer.endsWith('hardreset')) {
       buffer = '';
+      const { apiOk } = getSessionInfo();
+      if (apiOk && API_URL) {
+        fetch(`${API_URL}/session/${getToken()}/progress`, { method: 'DELETE' }).catch(() => {});
+      }
       localStorage.clear();
       location.reload();
     }
