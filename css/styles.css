@@ -4450,6 +4450,21 @@ body.keyboard-open .screen.active {
   gap: 8px;
 }
 
+/* ── admin music selector ── */
+.admin-music-selector { display: flex; flex-direction: column; gap: 6px; }
+.admin-music-actions { display: flex; gap: 8px; margin-bottom: 4px; }
+.admin-music-save { background: linear-gradient(135deg, #2a4a20 0%, #1e3a18 100%); flex: 1; }
+.admin-music-reset { background: #1a1a1a; border: 1px solid #333; color: #aaa; flex: 0 0 auto; font-size: 0.75rem; padding: 6px 10px; }
+.admin-music-hint { font-size: 0.7rem; color: #666; margin: 0 0 4px; }
+.admin-music-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #1a1a1a; }
+.admin-music-label { font-size: 0.72rem; color: #aaa; min-width: 110px; flex-shrink: 0; }
+.admin-music-select {
+  flex: 1; background: #111; color: #eee; border: 1px solid #333;
+  border-radius: 6px; padding: 4px 6px; font-size: 0.72rem;
+}
+.admin-music-select:focus { outline: none; border-color: var(--pink); }
+.admin-music-msg { font-size: 0.72rem; color: var(--yellow); margin-top: 8px; min-height: 16px; }
+
 .admin-slot {
   display: flex;
   align-items: center;

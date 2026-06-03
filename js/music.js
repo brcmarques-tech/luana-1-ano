@@ -1,47 +1,12 @@
-import { API_URL } from './config.js';
+import { applyOverride } from './content-overrides.js';
+import { MUSIC_DEFAULTS } from './music-config.js';
 
 const AUDIO_BASE = 'assets/audio';
 
-// ── Pool de músicas e shuffle por sessão ──────────────────────────────────────
-const POOL = [
-  'amor-e-fe-acustico','beautiful-things','bem','blinding-lights',
-  'boulevard-of-broken-dreams','ceu-azul','choose-me','clocks',
-  'cruel-summer','infinity','in-the-end','iris','let-me-love-you',
-  'lighter','lua-pegado','memories','mystery-of-love','numb',
-  'radioactive','somebody-that-i-used-to-know','too-sweet',
-];
+// atribuições fixas — lidas do content-override (admin) ou fallback em MUSIC_DEFAULTS
+const TRACK_MAP = applyOverride('music', MUSIC_DEFAULTS);
 
-const SCREEN_KEYS = ['gate','welcome','loves','game','puzzle','card','final'];
-// timeline-01 … timeline-13 são slots 7 a 19
-
-const SESSION_KEY = 'luana_music_shuffle';
-
-const buildMap = () => {
-  const shuffled = [...POOL].sort(() => Math.random() - 0.5);
-  const map = {};
-  SCREEN_KEYS.forEach((k, i) => { map[k] = shuffled[i % shuffled.length]; });
-  for (let t = 1; t <= 13; t++) {
-    const key = `timeline-${String(t).padStart(2,'0')}`;
-    map[key] = shuffled[(SCREEN_KEYS.length + t - 1) % shuffled.length];
-  }
-  return map;
-};
-
-const loadMap = () => {
-  try {
-    const saved = sessionStorage.getItem(SESSION_KEY);
-    if (saved) return JSON.parse(saved);
-  } catch {}
-  const map = buildMap();
-  try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(map)); } catch {}
-  return map;
-};
-
-const TRACK_MAP = loadMap();
-
-const PINNED = { 'timeline-12': 'ceilings' };
-
-const resolveKey = (key) => PINNED[key] ?? TRACK_MAP[key] ?? key;
+const resolveKey = (key) => TRACK_MAP[key] ?? key;
 
 export const resolvedTrack = resolveKey;
 

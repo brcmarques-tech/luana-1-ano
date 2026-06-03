@@ -2,6 +2,8 @@
 // Abre painel para upload de músicas e fotos direto na luana-api.
 
 import { renderTextsTab, bindTextsTab } from './admin-texts.js';
+import { MUSIC_DEFAULTS, POOL } from './music-config.js';
+import { applyOverride, setOverride, resetOverride } from './content-overrides.js';
 
 const SECRET = 'admin';
 let buffer = '';
@@ -189,9 +191,36 @@ const renderTabs = () => `
   </div>
 `;
 
+const renderMusicTab = () => {
+  const current = applyOverride('music', MUSIC_DEFAULTS);
+  const options = POOL.map(t => `<option value="${t}">${t}</option>`).join('');
+  const rows = MUSIC_SLOTS.map(slot => {
+    const val = current[slot.key] ?? '';
+    const opts = POOL.map(t =>
+      `<option value="${t}"${t === val ? ' selected' : ''}>${t}</option>`
+    ).join('');
+    return `
+      <div class="admin-music-row">
+        <span class="admin-music-label">${slot.label}</span>
+        <select class="admin-music-select" data-key="${slot.key}">${opts}</select>
+      </div>`;
+  }).join('');
+  return `
+    <div class="admin-music-selector">
+      <div class="admin-music-actions">
+        <button class="admin-btn admin-music-save" id="admin-music-save">💾 salvar seleção</button>
+        <button class="admin-btn admin-music-reset" id="admin-music-reset">↺ resetar padrões</button>
+      </div>
+      <p class="admin-music-hint">Mudanças recarregam a página ao confirmar.</p>
+      ${rows}
+      <span class="admin-music-msg" id="admin-music-msg"></span>
+    </div>
+  `;
+};
+
 const renderTabContent = () => {
   if (activeTab === 'texts') return renderTextsTab();
-  if (activeTab === 'music') return renderSlots(MUSIC_SLOTS, 'audio');
+  if (activeTab === 'music') return renderMusicTab();
   return renderSlots(PHOTO_SLOTS, 'img');
 };
 
@@ -234,12 +263,37 @@ const bindTabs = () => {
   bindActiveTab();
 };
 
+const bindMusicTab = () => {
+  const msgEl = document.getElementById('admin-music-msg');
+
+  document.getElementById('admin-music-save')?.addEventListener('click', async () => {
+    const selects = document.querySelectorAll('.admin-music-select');
+    const newMap = {};
+    selects.forEach(s => { newMap[s.dataset.key] = s.value; });
+    msgEl.textContent = '⏳ salvando...';
+    const result = await setOverride('music', newMap);
+    msgEl.textContent = result.ok
+      ? '✅ salvo. recarregando...'
+      : `❌ erro: ${result.error} (salvo localmente apenas)`;
+    if (result.ok) setTimeout(() => location.reload(), 1200);
+  });
+
+  document.getElementById('admin-music-reset')?.addEventListener('click', async () => {
+    if (!confirm('Resetar todas as músicas para o padrão?')) return;
+    msgEl.textContent = '⏳ resetando...';
+    const result = await resetOverride('music');
+    msgEl.textContent = result.ok ? '✅ resetado. recarregando...' : '❌ erro ao resetar';
+    if (result.ok) setTimeout(() => location.reload(), 1200);
+  });
+};
+
 const bindActiveTab = () => {
   if (activeTab === 'texts') {
     bindTextsTab();
+  } else if (activeTab === 'music') {
+    bindMusicTab();
   } else {
-    const type = activeTab === 'music' ? 'audio' : 'img';
-    bindSlotUploads(type);
+    bindSlotUploads('img');
   }
 };
 
