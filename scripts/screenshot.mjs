@@ -63,10 +63,15 @@ await timeline.evaluate((el) => {
 await page.waitForTimeout(400);
 await page.screenshot({ path: `${OUT_DIR}/07-timeline-final.png` });
 
-// Clica em "continuar →" do card final
-await page.locator('#btn-to-loves').click();
-await page.waitForTimeout(600);
-await page.screenshot({ path: `${OUT_DIR}/08-loves-top.png` });
+// Clica em "continuar →" da timeline → vai pra serendipity
+await page.locator('#btn-to-loves').click({ force: true });
+await page.waitForTimeout(800);
+await page.screenshot({ path: `${OUT_DIR}/08-serendipity.png` });
+
+// Avança da serendipity pra loves
+await page.locator('#btn-serendipity-next').click({ force: true });
+await page.waitForTimeout(800);
+await page.screenshot({ path: `${OUT_DIR}/08b-loves-top.png` });
 
 // Scroll dentro da loves-scroll pra revelar mais itens
 const lovesScroll = page.locator('.loves-scroll');
@@ -79,15 +84,17 @@ await page.waitForTimeout(700);
 await page.screenshot({ path: `${OUT_DIR}/10-loves-bottom.png` });
 
 // Vai pro jogo
-await page.locator('#btn-to-game').click();
+await page.locator('#btn-to-game').click({ force: true });
+await page.waitForSelector('#screen-game.active', { timeout: 5000 });
 await page.waitForTimeout(600);
 await page.screenshot({ path: `${OUT_DIR}/11-game-board.png` });
 
 // Clica em 2 cartas pra mostrar o flip
+await page.waitForSelector('.memory-card', { state: 'visible', timeout: 10000 });
 const cards = page.locator('.memory-card');
-await cards.nth(0).click();
+await cards.nth(0).click({ force: true });
 await page.waitForTimeout(200);
-await cards.nth(5).click();
+await cards.nth(5).click({ force: true });
 await page.waitForTimeout(600);
 await page.screenshot({ path: `${OUT_DIR}/12-game-flip.png` });
 
@@ -104,13 +111,42 @@ await page.evaluate(() => {
 await page.waitForTimeout(500);
 await page.screenshot({ path: `${OUT_DIR}/13-game-win.png` });
 
-// Vai pra carta TCG
-await page.locator('#btn-to-final').click();
+// Vai pro puzzle (game → puzzle → card → final)
+await page.locator('#btn-to-final').click({ force: true });
 await page.waitForTimeout(900);
-await page.screenshot({ path: `${OUT_DIR}/13b-card-tcg.png` });
+await page.screenshot({ path: `${OUT_DIR}/13b-puzzle.png` });
+
+// Força vitória no puzzle
+await page.evaluate(() => {
+  const overlay = document.getElementById('puzzle-win');
+  if (overlay) overlay.hidden = false;
+});
+await page.waitForTimeout(400);
+await page.locator('#puzzle-win-btn').click({ force: true });
+await page.waitForSelector('#screen-card.active', { timeout: 5000 });
+await page.waitForTimeout(900);
+await page.screenshot({ path: `${OUT_DIR}/13c-card-deck.png` });
+
+// Desbloqueia primeira carta do deck pra mostrar o botão
+await page.evaluate(() => {
+  const first = document.querySelector('.deck-card--locked');
+  if (first) {
+    first.classList.replace('deck-card--locked', 'deck-card--unlocked');
+    first.click();
+  }
+  const nextBtn = document.getElementById('btn-deck-next');
+  if (nextBtn) { nextBtn.classList.remove('deck-hidden'); nextBtn.classList.add('deck-show'); }
+});
+await page.waitForTimeout(800);
+await page.screenshot({ path: `${OUT_DIR}/13d-card-deck-flipped.png` });
+
+// Avança pra carta principal da Luana
+await page.locator('#btn-deck-next').click({ force: true });
+await page.waitForTimeout(1000);
+await page.screenshot({ path: `${OUT_DIR}/13e-card-luana.png` });
 
 // Vai pra tela final
-await page.locator('#btn-card-next').click();
+await page.locator('#btn-card-next').click({ force: true });
 await page.waitForTimeout(1500);
 await page.screenshot({ path: `${OUT_DIR}/14-final-header.png` });
 
