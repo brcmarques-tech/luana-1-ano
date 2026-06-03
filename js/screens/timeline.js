@@ -259,6 +259,7 @@ const render = () => {
 export const resetTimeline = () => {
   rendered = false;
   lastIdx = 0;
+  tlGroup = -1;
 };
 
 export const initTimeline = () => {

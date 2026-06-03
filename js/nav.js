@@ -2,7 +2,7 @@
 // Cada screen registra um callback onEnter(name) opcional via registerScreenEnter.
 
 import { animeTransition } from './transitions.js';
-import { playTrack, preloadTrack } from './music.js';
+import { playTrack, preloadTrack, primeTrack } from './music.js';
 import { updateHUDForScreen } from './hud.js';
 
 const SCREEN_IDS = [
@@ -44,7 +44,8 @@ const NEXT_TRACK = {
   serendipity: 'loves',
   loves: 'game',
   game: 'puzzle',
-  puzzle: 'final',
+  puzzle: 'card',
+  card: 'final',
 };
 
 const screens = {};
@@ -77,6 +78,7 @@ export const goToScreen = async (name, { fromHistory = false } = {}) => {
   document.body.classList.toggle('screen-loading', name === 'loading');
 
   const isFirstLoad = !document.querySelector('.screen.active');
+  if (SCREEN_TRACK[name]) primeTrack(SCREEN_TRACK[name]);
   if (ANIME_TRANSITION_SCREENS.has(name) && !isFirstLoad) {
     await animeTransition(name);
   }

@@ -32,7 +32,10 @@ const preloadImg = (key, timeout = 6000) =>
 export const LOAD_TASKS = [
   {
     label: 'abrindo o portal 💛',
-    fn: () => document.fonts.ready,
+    fn: () => Promise.race([
+      document.fonts.ready,
+      new Promise(r => setTimeout(r, 3000)),
+    ]),
   },
   {
     label: 'reunindo as memórias 🌸',
@@ -47,6 +50,8 @@ export const LOAD_TASKS = [
     fn: () => Promise.all([
       preloadAudio(resolvedTrack('gate')),
       preloadAudio(resolvedTrack('welcome')),
+      preloadAudio(resolvedTrack('loves')),
+      preloadAudio(resolvedTrack('game')),
     ]),
   },
   {

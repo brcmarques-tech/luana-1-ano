@@ -64,9 +64,14 @@ const _syncMuteBtn = () => {
   else btn.setAttribute('hidden', '');
 };
 
-const FADE_MS = 2200;
+const FADE_MS = 1400;
+
+const _fadeTimers = new Map();
 
 const fadeVolume = (el, from, to, ms, onDone) => {
+  const existing = _fadeTimers.get(el);
+  if (existing !== undefined) clearInterval(existing);
+
   const steps = 20;
   const stepMs = ms / steps;
   const delta = (to - from) / steps;
@@ -75,8 +80,14 @@ const fadeVolume = (el, from, to, ms, onDone) => {
   const id = setInterval(() => {
     s++;
     el.volume = Math.max(0, Math.min(1, from + delta * s));
-    if (s >= steps) { clearInterval(id); el.volume = to; onDone?.(); }
+    if (s >= steps) {
+      clearInterval(id);
+      _fadeTimers.delete(el);
+      el.volume = to;
+      onDone?.();
+    }
   }, stepMs);
+  _fadeTimers.set(el, id);
 };
 
 export const initMusic = () => {
@@ -95,7 +106,8 @@ export const playDirect = (filename, { loop = true, onEnded } = {}) => {
   const next = 1 - _current;
   const nextP = _players[next];
 
-  nextP.src = `${AUDIO_BASE}/${filename}.mp3`;
+  const targetFile = `${AUDIO_BASE}/${filename}.mp3`;
+  if (!nextP.src.endsWith(`/${filename}.mp3`)) nextP.src = targetFile;
   nextP.loop = loop;
   nextP.volume = 0;
   if (onEnded) nextP.addEventListener('ended', onEnded, { once: true });
@@ -121,7 +133,8 @@ export const playTrack = (key, { loop = true, onEnded } = {}) => {
   const next = 1 - _current;
   const nextP = _players[next];
 
-  nextP.src = `${AUDIO_BASE}/${resolveKey(key)}.mp3`;
+  const filename = resolveKey(key);
+  if (!nextP.src.endsWith(`/${filename}.mp3`)) nextP.src = `${AUDIO_BASE}/${filename}.mp3`;
   nextP.loop = loop;
   nextP.volume = 0;
   if (onEnded) nextP.addEventListener('ended', onEnded, { once: true });
@@ -177,6 +190,17 @@ export const toggleMute = () => {
 
 export const isMuted = () => _muted;
 export const isPlaying = () => !!_currentKey;
+
+// pré-aquece o player idle com o src da faixa sem tocar — elimina delay ao chamar playTrack
+export const primeTrack = (key) => {
+  if (!key) return;
+  const filename = resolveKey(key);
+  const idleP = _players[1 - _current];
+  if (!idleP || idleP.src.endsWith(`/${filename}.mp3`)) return;
+  idleP.src = `${AUDIO_BASE}/${filename}.mp3`;
+  idleP.volume = 0;
+  idleP.load();
+};
 
 const _preloadCache = new Set();
 
