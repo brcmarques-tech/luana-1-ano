@@ -31,7 +31,6 @@ const MUSIC_SLOTS = [
   { key: 'timeline-13',   label: 'Timeline Jun/26 🏁', file: 'timeline-13.mp3' },
   { key: 'loves',         label: 'Loves',              file: 'loves.mp3' },
   { key: 'game',          label: 'Memory Game',        file: 'game.mp3' },
-  { key: 'card',          label: 'TCG Card',           file: 'card.mp3' },
   { key: 'final',         label: 'Final',              file: 'final.mp3' },
 ];
 

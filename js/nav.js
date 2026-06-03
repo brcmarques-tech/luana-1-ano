@@ -33,7 +33,6 @@ const SCREEN_TRACK = {
   timeline: 'timeline-01',
   loves:    'loves',
   game:     'game',
-  card:     'card',
   final:    'final',
 };
 
@@ -44,8 +43,7 @@ const NEXT_TRACK = {
   serendipity: 'loves',
   loves: 'game',
   game: 'puzzle',
-  puzzle: 'card',
-  card: 'final',
+  puzzle: 'final',
 };
 
 const screens = {};

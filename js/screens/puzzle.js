@@ -239,8 +239,8 @@ const setupBoard = () => {
   completeOverlay = document.getElementById('puzzle-win');
 
   document.getElementById('puzzle-restart').addEventListener('click', newGame);
-  document.getElementById('puzzle-win-btn').addEventListener('click', () => { stopVersesTicker(); goToScreen('card'); });
-  document.getElementById('puzzle-skip')?.addEventListener('click', () => { stopVersesTicker(); goToScreen('card'); });
+  document.getElementById('puzzle-win-btn').addEventListener('click', () => { stopVersesTicker(); goToScreen('final'); });
+  document.getElementById('puzzle-skip')?.addEventListener('click', () => { stopVersesTicker(); goToScreen('final'); });
   startVersesTicker();
 };
 

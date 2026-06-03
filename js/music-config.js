@@ -6,7 +6,6 @@ export const MUSIC_DEFAULTS = {
   loves:         'iris',
   game:          'cruel-summer',
   puzzle:        'clocks',
-  card:          'mystery-of-love',
   final:         'memories',
   'timeline-01': 'amor-e-fe-acustico',
   'timeline-02': 'ceu-azul',
