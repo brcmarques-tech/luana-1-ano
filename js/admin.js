@@ -1,6 +1,8 @@
 // Modo admin oculto: digitar "admin" em qualquer tela (sem feedback visual).
 // Abre painel para upload de músicas e fotos direto na luana-api.
 
+import { renderTextsTab, bindTextsTab } from './admin-texts.js';
+
 const SECRET = 'admin';
 let buffer = '';
 let adminAuthenticated = false;
@@ -180,11 +182,18 @@ const renderTabs = () => `
   <div class="admin-tabs">
     <button class="admin-tab ${activeTab === 'music' ? 'active' : ''}" data-tab="music">🎵 Músicas</button>
     <button class="admin-tab ${activeTab === 'photo' ? 'active' : ''}" data-tab="photo">📷 Fotos</button>
+    <button class="admin-tab ${activeTab === 'texts' ? 'active' : ''}" data-tab="texts">📝 Textos</button>
   </div>
   <div class="admin-slots" id="admin-slots">
-    ${renderSlots(activeTab === 'music' ? MUSIC_SLOTS : PHOTO_SLOTS, activeTab === 'music' ? 'audio' : 'img')}
+    ${renderTabContent()}
   </div>
 `;
+
+const renderTabContent = () => {
+  if (activeTab === 'texts') return renderTextsTab();
+  if (activeTab === 'music') return renderSlots(MUSIC_SLOTS, 'audio');
+  return renderSlots(PHOTO_SLOTS, 'img');
+};
 
 const bindGenerateLink = () => {
   const btn = document.getElementById('admin-gen-btn');
@@ -218,13 +227,20 @@ const bindTabs = () => {
     tab.addEventListener('click', () => {
       activeTab = tab.dataset.tab;
       document.querySelectorAll('.admin-tab').forEach((t) => t.classList.toggle('active', t === tab));
-      const slots = activeTab === 'music' ? MUSIC_SLOTS : PHOTO_SLOTS;
-      const type = activeTab === 'music' ? 'audio' : 'img';
-      document.getElementById('admin-slots').innerHTML = renderSlots(slots, type);
-      bindSlotUploads(type);
+      document.getElementById('admin-slots').innerHTML = renderTabContent();
+      bindActiveTab();
     });
   });
-  bindSlotUploads(activeTab === 'music' ? 'audio' : 'img');
+  bindActiveTab();
+};
+
+const bindActiveTab = () => {
+  if (activeTab === 'texts') {
+    bindTextsTab();
+  } else {
+    const type = activeTab === 'music' ? 'audio' : 'img';
+    bindSlotUploads(type);
+  }
 };
 
 const renderSlots = (slots, type) => slots.map((slot) => `

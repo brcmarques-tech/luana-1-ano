@@ -3,6 +3,7 @@
 
 import { initSession } from './progress.js';
 import { initNav, goToScreen, goBack, canGoBack } from './nav.js';
+import { syncFromAPI } from './content-overrides.js';
 import { initHUD } from './hud.js';
 import { initMusic, toggleMute, isMuted, isPlaying, playTrack } from './music.js';
 import { initAmbient, allKilled, triggerSkullMode, resumePets } from './ambient.js';
@@ -61,6 +62,10 @@ if ('serviceWorker' in navigator) {
 }
 
 // ===== boot global (não depende de sessão) =====
+
+// puxa overrides de texto do backend (cache local é instantâneo,
+// API atualiza em background pra próxima sessão)
+syncFromAPI();
 
 initAmbient();
 initAdmin();

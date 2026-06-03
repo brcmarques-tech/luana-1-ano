@@ -1255,6 +1255,29 @@ body.screen-loading .hud {
   transform: translateY(0);
 }
 
+.final-epigraph {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: var(--yellow);
+  padding-left: 14px;
+  border-left: 2px solid rgba(255, 217, 61, 0.45);
+  margin-bottom: 28px;
+}
+
+.final-epigraph cite {
+  display: block;
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  opacity: 0.72;
+  margin-top: 6px;
+}
+
 .final-paragraph:last-child {
   font-family: var(--font-display);
   font-size: 1.7rem;
@@ -4248,6 +4271,177 @@ body.keyboard-open .screen.active {
   background: #1a1a1a;
 }
 
+/* ===== editor de textos ===== */
+
+.admin-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-texts-help {
+  font-size: 0.78rem;
+  color: #888;
+  line-height: 1.4;
+}
+
+.admin-texts-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-texts-section-btn {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #ddd;
+  padding: 12px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.88rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: left;
+}
+.admin-texts-section-btn:hover {
+  background: #222;
+  border-color: #555;
+}
+.admin-texts-section-arrow {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.admin-texts-reset-all {
+  margin-top: 12px;
+  background: none;
+  border: 1px solid #4a1a1a;
+  color: #a55;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.admin-texts-reset-all:hover { background: #2a0e0e; }
+
+.admin-texts-editor {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.admin-texts-editor-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-texts-back {
+  background: none;
+  border: 1px solid #333;
+  color: #999;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.admin-texts-back:hover { background: #1a1a1a; }
+
+.admin-texts-title {
+  font-size: 0.95rem;
+  color: #ddd;
+  font-weight: 600;
+}
+
+.admin-texts-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-texts-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-texts-field label {
+  font-size: 0.72rem;
+  color: #999;
+  letter-spacing: 0.3px;
+}
+
+.admin-texts-input {
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  color: #ddd;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  width: 100%;
+  resize: vertical;
+}
+
+.admin-texts-input:focus {
+  outline: none;
+  border-color: #5a5a5a;
+}
+
+.admin-texts-group {
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.admin-texts-group legend {
+  font-size: 0.78rem;
+  color: var(--yellow);
+  padding: 0 6px;
+  letter-spacing: 0.5px;
+}
+
+.admin-texts-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.admin-texts-reset, .admin-texts-save {
+  border: 1px solid #333;
+  background: #1a1a1a;
+  color: #ddd;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  flex: 1;
+}
+.admin-texts-reset:hover { background: #2a1a1a; border-color: #553333; color: #d99; }
+.admin-texts-save {
+  background: linear-gradient(135deg, #2a4a1a 0%, #1a3a14 100%);
+  border-color: #4a6a3a;
+  color: #cfc;
+  font-weight: 600;
+}
+.admin-texts-save:hover { background: linear-gradient(135deg, #3a5a2a 0%, #2a4a24 100%); }
+
+.admin-texts-saved {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: #6c6;
+  text-align: center;
+}
+
 /* slots */
 
 .admin-slots {
@@ -4575,6 +4769,29 @@ body:has(#screen-constellation.active) .pet--dead {
   color: var(--yellow);
   margin-bottom: 10px;
   opacity: 0.85;
+}
+
+.cn-quote {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--text-soft);
+  font-style: italic;
+  margin-bottom: 12px;
+  padding-left: 10px;
+  border-left: 2px solid rgba(255, 217, 61, 0.4);
+  opacity: 0.88;
+}
+
+.cn-quote-author {
+  display: block;
+  font-style: normal;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  color: var(--yellow);
+  margin-top: 2px;
+  opacity: 0.75;
 }
 
 .cn-text {

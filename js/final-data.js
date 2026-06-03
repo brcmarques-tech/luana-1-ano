@@ -1,10 +1,16 @@
 // ✏️ Edite aqui o conteúdo da tela final.
-// Cada string do array `paragraphs` vira um parágrafo que aparece com fade encadeado.
-// Mantenha em 4-6 parágrafos pra não ficar longo demais — ela vai ler no celular.
+// (também editável pelo painel admin > Textos)
 
-export const FINAL = {
+import { applyOverride } from './content-overrides.js';
+
+const DEFAULT = {
   date: '17 . 06 . 2026',
   badge: '1 ano',
+
+  epigraph: {
+    text: 'A vida é muito bela, basta um beijo e o delicado mecanismo se move.',
+    author: 'Adélia Prado',
+  },
 
   paragraphs: [
     'Eu queria escrever isso de um jeito engraçado, mas não consegui.',
@@ -15,7 +21,7 @@ export const FINAL = {
   ],
 
   signature: '— seu, Bruno',
-
-  // botão final que reinicia o site
   restartLabel: 'voltar pro começo ↺',
 };
+
+export const FINAL = applyOverride('final', DEFAULT);

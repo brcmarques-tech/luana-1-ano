@@ -50,6 +50,15 @@ const render = () => {
     restartBtn.textContent = FINAL.restartLabel;
 
     bodyEl.innerHTML = '';
+
+    // epígrafe literária (se houver)
+    if (FINAL.epigraph) {
+      const epi = document.createElement('blockquote');
+      epi.className = 'final-epigraph final-paragraph';
+      epi.innerHTML = `“${FINAL.epigraph.text}”<cite>— ${FINAL.epigraph.author}</cite>`;
+      bodyEl.appendChild(epi);
+    }
+
     FINAL.paragraphs.forEach((text) => {
       const p = document.createElement('p');
       p.className = 'final-paragraph';

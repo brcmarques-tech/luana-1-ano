@@ -1,6 +1,9 @@
 // Carta principal da Luana + baralho de pets + carta secreta do Bruno
+// (textos editáveis pelo painel admin > Textos)
 
-export const CARD = {
+import { applyOverride } from './content-overrides.js';
+
+const _CARD_DEFAULT = {
   id: 'luana',
   name: 'Luana Telles Melgarejo',
   title: 'A Deusa Acidental',
@@ -28,8 +31,10 @@ export const CARD = {
   flavor: '"perfeita em tudo, exceto em saber disso."',
 };
 
+export const CARD = applyOverride('card', _CARD_DEFAULT);
+
 // cartas de pets + carta bônus
-export const BONUS_CARDS = [
+const _BONUS_DEFAULT = [
   {
     id: 'wolf',
     name: 'Wolf',
@@ -171,8 +176,10 @@ export const BONUS_CARDS = [
   },
 ];
 
+export const BONUS_CARDS = applyOverride('bonusCards', _BONUS_DEFAULT);
+
 // carta secreta do Bruno — desbloqueada ao encontrar todos os easter eggs
-export const SPECIAL_CARD = {
+const _SPECIAL_DEFAULT = {
   id: 'bruno',
   name: 'Bruno Marques',
   title: 'O Agraciado Involuntário',
@@ -197,3 +204,5 @@ export const SPECIAL_CARD = {
   ],
   flavor: '"a sorte? é por ter ela."',
 };
+
+export const SPECIAL_CARD = applyOverride('specialCard', _SPECIAL_DEFAULT);

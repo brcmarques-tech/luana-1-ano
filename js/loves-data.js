@@ -1,46 +1,49 @@
-// Edite aqui as 8 coisas que você ama na Luana.
-// Pode adicionar/remover quantas quiser. As atuais são exemplos lúdicos.
-// Cada item tem emoji, texto principal e um subtítulo opcional (mais leve).
+// 8 coisas que ele ama nela.
+// (também editável pelo painel admin > Textos)
 
-export const LOVES = [
+import { applyOverride } from './content-overrides.js';
+
+const DEFAULT = [
   {
-    emoji: '😴',
-    text: 'o jeito que você dorme grudada em mim',
-    sub: 'mesmo no calor de 35°C',
-  },
-  {
-    emoji: '😂',
-    text: 'sua risada quando você acha algo MUITO engraçado',
-    sub: '(que ninguém mais acha)',
+    emoji: '🌅',
+    text: 'amo seu jeito lento de acordar',
+    sub: 'como se a manhã também precisasse de tempo pra existir',
   },
   {
     emoji: '☕',
-    text: 'você me trazer café sem eu pedir',
-    sub: 'isso é amor de verdade',
+    text: 'amo que você lembre coisas que eu nem cheguei a dizer',
+    sub: 'como se já tivesse me ouvido em outra vida',
   },
   {
-    emoji: '🎵',
-    text: 'você cantando errado o refrão',
-    sub: 'e jurando que é assim mesmo',
-  },
-  {
-    emoji: '🥟',
-    text: 'você me deixar comer da sua comida',
-    sub: 'sabendo que eu sempre vou querer mais',
+    emoji: '😂',
+    text: 'amo a sua risada quando só você acha graça',
+    sub: 'é o som mais honesto que eu já ouvi',
   },
   {
     emoji: '🌧️',
-    text: 'dormir com chuva é melhor com você',
-    sub: 'principalmente quando tem trovão',
+    text: 'amo dia ruim, se for com você',
+    sub: 'porque o seu colo desfaz qualquer nuvem',
   },
   {
-    emoji: '🧠',
-    text: 'você lembrar de tudo que eu esqueço',
-    sub: 'até as coisas que eu nem disse',
+    emoji: '🤔',
+    text: 'amo as perguntas que você faz às 23h',
+    sub: 'por que o céu é azul, será que a gente vai velho junto',
+  },
+  {
+    emoji: '🐾',
+    text: 'amo como você fala com os bichos da casa',
+    sub: 'cada um ganha um tom seu, mais doce que o nosso',
+  },
+  {
+    emoji: '🌸',
+    text: 'amo sua memória que guarda partes minhas',
+    sub: 'que eu nem sabia que tinha',
   },
   {
     emoji: '💛',
-    text: 'você ser exatamente você',
-    sub: 'sem editar pra ninguém',
+    text: 'amo você sendo só você',
+    sub: 'sem editar pra ninguém, nem pra mim',
   },
 ];
+
+export const LOVES = applyOverride('loves', DEFAULT);

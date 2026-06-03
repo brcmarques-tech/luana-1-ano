@@ -1,8 +1,9 @@
 // Edite aqui os 13 cards da timeline (jun/25 → jun/26).
-// Quando tiver foto, troque `photo: null` por `photo: 'assets/img/nome-do-arquivo.jpg'`.
-// As captions atuais são exemplos lúdicos — substitua pelas memórias de vocês.
+// (também editável pelo painel admin > Textos)
 
-export const TIMELINE = [
+import { applyOverride } from './content-overrides.js';
+
+const DEFAULT = [
   {
     date: 'JUN 2025',
     caption: 'onde tudo começou 💫',
@@ -131,3 +132,5 @@ export const TIMELINE = [
     finalText: 'e olha onde a gente chegou 💛',
   },
 ];
+
+export const TIMELINE = applyOverride('timeline', DEFAULT);

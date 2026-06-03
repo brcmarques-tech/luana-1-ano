@@ -3,16 +3,18 @@
 
 import { API_URL } from '../config.js';
 import { getToken } from '../progress.js';
+import { applyOverride } from '../content-overrides.js';
 
 const LS_KEY = 'luana_constellation';
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 // ===== as 7 perguntas =====
 
-export const QUESTIONS = [
+const _QUESTIONS_DEFAULT = [
   {
     day: 1,
     title: 'lembrança',
+    quote: { text: 'amar se aprende amando', author: 'Drummond' },
     text: 'qual foi a primeira coisa que te conquistou nele?',
     options: [
       { id: 'a', label: 'o jeito que ele me olhou' },
@@ -24,6 +26,7 @@ export const QUESTIONS = [
   {
     day: 2,
     title: 'cotidiano',
+    quote: { text: 'amar é deslocar a alma de casa em casa', author: 'Mario Quintana' },
     text: 'qual hábito dele você mais ama hoje?',
     options: [
       { id: 'a', label: 'como ele me acorda' },
@@ -35,6 +38,7 @@ export const QUESTIONS = [
   {
     day: 3,
     title: 'humor',
+    quote: { text: 'ser feliz é viver morto de paixão', author: 'Vinicius de Moraes' },
     text: 'o que mais te faz rir nele?',
     options: [
       { id: 'a', label: 'os comentários aleatórios' },
@@ -46,6 +50,7 @@ export const QUESTIONS = [
   {
     day: 4,
     title: 'segurança',
+    quote: { text: 'o mundo que é nosso é sempre tão pequeno e infinito que só cabe no olhar de uma criança', author: 'Mia Couto' },
     text: 'quando você se sentiu mais segura com ele?',
     options: [
       { id: 'a', label: 'num dia ruim que ele me carregou' },
@@ -57,6 +62,7 @@ export const QUESTIONS = [
   {
     day: 5,
     title: 'futuro',
+    quote: { text: 'de longe te hei de amar — da tranquila distância em que o amor é saudade e o desejo, constância', author: 'Cecília Meireles' },
     text: 'o que você quer fazer com ele esse próximo ano?',
     options: [
       { id: 'a', label: 'viajar pra um lugar que a gente nunca foi' },
@@ -68,6 +74,7 @@ export const QUESTIONS = [
   {
     day: 6,
     title: 'ele em uma palavra',
+    quote: { text: 'amar é poder deixar que o amado exista enquanto tal, como ele mesmo', author: 'Adélia Prado' },
     text: 'se tivesse que escolher uma palavra pra descrever ele, qual seria?',
     freeTextOnly: true,
     placeholder: 'uma palavra (ou duas, se precisar)',
@@ -76,6 +83,7 @@ export const QUESTIONS = [
   {
     day: 7,
     title: 'o momento',
+    quote: { text: 'a vida é muito bela, basta um beijo e o delicado mecanismo se move', author: 'Adélia Prado' },
     text: 'se você pudesse reviver um único momento desse ano, qual seria?',
     freeTextOnly: true,
     placeholder: 'conta esse momento…',
@@ -83,14 +91,18 @@ export const QUESTIONS = [
   },
 ];
 
+export const QUESTIONS = applyOverride('questions', _QUESTIONS_DEFAULT);
+
 // ===== coordenadas do reveal final =====
 
-export const REVEAL = {
+const _REVEAL_DEFAULT = {
   lat: -32.23775,
   lon: -53.08528,
   dms: `32°14'15.9"S 53°05'07.0"W`,
   date: '17/06/2025',
 };
+
+export const REVEAL = applyOverride('reveal', _REVEAL_DEFAULT);
 
 // ===== estado local + sincronização =====
 

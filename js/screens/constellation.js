@@ -77,11 +77,15 @@ const renderPanel = () => {
   if (!q) return;
 
   const eyebrow = `dia ${q.day} · ${q.title}`;
+  const quoteHtml = q.quote
+    ? `<p class="cn-quote">“${q.quote.text}” <span class="cn-quote-author">— ${q.quote.author}</span></p>`
+    : '';
 
   if (q.freeTextOnly) {
     panel.innerHTML = `
       <div class="cn-question">
         <p class="cn-eyebrow">${eyebrow}</p>
+        ${quoteHtml}
         <p class="cn-text">${q.text}</p>
         <textarea class="cn-textarea" id="cn-text-input"
           maxlength="${q.maxLength || 200}"
@@ -106,6 +110,7 @@ const renderPanel = () => {
   panel.innerHTML = `
     <div class="cn-question">
       <p class="cn-eyebrow">${eyebrow}</p>
+      ${quoteHtml}
       <p class="cn-text">${q.text}</p>
       <div class="cn-options">${optsHtml}</div>
       <textarea class="cn-textarea cn-textarea--free" id="cn-text-input"
