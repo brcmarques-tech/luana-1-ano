@@ -4,6 +4,7 @@
 
 import { registerScreenEnter, goToScreen } from '../nav.js';
 import { playTrack } from '../music.js';
+import { startBalloons, stopBalloons } from '../constellation/balloons.js';
 import { unlock } from '../achievements.js';
 import { haptic, HAPTIC } from '../haptic.js';
 import {
@@ -235,13 +236,18 @@ const showRevealText = async () => {
   await typeInto(lines[1], `${REVEAL.lat}°, ${REVEAL.lon}°`, 50);
 
   await new Promise((r) => setTimeout(r, 600));
+
+  // lança os balões após as coordenadas aparecerem
+  const cnScreen = document.getElementById('screen-constellation');
+  if (cnScreen) startBalloons(cnScreen);
+
   const btn = document.getElementById('cn-reveal-close');
-  btn.hidden = false;
   requestAnimationFrame(() => btn.classList.add('cn-reveal-close--show'));
   btn.addEventListener('click', dismissReveal);
 };
 
 const dismissReveal = () => {
+  stopBalloons();
   const overlay = document.getElementById('cn-reveal-overlay');
   overlay?.classList.remove('show');
   exitFullscreen();

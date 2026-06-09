@@ -5536,3 +5536,112 @@ body:has(#screen-constellation.active) .pet--dead {
   line-height: 1.2;
   margin-top: 1px;
 }
+
+/* ===== BALLOON PHOTOS (constellation reveal) ===== */
+.cn-balloon-wrap {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  animation: cn-rise var(--rise, 10s) linear forwards;
+  z-index: 25;
+}
+
+@keyframes cn-rise {
+  to { transform: translateY(calc(-115vh - 300px)); }
+}
+
+.cn-balloon-inner {
+  animation: cn-sway var(--sway, 3s) ease-in-out infinite alternate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@keyframes cn-sway {
+  from { transform: translateX(calc(-1 * var(--amp, 30px))); }
+  to   { transform: translateX(var(--amp, 30px)); }
+}
+
+/* ---- forma de balão ---- */
+.cn-balloon-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: center bottom;
+}
+
+.cn-balloon-body {
+  position: relative;
+  border-radius: 50%;           /* ellipse — largura ≠ altura → oval real */
+  overflow: hidden;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.55), inset 0 -4px 10px rgba(0,0,0,0.25);
+  flex-shrink: 0;
+}
+
+.cn-balloon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: rotate(var(--rot, 0deg)) scale(1.05); /* pequeno zoom para cobrir borda */
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* brilho de balão (reflexo) */
+.cn-balloon-shine {
+  position: absolute;
+  top: 8%;
+  left: 16%;
+  width: 28%;
+  height: 22%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.42) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* nó do balão */
+.cn-balloon-knot {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 40% 40% 55% 55%;
+  flex-shrink: 0;
+}
+
+/* cordão SVG — herda alinhamento do flex pai */
+.cn-balloon-string {
+  display: block;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+/* ---- interação: incha e explode ---- */
+.cn-balloon-shell.cn-balloon--inflating {
+  animation: cn-inflate 1.5s ease-out forwards;
+}
+
+.cn-balloon-shell.cn-balloon--pop {
+  animation: cn-pop 0.38s ease-in forwards;
+}
+
+@keyframes cn-inflate {
+  0%   { transform: scale(1); }
+  60%  { transform: scale(1.7); }
+  85%  { transform: scale(2.1); }
+  100% { transform: scale(2.35); }
+}
+
+@keyframes cn-pop {
+  0%   { transform: scale(2.35); opacity: 1;   filter: brightness(1.5); }
+  25%  { transform: scale(2.8);  opacity: 0.9; filter: brightness(5);   }
+  100% { transform: scale(1.2);  opacity: 0;   filter: brightness(1);   }
+}
+
+/* ---- partículas de explosão ---- */
+.cn-particle {
+  animation: cn-particle-fly 0.65s ease-out forwards;
+}
+
+@keyframes cn-particle-fly {
+  0%   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
+}
