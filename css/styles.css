@@ -372,27 +372,6 @@ body.screen-loading .hud {
 
 /* ===== mute button ===== */
 
-.btn-mute {
-  position: fixed;
-  top: calc(max(env(safe-area-inset-top, 10px), 10px) + 50px);
-  left: 10px;
-  background: rgba(26, 10, 46, 0.78);
-  border: 1px solid rgba(255, 94, 138, 0.3);
-  color: var(--text);
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  font-size: 1rem;
-  cursor: pointer;
-  z-index: 100;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-mute[hidden] { display: none; }
 
 .btn-skip-music {
   position: fixed;
@@ -4625,7 +4604,6 @@ body.skull-mode .screen.active {
 /* esconde HUD/lanternas/mute/sky-button enquanto a Constelação está ativa */
 body:has(#screen-constellation.active) .hud,
 body:has(#screen-constellation.active) .lantern-layer,
-body:has(#screen-constellation.active) .btn-mute,
 body:has(#screen-constellation.active) .btn-sky,
 body:has(#screen-constellation.active) .pet-layer,
 body:has(#screen-constellation.active) .sakura-layer {

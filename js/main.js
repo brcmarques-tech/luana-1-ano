@@ -5,7 +5,7 @@ import { initSession } from './progress.js';
 import { initNav, goToScreen, goBack, canGoBack } from './nav.js';
 import { syncFromAPI } from './content-overrides.js';
 import { initHUD } from './hud.js';
-import { initMusic, toggleMute, isMuted, isPlaying, playTrack } from './music.js';
+import { initMusic } from './music.js';
 import { initAmbient, allKilled, triggerSkullMode, resumePets } from './ambient.js';
 import { initAdmin } from './admin.js';
 import { initMobileKeyboard } from './mobile-keyboard.js';
@@ -72,17 +72,6 @@ initAdmin();
 initMusic();
 initMobileKeyboard();
 
-const btnMute = document.getElementById('btn-mute');
-btnMute.textContent = isMuted() ? '🔇' : '🔊';
-btnMute.addEventListener('click', () => {
-  const muted = toggleMute();
-  btnMute.textContent = muted ? '🔇' : '🔊';
-  // se desmutou e nada estava tocando, inicia a música da tela atual
-  if (!muted && !isPlaying()) {
-    const screen = document.querySelector('.screen.active')?.id?.replace('screen-', '');
-    playTrack(screen || 'gate');
-  }
-});
 
 // ===== botão de voltar global =====
 

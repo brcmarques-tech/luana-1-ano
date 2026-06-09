@@ -10,7 +10,7 @@ const resolveKey = (key) => TRACK_MAP[key] ?? key;
 
 export const resolvedTrack = resolveKey;
 
-// playlist das 13 faixas da timeline (já shuffled)
+// playlist das 13 faixas da timeline
 export const TIMELINE_PLAYLIST = Array.from({ length: 13 }, (_, i) =>
   resolveKey(`timeline-${String(i + 1).padStart(2, '0')}`)
 );
@@ -18,16 +18,7 @@ export const TIMELINE_PLAYLIST = Array.from({ length: 13 }, (_, i) =>
 let _players = [null, null];
 let _current = 0;
 let _currentKey = null;
-// padrão é mudo — só toca com som se o usuário desmutar explicitamente
-let _muted = localStorage.getItem('luana_muted') !== '0';
 const _positions = new Map();
-
-const _syncMuteBtn = () => {
-  const btn = document.getElementById('btn-mute');
-  if (!btn) return;
-  if (_currentKey) btn.removeAttribute('hidden');
-  else btn.setAttribute('hidden', '');
-};
 
 const FADE_MS = 1400;
 
@@ -60,7 +51,6 @@ export const initMusic = () => {
   _players[1] = document.getElementById('bg-music-b');
 };
 
-// toca um arquivo por nome direto (sem passar pelo mapa de shuffle)
 export const playDirect = (filename, { loop = true, onEnded } = {}) => {
   if (filename === _currentKey && loop) return;
 
@@ -71,27 +61,22 @@ export const playDirect = (filename, { loop = true, onEnded } = {}) => {
   const next = 1 - _current;
   const nextP = _players[next];
 
-  const targetFile = `${AUDIO_BASE}/${filename}.mp3`;
-  if (!nextP.src.endsWith(`/${filename}.mp3`)) nextP.src = targetFile;
+  if (!nextP.src.endsWith(`/${filename}.mp3`)) nextP.src = `${AUDIO_BASE}/${filename}.mp3`;
   nextP.loop = loop;
   nextP.volume = 0;
   if (onEnded) nextP.addEventListener('ended', onEnded, { once: true });
   nextP.play().catch(() => {});
 
-  fadeVolume(nextP, 0, _muted ? 0 : 0.4, FADE_MS);
+  fadeVolume(nextP, 0, 0.4, FADE_MS);
   fadeVolume(curr, curr.volume, 0, FADE_MS, () => { curr.pause(); curr.src = ''; });
   _current = next;
-  _syncMuteBtn();
 };
 
 export const playTrack = (key, { loop = true, onEnded } = {}) => {
   if (key === _currentKey && loop) return;
 
-  // salva posição da faixa atual antes de trocar
   const curr = _players[_current];
-  if (_currentKey && curr?.src) {
-    _positions.set(_currentKey, curr.currentTime);
-  }
+  if (_currentKey && curr?.src) _positions.set(_currentKey, curr.currentTime);
 
   _currentKey = key;
 
@@ -104,29 +89,21 @@ export const playTrack = (key, { loop = true, onEnded } = {}) => {
   nextP.volume = 0;
   if (onEnded) nextP.addEventListener('ended', onEnded, { once: true });
 
-  // restaura posição salva ao carregar metadados
   const savedPos = _positions.get(key) || 0;
   if (savedPos > 0) {
-    nextP.addEventListener('loadedmetadata', () => {
-      nextP.currentTime = savedPos;
-    }, { once: true });
+    nextP.addEventListener('loadedmetadata', () => { nextP.currentTime = savedPos; }, { once: true });
   }
 
   nextP.play().catch(() => {});
 
-  fadeVolume(nextP, 0, _muted ? 0 : 0.4, FADE_MS);
-  fadeVolume(curr, curr.volume, 0, FADE_MS, () => {
-    curr.pause();
-    curr.src = '';
-  });
+  fadeVolume(nextP, 0, 0.4, FADE_MS);
+  fadeVolume(curr, curr.volume, 0, FADE_MS, () => { curr.pause(); curr.src = ''; });
   _current = next;
-  _syncMuteBtn();
 };
 
 export const stopMusic = () => {
   _currentKey = null;
   _players.forEach((p) => fadeVolume(p, p.volume, 0, 800, () => { p.pause(); p.src = ''; }));
-  _syncMuteBtn();
 };
 
 let _wasPlayingBeforeVideo = false;
@@ -141,22 +118,13 @@ export const pauseForVideo = () => {
 export const resumeAfterVideo = () => {
   if (!_wasPlayingBeforeVideo) return;
   _players.forEach((p) => {
-    if (p.src) { p.play().catch(() => {}); fadeVolume(p, 0, _muted ? 0 : 0.4, 600); }
+    if (p.src) { p.play().catch(() => {}); fadeVolume(p, 0, 0.4, 600); }
   });
   _wasPlayingBeforeVideo = false;
 };
 
-export const toggleMute = () => {
-  _muted = !_muted;
-  localStorage.setItem('luana_muted', _muted ? '1' : '0');
-  _players.forEach((p) => fadeVolume(p, p.volume, _muted ? 0 : 0.4, 400));
-  return _muted;
-};
-
-export const isMuted = () => _muted;
 export const isPlaying = () => !!_currentKey;
 
-// pré-aquece o player idle com o src da faixa sem tocar — elimina delay ao chamar playTrack
 export const primeTrack = (key) => {
   if (!key) return;
   const filename = resolveKey(key);
