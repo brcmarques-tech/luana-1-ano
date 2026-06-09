@@ -33,9 +33,10 @@ const SCREEN_TRACK = {
   timeline:    'timeline-01',
   serendipity: 'loves',
   loves:       'loves',
-  game:     'game',
-  puzzle:   'game',
-  final:    'final',
+  game:          'game',
+  puzzle:        'game',
+  constellation: 'constellation',
+  final:         'final',
 };
 
 const NEXT_TRACK = {
