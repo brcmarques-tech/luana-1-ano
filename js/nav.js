@@ -30,8 +30,9 @@ const SCREEN_TRACK = {
   gate:     'gate',
   welcome:  'welcome',
   hanami:   'welcome',
-  timeline: 'timeline-01',
-  loves:    'loves',
+  timeline:    'timeline-01',
+  serendipity: 'loves',
+  loves:       'loves',
   game:     'game',
   final:    'final',
 };
