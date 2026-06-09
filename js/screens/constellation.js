@@ -3,6 +3,7 @@
 // transição céu→mapa, coordenadas do primeiro encontro.
 
 import { registerScreenEnter, goToScreen } from '../nav.js';
+import { playTrack } from '../music.js';
 import { unlock } from '../achievements.js';
 import { haptic, HAPTIC } from '../haptic.js';
 import {
@@ -183,7 +184,7 @@ const exitFullscreen = async () => {
 
 const startReveal = () => {
   panel.classList.add('cn-panel--hidden');
-  // tenta entrar em fullscreen real pra modo cinema
+  playTrack('constellation');
   enterFullscreen();
   sky.startReveal(() => {
     setTimeout(showRevealText, 600);
