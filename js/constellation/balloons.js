@@ -75,7 +75,7 @@ const spawnParticles = (wrap) => {
   }
 };
 
-const createBalloon = (src) => {
+const createBalloon = (src, onPopped) => {
   const bw       = 90  + Math.random() * 70;    // largura 90–160px
   const bh       = bw  * 1.18;                  // altura ~18% maior
   const kh       = bw  * 0.11;                  // altura do nó
@@ -142,6 +142,7 @@ const createBalloon = (src) => {
       shell.classList.remove('cn-balloon--inflating');
       shell.classList.add('cn-balloon--pop');
       spawnParticles(wrap);
+      onPopped?.();
       setTimeout(() => wrap.remove(), 450);
     }, { once: true });
   });
@@ -155,19 +156,25 @@ export const stopBalloons = () => {
   if (_timer) { clearTimeout(_timer); _timer = null; }
 };
 
-export const startBalloons = (container, photos = BALLOON_PHOTOS, onDone) => {
+export const startBalloons = (container, photos = BALLOON_PHOTOS, onDone, onAllPopped) => {
   stopBalloons();
 
   const list  = shuffle(photos);
   const total = list.length;
   const maxMs = 200_000;
   let launched = 0;
+  let popped   = 0;
   let elapsed  = 0;
+
+  const handlePop = () => {
+    popped++;
+    if (onAllPopped && popped >= total) onAllPopped();
+  };
 
   const launch = () => {
     if (launched >= total || elapsed >= maxMs) return;
 
-    const { wrap, riseDur } = createBalloon(list[launched++]);
+    const { wrap, riseDur } = createBalloon(list[launched++], handlePop);
     container.appendChild(wrap);
 
     const isLast = launched >= total || elapsed >= maxMs;
