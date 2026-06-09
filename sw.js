@@ -4,7 +4,7 @@
 //  - network-first pra API (com fallback cache se offline)
 //  - assets de mídia (audio/img) não cacheados aqui (servidos pela luana-api)
 
-const VERSION = 'v9';
+const VERSION = 'v10';
 const STATIC_CACHE = `luana-static-${VERSION}`;
 const RUNTIME_CACHE = `luana-runtime-${VERSION}`;
 
