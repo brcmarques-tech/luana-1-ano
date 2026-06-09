@@ -48,6 +48,14 @@ const lsAccess = () => {
 export const initSession = async () => {
   _token = resolveToken();
 
+  // modo dev local: ?dev=1 bypassa a verificação de acesso
+  if (new URLSearchParams(location.search).get('dev') === '1') {
+    _xp = lsXP();
+    _achievements.clear();
+    lsAchievements().forEach(id => _achievements.add(id));
+    return { hasAccess: true, nextUnlock: null };
+  }
+
   // modo offline: API não configurada ou sem token
   if (!API_URL || !_token) {
     _xp = lsXP();
