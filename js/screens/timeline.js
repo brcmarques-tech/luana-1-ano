@@ -5,24 +5,11 @@ import { TIMELINE } from '../timeline-data.js';
 import { goToScreen, registerScreenEnter } from '../nav.js';
 import { unlock } from '../achievements.js';
 import { setupEggTimelineCounter } from '../easter-eggs.js';
-import { playDirect, TIMELINE_PLAYLIST } from '../music.js';
+import { playTrack } from '../music.js';
 
 let timelineEl, dotsEl, counterEl;
 let rendered = false;
 let lastIdx = 0;
-let tlGroup = -1;
-
-const GROUP_SIZE = 3;
-const NUM_GROUPS = Math.ceil(13 / GROUP_SIZE); // 5 grupos: 0-2, 3-5, 6-8, 9-11, 12
-
-const playGroupAt = (group) => {
-  tlGroup = ((group % NUM_GROUPS) + NUM_GROUPS) % NUM_GROUPS;
-  const trackIdx = tlGroup * GROUP_SIZE; // 0, 3, 6, 9, 12
-  playDirect(TIMELINE_PLAYLIST[Math.min(trackIdx, TIMELINE_PLAYLIST.length - 1)], {
-    loop: false,
-    onEnded: () => playGroupAt(tlGroup + 1),
-  });
-};
 
 export const getLastTimelineIdx = () => lastIdx;
 
@@ -212,8 +199,6 @@ const wireScroll = () => {
       if (seen.size === TIMELINE.length) unlock('all-cards-seen');
       if (closest !== lastIdx) {
         lastIdx = closest;
-        const group = Math.floor(closest / GROUP_SIZE);
-        if (group !== tlGroup) playGroupAt(group);
       }
     }, 80);
   }, { passive: true });
@@ -259,7 +244,6 @@ const render = () => {
 export const resetTimeline = () => {
   rendered = false;
   lastIdx = 0;
-  tlGroup = -1;
 };
 
 export const initTimeline = () => {
@@ -271,7 +255,6 @@ export const initTimeline = () => {
 
   registerScreenEnter('journey', () => {
     render();
-    const group = Math.floor(lastIdx / GROUP_SIZE);
-    playGroupAt(group);
+    playTrack('timeline-01');
   });
 };

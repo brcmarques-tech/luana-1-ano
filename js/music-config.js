@@ -8,18 +8,6 @@ export const MUSIC_DEFAULTS = {
   puzzle:        'clocks',
   final:         'memories',
   'timeline-01': 'amor-e-fe-acustico',
-  'timeline-02': 'ceu-azul',
-  'timeline-03': 'choose-me',
-  'timeline-04': 'bem',
-  'timeline-05': 'let-me-love-you',
-  'timeline-06': 'lighter',
-  'timeline-07': 'blinding-lights',
-  'timeline-08': 'numb',
-  'timeline-09': 'infinity',
-  'timeline-10': 'in-the-end',
-  'timeline-11': 'too-sweet',
-  'timeline-12': 'ceilings',
-  'timeline-13': 'somebody-that-i-used-to-know',
 };
 
 export const POOL = [

@@ -10,10 +10,6 @@ const resolveKey = (key) => TRACK_MAP[key] ?? key;
 
 export const resolvedTrack = resolveKey;
 
-// playlist das 13 faixas da timeline
-export const TIMELINE_PLAYLIST = Array.from({ length: 13 }, (_, i) =>
-  resolveKey(`timeline-${String(i + 1).padStart(2, '0')}`)
-);
 
 let _players = [null, null];
 let _current = 0;
@@ -51,26 +47,6 @@ export const initMusic = () => {
   _players[1] = document.getElementById('bg-music-b');
 };
 
-export const playDirect = (filename, { loop = true, onEnded } = {}) => {
-  if (filename === _currentKey && loop) return;
-
-  const curr = _players[_current];
-  if (_currentKey && curr?.src) _positions.set(_currentKey, curr.currentTime);
-
-  _currentKey = filename;
-  const next = 1 - _current;
-  const nextP = _players[next];
-
-  if (!nextP.src.endsWith(`/${filename}.mp3`)) nextP.src = `${AUDIO_BASE}/${filename}.mp3`;
-  nextP.loop = loop;
-  nextP.volume = 0;
-  if (onEnded) nextP.addEventListener('ended', onEnded, { once: true });
-  nextP.play().catch(() => {});
-
-  fadeVolume(nextP, 0, 0.4, FADE_MS);
-  fadeVolume(curr, curr.volume, 0, FADE_MS, () => { curr.pause(); curr.src = ''; });
-  _current = next;
-};
 
 export const playTrack = (key, { loop = true, onEnded } = {}) => {
   if (key === _currentKey && loop) return;
