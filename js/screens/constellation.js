@@ -206,6 +206,18 @@ const typeInto = (el, text, speed = 60) => new Promise((resolve) => {
   tick();
 });
 
+const showSairBtn = () => {
+  if (document.getElementById('cn-sair-btn')) return;
+  const btn = document.createElement('button');
+  btn.id = 'cn-sair-btn';
+  btn.className = 'btn cn-sair-btn';
+  btn.textContent = 'Sair';
+  btn.addEventListener('click', dismissReveal);
+  const screen = document.getElementById('screen-constellation');
+  screen?.appendChild(btn);
+  requestAnimationFrame(() => btn.classList.add('cn-sair-btn--show'));
+};
+
 const showRevealText = async () => {
   if (document.getElementById('cn-reveal-overlay')) return;
   const overlay = document.createElement('div');
@@ -237,17 +249,18 @@ const showRevealText = async () => {
 
   await new Promise((r) => setTimeout(r, 600));
 
-  // lança os balões após as coordenadas aparecerem
+  // lança os balões — botão "Sair" aparece quando o último balão sumir
   const cnScreen = document.getElementById('screen-constellation');
-  if (cnScreen) startBalloons(cnScreen);
+  if (cnScreen) startBalloons(cnScreen, undefined, showSairBtn);
 
+  // esconde o "voltar →" enquanto os balões sobem (Sair vai substituir)
   const btn = document.getElementById('cn-reveal-close');
-  requestAnimationFrame(() => btn.classList.add('cn-reveal-close--show'));
-  btn.addEventListener('click', dismissReveal);
+  btn.hidden = true;
 };
 
 const dismissReveal = () => {
   stopBalloons();
+  document.getElementById('cn-sair-btn')?.remove();
   const overlay = document.getElementById('cn-reveal-overlay');
   overlay?.classList.remove('show');
   exitFullscreen();

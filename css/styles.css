@@ -5645,3 +5645,33 @@ body:has(#screen-constellation.active) .pet--dead {
   0%   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
   100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
 }
+
+/* ===== BOTÃO SAIR (após balões) ===== */
+.cn-sair-btn {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateX(-50%) translateY(12px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 12px 36px;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  border-radius: 50px;
+  backdrop-filter: blur(6px);
+  pointer-events: auto;
+}
+
+.cn-sair-btn.cn-sair-btn--show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.cn-sair-btn:active {
+  opacity: 0.7;
+}

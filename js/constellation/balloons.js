@@ -155,7 +155,7 @@ export const stopBalloons = () => {
   if (_timer) { clearTimeout(_timer); _timer = null; }
 };
 
-export const startBalloons = (container, photos = BALLOON_PHOTOS) => {
+export const startBalloons = (container, photos = BALLOON_PHOTOS, onDone) => {
   stopBalloons();
 
   const list  = shuffle(photos);
@@ -167,13 +167,18 @@ export const startBalloons = (container, photos = BALLOON_PHOTOS) => {
   const launch = () => {
     if (launched >= total || elapsed >= maxMs) return;
 
-    const { wrap, riseDur, totalH } = createBalloon(list[launched++]);
+    const { wrap, riseDur } = createBalloon(list[launched++]);
     container.appendChild(wrap);
-    setTimeout(() => wrap.remove(), riseDur + 900);
 
-    const delay = 1400 + Math.random() * 1200;
-    elapsed += delay;
-    if (launched < total && elapsed < maxMs) {
+    const isLast = launched >= total || elapsed >= maxMs;
+    setTimeout(() => {
+      wrap.remove();
+      if (isLast && onDone) onDone();
+    }, riseDur + 900);
+
+    if (!isLast) {
+      const delay = 1400 + Math.random() * 1200;
+      elapsed += delay;
       _timer = setTimeout(launch, delay);
     }
   };
