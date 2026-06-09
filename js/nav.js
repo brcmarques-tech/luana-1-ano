@@ -34,6 +34,7 @@ const SCREEN_TRACK = {
   serendipity: 'loves',
   loves:       'loves',
   game:     'game',
+  puzzle:   'game',
   final:    'final',
 };
 

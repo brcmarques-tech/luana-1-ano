@@ -1,13 +1,12 @@
 // Atribuição fixa de faixas por tela. Editável pelo painel admin → aba Músicas.
 
 export const MUSIC_DEFAULTS = {
-  gate:          'lua-pegado',
+  gate:          'ceu-azul',
   welcome:       'beautiful-things',
-  loves:         'iris',
-  game:          'cruel-summer',
-  puzzle:        'clocks',
+  loves:         'ceilings',
+  game:          'numb',
   final:         'memories',
-  'timeline-01': 'amor-e-fe-acustico',
+  'timeline-01': 'bem',
 };
 
 export const POOL = [
