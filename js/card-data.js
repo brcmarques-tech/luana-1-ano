@@ -23,9 +23,9 @@ const _CARD_DEFAULT = {
   ],
 
   abilities: [
-    { icon: '☕', name: 'Café Salvador',      desc: 'Traz café sem ser pedido. Restaura +50 HP do Bruno por turno.' },
-    { icon: '✨', name: 'Sorriso Crítico',    desc: 'Causa dano emocional fatal em quem olha. Sem contra.' },
-    { icon: '🤔', name: 'Pergunta Filosófica',desc: 'Faz perguntas tipo "por que o céu é azul?" às 23h. Aliados confusos mas apaixonados.' },
+    { icon: '☕', name: 'Café Salvador',        desc: 'Traz café sem ser pedido na cama. Restaura +50 HP do Bruno por turno.' },
+    { icon: '✨', name: 'Sorriso Crítico',      desc: 'Causa dano emocional fatal em quem olha. Sem contra.' },
+    { icon: '🤔', name: 'Pensamento Filosófico',desc: 'Faz perguntas 3 meses depois de filosofar.' },
   ],
 
   flavor: '"perfeita em tudo, exceto em saber disso."',
@@ -54,7 +54,7 @@ const _BONUS_DEFAULT = [
     ],
     abilities: [
       { icon: '🐺', name: 'Pacto de Irmandade', desc: 'Sente quando o Bruno tá mal-humorado antes de qualquer um. Buff de presença permanente.' },
-      { icon: '✊', name: 'Postura de Alfa',     desc: 'Só de existir, intimida. Passiva permanente.' },
+      { icon: '✊', name: 'Postura de Alfa',     desc: 'Só de existir, intimida. Passiva permanente (incapacidade de pegar a Winter).' },
     ],
     flavor: '"ele não late pra nada. ele late pra você."',
   },
@@ -116,14 +116,14 @@ const _BONUS_DEFAULT = [
     gradient: 'linear-gradient(135deg, #3a281c 0%, #251a12 50%, #4e3424 100%)',
     border: 'linear-gradient(135deg, #d6a05c 0%, #f0be7a 50%, #d6a05c 100%)',
     stats: [
-      { label: 'FELIZ', value: 999, color: '#d6a05c' },
+      { label: 'FELIZ', value:  99, color: '#d6a05c' },
       { label: 'AMOR',  value: 100, color: '#d6a05c' },
       { label: 'ENERG', value:  98, color: '#d6a05c' },
       { label: 'INT',   value:  10, color: '#d6a05c' },
     ],
     abilities: [
-      { icon: '⚡', name: 'Corrida Sem Destino', desc: 'Corre em círculos por 30 segundos. Motivo desconhecido. Energia: infinita.' },
-      { icon: '🐶', name: 'Animação Perpétua',   desc: 'Fica feliz com absolutamente tudo. Habilidade passiva.' },
+      { icon: '⚡', name: 'Buraco Sem Fim',    desc: 'Faz buracos por dias a fio. Motivo desconhecido.' },
+      { icon: '🐶', name: 'Animação Perpétua', desc: 'Fica feliz com absolutamente tudo. Habilidade passiva (Wolf não pega ela por nada).' },
     ],
     flavor: '"nem sempre sabe o que tá fazendo. sempre sabe que te ama."',
   },
@@ -200,7 +200,7 @@ const _SPECIAL_DEFAULT = {
   abilities: [
     { icon: '🍀', name: 'Sortudo Demais',  desc: 'Casou com a Luana. +999 em tudo só por isso. Habilidade inata e imerecida.' },
     { icon: '😂', name: 'Comédia Passiva', desc: 'Faz ela rir mesmo sem querer. Não tem controle disso.' },
-    { icon: '❤️', name: 'Ruim em Tudo',   desc: '-95 em todas as habilidades técnicas. A Luana compensa.' },
+    { icon: '❤️', name: 'Ruim em Tudo',   desc: '-95 em todas as habilidades técnicas. (a menos que precise, aí fica ∞)' },
   ],
   flavor: '"a sorte? é por ter ela."',
 };

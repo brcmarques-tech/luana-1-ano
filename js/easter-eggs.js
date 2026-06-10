@@ -19,9 +19,9 @@ export const EGG_HINTS = [
 export const TIMELINE_STATS = [
   '8.760 horas com você',
   '525.600 minutos juntos',
-  '≈ 1.245 cafés tomados',
+  '≈ 144 vezes feitas com você 😏',
   '0 vezes que cansei',
-  '∞ vontades de te abraçar',
+  '∞ vontades de te endiabrar',
 ];
 
 export const KONAMI_WORD = 'amor';
@@ -167,10 +167,17 @@ const spawnHeart = (layer, mega = false) => {
   setTimeout(() => heart.remove(), 10000);
 };
 
-// ===== EGG 4: digitar "luana" em qualquer tela (konami-like) =====
+// ===== EGG 4: digitar "amor" no teclado =====
 
-// egg 4: digitar "amor" no teclado
-// egg 5: triplo toque no kanji 偶然の美
+export const triggerEggAmor = (spawnConfetti) => {
+  if (markFound('amor', 3)) {
+    showBigMessage('💛 essa palavra abre tudo aqui');
+    spawnConfetti?.(35);
+  }
+};
+
+// ===== EGG 5: triplo toque no kanji 偶然の美 =====
+
 export const triggerEgg4Mobile = (spawnConfetti) => {
   if (markFound('kanji', 4)) {
     showBigMessage('🌸 偶然の美 — até os segredos chegam por acidente');

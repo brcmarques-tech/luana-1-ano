@@ -10,7 +10,7 @@ import { initAmbient, allKilled, triggerSkullMode, resumePets } from './ambient.
 import { initAdmin } from './admin.js';
 import { initMobileKeyboard } from './mobile-keyboard.js';
 import { initLoveLetter } from './love-letter.js';
-import { setupEggKonami, setupKonamiCode } from './easter-eggs.js';
+import { setupEggKonami, setupKonamiCode, triggerEggAmor } from './easter-eggs.js';
 import { unlock } from './achievements.js';
 import { spawnConfetti } from './confetti.js';
 import { wait } from './utils.js';
@@ -125,7 +125,12 @@ const wireTypingCards = () => {
     if (e.ctrlKey || e.altKey || e.metaKey) return;
     buffer = (buffer + e.key.toLowerCase()).slice(-maxLen);
     for (const [word, getter] of Object.entries(TRIGGERS)) {
-      if (buffer.endsWith(word)) { revealCard(getter()); buffer = ''; break; }
+      if (buffer.endsWith(word)) {
+        revealCard(getter());
+        if (word === 'amor') triggerEggAmor(spawnConfetti);
+        buffer = '';
+        break;
+      }
     }
   });
 };

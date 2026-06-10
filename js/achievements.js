@@ -25,7 +25,7 @@ export const ACHIEVEMENTS = {
   'memory-master': { icon: '🧠', name: 'Memorizadora pro',     desc: 'Completou o memory game' },
   'happy-ending':  { icon: '✨', name: 'Final feliz',           desc: 'Chegou até o fim' },
   'egg-hunter':    { icon: '🥚', name: 'Caçadora de segredos', desc: 'Achou um easter egg' },
-  'all-eggs':      { icon: '🏆', name: 'Lendária',             desc: 'Achou os 4 easter eggs' },
+  'all-eggs':      { icon: '🏆', name: 'Lendária',             desc: 'Achou os 5 easter eggs' },
   'konami-master': { icon: '🎮', name: 'Hardcore gamer',       desc: 'Konami code, sério mesmo?' },
   'animal-killer':  { icon: '☠️',  name: 'Assassina de bichinho', desc: 'Matou um animal inocente' },
   'animal-forgiver':{ icon: '🕊️', name: 'Redentora',             desc: 'Pediu desculpa pros bichinhos' },

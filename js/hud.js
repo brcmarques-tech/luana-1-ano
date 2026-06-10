@@ -1,6 +1,8 @@
 import { saveXP, loadXP, saveLevel, getSessionInfo } from './progress.js';
 import { CARD } from './card-data.js';
+import { isCardCollected } from './card-reveal.js';
 import { applyHoloTilt } from './card-holo.js';
+import { imgBase } from './utils.js';
 import { openAchievementsDrawer } from './achievements-drawer.js';
 
 const SCREEN_XP = {
@@ -100,7 +102,7 @@ export const openProfilePanel = () => {
 
   const session  = getSessionInfo();
   const level    = currentXP >= 100 ? 2 : 1;
-  const cardSeen = localStorage.getItem(cardSeenKey) === '1';
+  const cardSeen = isCardCollected(CARD.id) || localStorage.getItem(cardSeenKey) === '1';
 
   const statsHTML = CARD.stats.map(
     (s) => `<div class="pcard-stat"><span class="pcard-stat-label">${s.label}</span><span class="pcard-stat-val" style="color:${s.color}">${s.value}</span></div>`
@@ -163,10 +165,9 @@ export const openProfilePanel = () => {
 const openCardModal = () => {
   if (document.getElementById('card-modal')) return;
 
-  const apiUrl = localStorage.getItem('luana_api_url') || '';
-  const photoUrl = CARD.photoKey && apiUrl ? `${apiUrl}/assets/img/${CARD.photoKey}.jpg` : null;
+  const photoUrl = CARD.photoKey ? `${imgBase()}/${CARD.photoKey}.jpg` : null;
   const imgTag = photoUrl
-    ? `<img src="${photoUrl}" alt="" class="card-portrait-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />`
+    ? `<img src="${photoUrl}" alt="" class="card-portrait-img"${CARD.photoPosition ? ` style="object-position:${CARD.photoPosition}"` : ''} onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />`
     : '';
   const emojiStyle = photoUrl ? 'style="display:none"' : '';
 
@@ -200,7 +201,7 @@ const openCardModal = () => {
           <div class="card-portrait-bg"></div>
           ${imgTag}
           <div class="card-portrait-emoji" ${emojiStyle}>${CARD.emoji}</div>
-          <span class="card-level">${CARD.level}</span>
+          <span class="card-level">${CARD.level || ''}</span>
         </div>
         <div class="card-type">${CARD.type}</div>
         <div class="card-stats">${statsHTML}</div>
