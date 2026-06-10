@@ -35,9 +35,9 @@ const CARDS = {
     tone: '#2a1740', accent: '#caa3ea',
     stats: [{ label:'AMOR',value:'999'},{ label:'BELEZA',value:'100'},{ label:'CARINHO',value:'100'},{ label:'INT',value:'12'}],
     abilities: [
-      { icon:'☕', title:'Café Salvador', text:'Traz café sem ser pedido. Restaura +50 HP do Bruno por turno.' },
+      { icon:'☕', title:'Café Salvador', text:'Traz café sem ser pedido na cama. Restaura +50 HP do Bruno por turno.' },
       { icon:'✨', title:'Sorriso Crítico', text:'Causa dano emocional fatal em quem olha. Sem contra.' },
-      { icon:'🤔', title:'Pergunta Filosófica', text:'Faz perguntas tipo "por que o céu é azul?" às 23h. Aliados confusos mas apaixonados.' },
+      { icon:'🤔', title:'Pensamento Filosófico', text:'Faz perguntas 3 meses depois de filosofar.' },
     ],
     quote: 'perfeita em tudo, exceto em saber disso.',
   },
@@ -49,7 +49,7 @@ const CARDS = {
     stats: [{ label:'PARCERIA',value:'100'},{ label:'FORÇA',value:'95'},{ label:'LEAL',value:'99'},{ label:'FARO',value:'88'}],
     abilities: [
       { icon:'🐺', title:'Pacto de Irmandade', text:'Sente quando o Bruno tá mal-humorado antes de qualquer um. Buff de presença permanente.' },
-      { icon:'✊', title:'Postura de Alfa', text:'Só de existir, intimida. Passiva permanente.' },
+      { icon:'✊', title:'Postura de Alfa', text:'Só de existir, intimida. Passiva permanente (incapacidade de pegar a Winter).' },
     ],
     quote: 'ele não late pra nada. ele late pra você.',
   },
@@ -82,10 +82,10 @@ const CARDS = {
     stars: { filled: 3, total: 5 }, name: 'Winter',
     title: 'Winter, a Alma Pura da Família', tags: 'Criatura · Canina · Caótica · Felizardo',
     tone: '#3a281c', accent: '#d6a05c',
-    stats: [{ label:'FELIZ',value:'999'},{ label:'AMOR',value:'100'},{ label:'ENERG',value:'98'},{ label:'INT',value:'10'}],
+    stats: [{ label:'FELIZ',value:'99'},{ label:'AMOR',value:'100'},{ label:'ENERG',value:'98'},{ label:'INT',value:'10'}],
     abilities: [
-      { icon:'⚡', title:'Corrida Sem Destino', text:'Corre em círculos por 30 segundos. Motivo desconhecido. Energia: infinita.' },
-      { icon:'🐶', title:'Animação Perpétua', text:'Fica feliz com absolutamente tudo. Habilidade passiva.' },
+      { icon:'⚡', title:'Buraco Sem Fim', text:'Faz buracos por dias a fio. Motivo desconhecido.' },
+      { icon:'🐶', title:'Animação Perpétua', text:'Fica feliz com absolutamente tudo. Habilidade passiva (Wolf não pega ela por nada).' },
     ],
     quote: 'nem sempre sabe o que tá fazendo. sempre sabe que te ama.',
   },
@@ -123,7 +123,7 @@ const CARDS = {
     abilities: [
       { icon:'🍀', title:'Sortudo Demais', text:'Casou com a Luana. +999 em tudo só por isso. Habilidade inata e imerecida.' },
       { icon:'😂', title:'Comédia Passiva', text:'Faz ela rir mesmo sem querer. Não tem controle disso.' },
-      { icon:'❤️', title:'Ruim em Tudo', text:'-95 em todas as habilidades técnicas. A Luana compensa.' },
+      { icon:'❤️', title:'Ruim em Tudo', text:'-95 em todas as habilidades técnicas. (a menos que precise, aí fica ∞)' },
     ],
     quote: 'a sorte? é por ter ela.',
   },
