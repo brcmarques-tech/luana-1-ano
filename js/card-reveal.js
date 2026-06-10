@@ -73,7 +73,7 @@ const processQueue = () => {
   showReveal(revealQueue.shift());
 };
 
-export const revealCard = (card) => {
+export const revealCard = (card, onDismiss) => {
   if (!card?.id) return;
   if (isCardCollected(card.id)) return;
   collected.add(card.id);
@@ -81,7 +81,7 @@ export const revealCard = (card) => {
   haptic(HAPTIC.special);
   updateDeckBadge();
   if (revealActive) { revealQueue.push(card); return; }
-  showReveal(card);
+  showReveal(card, onDismiss);
 };
 
 const makeIframe = (card) => {
@@ -93,7 +93,7 @@ const makeIframe = (card) => {
   return iframe;
 };
 
-const showReveal = (card) => {
+const showReveal = (card, onDismiss) => {
   revealActive = true;
   document.body.style.overflow = 'hidden';
 
@@ -117,11 +117,11 @@ const showReveal = (card) => {
     overlay.classList.add('cr-show');
   }));
 
-  header.querySelector('.cr-close').addEventListener('click', () => flyToDeck(overlay, iframe));
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) flyToDeck(overlay, iframe); });
+  header.querySelector('.cr-close').addEventListener('click', () => flyToDeck(overlay, iframe, onDismiss));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) flyToDeck(overlay, iframe, onDismiss); });
 };
 
-const flyToDeck = (overlay, iframe) => {
+const flyToDeck = (overlay, iframe, onDismiss) => {
   document.body.style.overflow = '';
   const deckRect = deckBtn.getBoundingClientRect();
   const iframeRect = iframe.getBoundingClientRect();
@@ -139,6 +139,7 @@ const flyToDeck = (overlay, iframe) => {
     deckBtn.classList.add('btn-deck--pulse');
     setTimeout(() => deckBtn.classList.remove('btn-deck--pulse'), 700);
     revealActive = false;
+    if (onDismiss) setTimeout(onDismiss, 300);
     setTimeout(processQueue, 400);
   }, 550);
 };

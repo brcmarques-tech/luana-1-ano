@@ -95,7 +95,7 @@ const triggerLevelUp = () => {
 
 const cardSeenKey = 'luana_card_seen';
 
-const openProfilePanel = () => {
+export const openProfilePanel = () => {
   if (document.getElementById('profile-panel')) return;
 
   const session  = getSessionInfo();
