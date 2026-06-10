@@ -14,12 +14,13 @@ let adminSecret = '';
 // ===== slots de conteúdo =====
 
 const MUSIC_SLOTS = [
-  { key: 'gate',          label: 'Gate',               file: 'gate.mp3' },
-  { key: 'welcome',       label: 'Welcome + Hanami',   file: 'welcome.mp3' },
-  { key: 'timeline-01',   label: 'Timeline (todas as fotos)', file: 'timeline-01.mp3' },
-  { key: 'loves',         label: 'Loves',              file: 'loves.mp3' },
-  { key: 'game',          label: 'Memory Game',        file: 'game.mp3' },
-  { key: 'final',         label: 'Final',              file: 'final.mp3' },
+  { key: 'gate',          label: 'Gate',                       file: 'gate.mp3' },
+  { key: 'welcome',       label: 'Welcome',                    file: 'welcome.mp3' },
+  { key: 'hanami',        label: 'Hanami',                     file: 'hanami.mp3' },
+  { key: 'timeline-01',   label: 'Timeline (todas as fotos)',  file: 'timeline-01.mp3' },
+  { key: 'loves',         label: 'Loves',                      file: 'loves.mp3' },
+  { key: 'game',          label: 'Memory Game',                file: 'game.mp3' },
+  { key: 'final',         label: 'Final',                      file: 'final.mp3' },
 ];
 
 const PHOTO_SLOTS = [
