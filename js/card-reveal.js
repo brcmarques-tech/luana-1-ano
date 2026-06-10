@@ -75,7 +75,11 @@ const processQueue = () => {
 
 export const revealCard = (card, onDismiss) => {
   if (!card?.id) return;
-  if (isCardCollected(card.id)) return;
+  if (isCardCollected(card.id)) {
+    // carta já coletada — apenas executa o callback (ex: abrir perfil)
+    if (onDismiss) setTimeout(onDismiss, 300);
+    return;
+  }
   collected.add(card.id);
   saveCollected();
   haptic(HAPTIC.special);
