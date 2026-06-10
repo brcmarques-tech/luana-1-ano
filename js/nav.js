@@ -29,7 +29,7 @@ const ANIME_TRANSITION_SCREENS = new Set([
 const SCREEN_TRACK = {
   gate:     'gate',
   welcome:  'welcome',
-  hanami:   'welcome',
+  hanami:   'hanami',
   timeline:    'timeline-01',
   serendipity: 'loves',
   loves:       'loves',
