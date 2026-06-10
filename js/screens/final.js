@@ -9,8 +9,39 @@ import { spawnConfetti } from '../confetti.js';
 import { revealCard } from '../card-reveal.js';
 import { openProfilePanel } from '../hud.js';
 import { CARD } from '../card-data.js';
+import { pauseForVideo, resumeAfterVideo } from '../music.js';
 
-let dateEl, badgeEl, bodyEl, sigEl, restartBtn, heartsEl;
+const FINAL_VIDEO_SRC = 'assets/video/mensagem-final.mp4';
+
+const openFinalVideo = () => {
+  if (document.getElementById('final-video-overlay')) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'final-video-overlay';
+  overlay.className = 'final-video-overlay';
+  overlay.innerHTML = `
+    <video class="final-video-player" src="${FINAL_VIDEO_SRC}" controls playsinline></video>
+    <button class="final-video-close" id="final-video-close" aria-label="fechar">✕</button>
+  `;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('show'));
+
+  const video = overlay.querySelector('video');
+  pauseForVideo();
+  video.play().catch(() => {});
+
+  const close = () => {
+    video.pause();
+    overlay.classList.remove('show');
+    resumeAfterVideo();
+    setTimeout(() => overlay.remove(), 400);
+  };
+
+  document.getElementById('final-video-close').addEventListener('click', close);
+  video.addEventListener('ended', close);
+};
+
+let dateEl, badgeEl, bodyEl, sigEl, restartBtn, videoBtnEl, heartsEl;
 let rendered = false;
 let heartsInterval = null;
 let onRestart = null;
@@ -72,6 +103,12 @@ const render = () => {
       onRestart?.();
       goToScreen('gate');
     });
+
+    videoBtnEl = document.createElement('button');
+    videoBtnEl.className = 'btn-final-video';
+    videoBtnEl.innerHTML = '▶ minha mensagem pra você';
+    videoBtnEl.addEventListener('click', openFinalVideo);
+    restartBtn.insertAdjacentElement('beforebegin', videoBtnEl);
   }
 
   const paras = bodyEl.querySelectorAll('.final-paragraph');
@@ -79,7 +116,8 @@ const render = () => {
 
   const lastDelay = 1600 + paras.length * 1100;
   setTimeout(() => sigEl.classList.add('revealed'), lastDelay);
-  setTimeout(() => restartBtn.classList.add('revealed'), lastDelay + 800);
+  setTimeout(() => videoBtnEl.classList.add('revealed'), lastDelay + 800);
+  setTimeout(() => restartBtn.classList.add('revealed'), lastDelay + 1600);
 
   startHearts();
 };
@@ -91,6 +129,7 @@ export const initFinal = ({ onFullRestart }) => {
   sigEl      = document.getElementById('final-signature');
   restartBtn = document.getElementById('btn-final-restart');
   heartsEl   = document.getElementById('final-bg-hearts');
+  videoBtnEl = null;
   onRestart  = onFullRestart;
 
   const heart = document.querySelector('#screen-final .final-heart');

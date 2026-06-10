@@ -1284,6 +1284,77 @@ body.screen-loading .hud {
   opacity: 1;
 }
 
+.btn-final-video {
+  display: block;
+  margin: 0 auto 20px;
+  background: transparent;
+  border: 1.5px solid var(--pink);
+  color: var(--pink);
+  font-size: 1rem;
+  padding: 12px 28px;
+  border-radius: 40px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.9s ease, transform 0.9s ease, background 0.2s, color 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.btn-final-video.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.btn-final-video:hover {
+  background: var(--pink);
+  color: #1a0a2e;
+}
+
+/* ===== overlay de vídeo final ===== */
+
+.final-video-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(10, 4, 20, 0.97);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.final-video-overlay.show {
+  opacity: 1;
+}
+
+.final-video-player {
+  width: min(92vw, 680px);
+  max-height: 85vh;
+  border-radius: 12px;
+  outline: none;
+  box-shadow: 0 0 60px rgba(255, 94, 138, 0.2);
+}
+
+.final-video-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.final-video-close:hover {
+  background: rgba(255, 94, 138, 0.3);
+}
+
 .btn-final-restart {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.18);

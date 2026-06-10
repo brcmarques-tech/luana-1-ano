@@ -17,10 +17,11 @@ obrigado por cada dia.
 — Bruno 🌸`;
 
 // mensagem ao segurar a flor do perfil
-const LOVE_MESSAGE_AVATAR = `ei, você 🌸
+const LOVE_MESSAGE_AVATAR = `ei, você 🐑
 
-segurou na florzinha, né?
+segurou na ovelhinha, né?
 sabia que ia achar isso aqui.
+até por que tu é minha ovelhinha kkk
 
 esse site inteiro é pra você.
 cada detalhe, cada segredo —
