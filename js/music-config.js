@@ -3,6 +3,7 @@
 export const MUSIC_DEFAULTS = {
   gate:           'ceu-azul',
   welcome:        'beautiful-things',
+  hanami:         'angelical',
   loves:          'ceilings',
   game:           'numb',
   final:          'memories',
@@ -11,6 +12,7 @@ export const MUSIC_DEFAULTS = {
 };
 
 export const POOL = [
+  'angelical',
   'amor-e-fe-acustico',
   'beautiful-things',
   'bem',
