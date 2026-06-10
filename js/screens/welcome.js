@@ -19,7 +19,7 @@ const typeText = (el, text, speed = 110) => new Promise((resolve) => {
 });
 
 let welcomePlayed = false;
-let welcomeName, welcomeSub, btnStart;
+let welcomeName, welcomeSub, welcomeExtra, btnStart;
 
 const playSequence = async () => {
   if (welcomePlayed) return;
@@ -33,21 +33,27 @@ const playSequence = async () => {
   welcomeSub.textContent = 'faz exatamente 1 ano que tudo começou 💛';
   welcomeSub.classList.add('show');
 
+  await wait(700);
+  welcomeExtra.textContent = 'eu fiz esse lugar pra você — está cheio de mistérios e segredos esperando pra ser descobertos. espero que goste muito. 🌸';
+  welcomeExtra.classList.add('show');
+
   await wait(900);
   btnStart.classList.add('show');
 };
 
 export const resetWelcome = () => {
   welcomePlayed = false;
-  if (welcomeName) welcomeName.classList.remove('done');
-  if (welcomeSub)  welcomeSub.classList.remove('show');
-  if (btnStart)    btnStart.classList.remove('show');
+  if (welcomeName)  welcomeName.classList.remove('done');
+  if (welcomeSub)   welcomeSub.classList.remove('show');
+  if (welcomeExtra) welcomeExtra.classList.remove('show');
+  if (btnStart)     btnStart.classList.remove('show');
 };
 
 export const initWelcome = () => {
-  welcomeName = document.getElementById('welcome-name');
-  welcomeSub  = document.getElementById('welcome-sub');
-  btnStart    = document.getElementById('btn-start');
+  welcomeName  = document.getElementById('welcome-name');
+  welcomeSub   = document.getElementById('welcome-sub');
+  welcomeExtra = document.getElementById('welcome-extra');
+  btnStart     = document.getElementById('btn-start');
 
   btnStart.addEventListener('click', () => goToScreen('hanami'));
 
