@@ -8,8 +8,8 @@ const DEFAULT = {
   badge: '1 ano',
 
   epigraph: {
-    text: 'A vida é muito bela, basta um beijo e o delicado mecanismo se move.',
-    author: 'Adélia Prado',
+    text: 'Mulher virtuosa, quem a achará? O seu valor muito excede o de finas joias.',
+    author: 'Provérbios 31:10',
   },
 
   paragraphs: [
