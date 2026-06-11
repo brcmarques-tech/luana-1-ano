@@ -5724,12 +5724,12 @@ body:has(#screen-constellation.active) .pet--dead {
 /* ===== BOTÃO SAIR (após balões) ===== */
 .cn-sair-btn {
   position: absolute;
-  bottom: 36px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 30;
   opacity: 0;
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition: opacity 0.8s ease, transform 0.8s ease, bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(-50%) translateY(12px);
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -5740,6 +5740,10 @@ body:has(#screen-constellation.active) .pet--dead {
   border-radius: 50px;
   backdrop-filter: blur(6px);
   pointer-events: auto;
+}
+
+body.keyboard-open .cn-sair-btn {
+  bottom: 24px;
 }
 
 .cn-sair-btn.cn-sair-btn--show {
@@ -5757,7 +5761,7 @@ body:has(#screen-constellation.active) .pet--dead {
   font-style: italic;
   color: rgba(255, 255, 255, 0.48);
   line-height: 1.8;
-  margin-bottom: 44px;
+  margin: 0 auto 44px;
   max-width: 280px;
   text-align: center;
   opacity: 0;
