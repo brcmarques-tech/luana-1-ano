@@ -2,36 +2,10 @@
 // Clique no balão: para, incha e explode.
 // Adicione fotos em assets/photos/balloons/ e liste aqui.
 
-export const BALLOON_PHOTOS = [
-  'assets/img/timeline-01.jpg',
-  'assets/img/timeline-02.jpg',
-  'assets/img/timeline-03.jpg',
-  'assets/img/timeline-04.jpg',
-  'assets/img/timeline-05.jpg',
-  'assets/img/timeline-06.jpg',
-  'assets/img/timeline-07.jpg',
-  'assets/img/timeline-08.jpg',
-  'assets/img/timeline-09.jpg',
-  'assets/img/timeline-10.jpg',
-  'assets/img/timeline-11.jpg',
-  'assets/img/timeline-12.jpg',
-  'assets/img/game-01.jpg',
-  'assets/img/game-02.jpg',
-  'assets/img/game-03.jpg',
-  'assets/img/game-04.jpg',
-  'assets/img/game-05.jpg',
-  'assets/img/game-06.jpg',
-  'assets/img/game-07.jpg',
-  'assets/img/game-08.jpg',
-  'assets/img/game-09.jpg',
-  'assets/img/game-10.jpg',
-  'assets/img/game-11.jpg',
-  'assets/img/game-12.jpg',
-  'assets/img/game-13.jpg',
-  'assets/img/game-14.jpg',
-  'assets/img/game-15.jpg',
-  'assets/img/começo-3.jpg',
-];
+export const BALLOON_PHOTOS = Array.from(
+  { length: 54 },
+  (_, i) => `assets/img/balloons/balloon-${String(i + 1).padStart(2, '0')}.jpg`,
+);
 
 const shuffle = (arr) => {
   const a = [...arr];
