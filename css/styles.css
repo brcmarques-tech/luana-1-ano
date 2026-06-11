@@ -1494,6 +1494,28 @@ body.screen-loading .hud {
   box-shadow: 0 8px 40px rgba(0,0,0,0.8);
 }
 
+.pateta-audio-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 94, 138, 0.35), rgba(26, 10, 46, 0.85));
+  box-shadow: 0 8px 60px rgba(255, 94, 138, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  animation: pateta-pulse 1.6s ease-in-out infinite;
+}
+
+.pateta-audio-icon {
+  font-size: 5rem;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+
+@keyframes pateta-pulse {
+  0%, 100% { transform: scale(1);   box-shadow: 0 8px 60px rgba(255, 94, 138, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08); }
+  50%      { transform: scale(1.06); box-shadow: 0 8px 80px rgba(255, 94, 138, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.12); }
+}
+
 .pateta-close {
   position: absolute;
   top: 16px;

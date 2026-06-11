@@ -301,22 +301,26 @@ const showPateta = () => {
   const el = document.createElement('div');
   el.id = 'pateta-overlay';
   el.innerHTML = `
-    <video class="pateta-video" src="assets/video/melgarejo.mp4" autoplay playsinline></video>
+    <div class="pateta-audio-wrap">
+      <div class="pateta-audio-icon">🎙️</div>
+      <audio class="pateta-audio" src="assets/audio/melgarejo.mp3" autoplay></audio>
+    </div>
     <button class="pateta-close" aria-label="fechar">✕</button>
   `;
   document.body.appendChild(el);
   requestAnimationFrame(() => el.classList.add('show'));
   if (navigator.vibrate) navigator.vibrate([50, 30, 80, 30, 120]);
 
-  const video = el.querySelector('video');
+  const audio = el.querySelector('audio');
   pauseForVideo();
 
   const close = () => {
+    audio.pause();
     el.classList.remove('show');
     resumeAfterVideo();
     setTimeout(() => el.remove(), 400);
   };
-  video.addEventListener('ended', close);
+  audio.addEventListener('ended', close);
   el.querySelector('.pateta-close').addEventListener('click', close);
 };
 
