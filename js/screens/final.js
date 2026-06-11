@@ -13,6 +13,20 @@ import { pauseForVideo, resumeAfterVideo } from '../music.js';
 
 const FINAL_VIDEO_SRC = 'assets/video/mensagem-final.mp4';
 
+// força o browser a baixar o vídeo em background — chamado a partir da tela de game
+// pra que a Luana não espere quando clicar em "minha mensagem pra você".
+let _preloadEl = null;
+export const preloadFinalVideo = () => {
+  if (_preloadEl) return;
+  _preloadEl = document.createElement('video');
+  _preloadEl.src = FINAL_VIDEO_SRC;
+  _preloadEl.preload = 'auto';
+  _preloadEl.muted = true;
+  _preloadEl.playsInline = true;
+  _preloadEl.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;left:-9999px';
+  document.body.appendChild(_preloadEl);
+};
+
 const openFinalVideo = () => {
   if (document.getElementById('final-video-overlay')) return;
 

@@ -5,6 +5,7 @@ import { goToScreen, registerScreenEnter } from '../nav.js';
 import { unlock } from '../achievements.js';
 import { haptic, HAPTIC } from '../haptic.js';
 import { spawnConfetti } from '../confetti.js';
+import { preloadFinalVideo } from './final.js';
 
 const MEMORY_DONE_KEY = 'luana_memory_done';
 
@@ -110,5 +111,8 @@ export const initMemoryGame = () => {
     skipBtn.addEventListener('click', () => goToScreen('puzzle'));
   }
 
-  registerScreenEnter('game', render);
+  registerScreenEnter('game', () => {
+    preloadFinalVideo();
+    render();
+  });
 };
