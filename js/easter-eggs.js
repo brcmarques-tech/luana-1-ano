@@ -203,12 +203,33 @@ export const setupEggKonami = (spawnConfetti, onDesculpa) => {
 
     if (buffer.endsWith('hardreset')) {
       buffer = '';
-      const { apiOk } = getSessionInfo();
-      if (apiOk && API_URL) {
-        fetch(`${API_URL}/session/${getToken()}/progress`, { method: 'DELETE' }).catch(() => {});
-      }
-      localStorage.clear();
-      location.reload();
+      showBigMessage('🔄 resetando tudo...');
+      (async () => {
+        // 1. reset progresso no backend (aguarda completar)
+        const { apiOk } = getSessionInfo();
+        if (apiOk && API_URL) {
+          try { await fetch(`${API_URL}/session/${getToken()}/progress`, { method: 'DELETE' }); } catch {}
+        }
+        // 2. limpa storage local
+        try { localStorage.clear(); } catch {}
+        try { sessionStorage.clear(); } catch {}
+        // 3. limpa caches do Service Worker (PWA/TWA pode estar servindo HTML/JS antigos)
+        if ('caches' in window) {
+          try {
+            const keys = await caches.keys();
+            await Promise.all(keys.map(k => caches.delete(k)));
+          } catch {}
+        }
+        // 4. desregistra Service Worker pra forçar versão nova no próximo boot
+        if ('serviceWorker' in navigator) {
+          try {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(regs.map(r => r.unregister()));
+          } catch {}
+        }
+        // 5. reload (delay pra dar tempo do toast aparecer)
+        setTimeout(() => location.reload(), 600);
+      })();
     }
 
     if (buffer.endsWith('desculpa')) {
