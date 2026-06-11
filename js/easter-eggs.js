@@ -19,7 +19,7 @@ export const EGG_HINTS = [
 export const TIMELINE_STATS = [
   '8.760 horas com você',
   '525.600 minutos juntos',
-  '≈ 144 vezes feitas com você 😏',
+  '≈ 144 vezes 😏',
   '0 vezes que cansei',
   '∞ vontades de te endiabrar',
 ];
