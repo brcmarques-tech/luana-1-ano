@@ -130,19 +130,24 @@ export const stopBalloons = () => {
   if (_timer) { clearTimeout(_timer); _timer = null; }
 };
 
-export const startBalloons = (container, photos = BALLOON_PHOTOS, onDone, onAllPopped) => {
+export const startBalloons = (container, photos = BALLOON_PHOTOS, onDone, onPopGoal, popGoal) => {
   stopBalloons();
 
   const list  = shuffle(photos);
   const total = list.length;
+  const goal  = Math.min(popGoal ?? total, total);
   const maxMs = 200_000;
   let launched = 0;
   let popped   = 0;
   let elapsed  = 0;
+  let goalFired = false;
 
   const handlePop = () => {
     popped++;
-    if (onAllPopped && popped >= total) onAllPopped();
+    if (onPopGoal && !goalFired && popped >= goal) {
+      goalFired = true;
+      onPopGoal();
+    }
   };
 
   const launch = () => {

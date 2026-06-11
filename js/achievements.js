@@ -32,7 +32,7 @@ export const ACHIEVEMENTS = {
   'genocide':       { icon: '💀',  name: 'Endiabrada',              desc: 'Matou todos os bichinhos inocentes' },
   'beginning':      { icon: '🌌',  name: 'Início de tudo',         desc: 'Acendeu todas as estrelas — e descobriu onde tudo começou' },
   'puzzle-master':  { icon: '🧩',  name: 'Montadora',              desc: 'Montou a foto inteira' },
-  'balloon-popper': { icon: '🎈',  name: 'Estoura-tudo',           desc: 'Estourou todos os balões de memória' },
+  'balloon-popper': { icon: '🎈',  name: 'Estoura-tudo',           desc: 'Estourou 20 balões de memória' },
 };
 
 // restaura conquistas salvas

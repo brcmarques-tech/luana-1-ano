@@ -216,3 +216,27 @@ export const saveAnswer = async (day, { optionId = null, text = '' }) => {
   }
   return getStatus();
 };
+
+// força respostas pros 7 dias (atalho de debug — digitar "constelation" no teclado)
+export const forceComplete = async () => {
+  _state = {
+    firstAccess: Date.now() - 7 * DAY_MS,
+    answers: {
+      1: { optionId: 'a', text: '', ts: Date.now() },
+      2: { optionId: 'a', text: '', ts: Date.now() },
+      3: { optionId: 'a', text: '', ts: Date.now() },
+      4: { optionId: 'a', text: '', ts: Date.now() },
+      5: { optionId: 'a', text: '', ts: Date.now() },
+      6: { optionId: null, text: 'meu',          ts: Date.now() },
+      7: { optionId: null, text: 'aquela tarde', ts: Date.now() },
+    },
+    synced: false,
+  };
+  lsSave(_state);
+  if (apiOk()) {
+    for (const [day, ans] of Object.entries(_state.answers)) {
+      apiPost(Number(day), { optionId: ans.optionId, text: ans.text }).catch(() => {});
+    }
+  }
+  return getStatus();
+};

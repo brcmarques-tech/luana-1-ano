@@ -251,7 +251,7 @@ const showRevealText = async () => {
 
   // lança os balões — botão "Sair" aparece quando o último balão sumir
   const cnScreen = document.getElementById('screen-constellation');
-  if (cnScreen) startBalloons(cnScreen, undefined, showSairBtn, () => unlock('balloon-popper'));
+  if (cnScreen) startBalloons(cnScreen, undefined, showSairBtn, () => unlock('balloon-popper'), 20);
 
   // esconde o "voltar →" enquanto os balões sobem (Sair vai substituir)
   const btn = document.getElementById('cn-reveal-close');

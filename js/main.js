@@ -17,6 +17,7 @@ import { wait } from './utils.js';
 import { runPreloader } from './preloader.js';
 import { initCardReveal, revealCard } from './card-reveal.js';
 import { BONUS_CARDS } from './card-data.js';
+import { forceComplete as forceCompleteConstellation } from './constellation/data.js';
 
 import { initGate, resetGate } from './screens/gate.js';
 import { initWelcome, resetWelcome } from './screens/welcome.js';
@@ -120,10 +121,28 @@ const wireTypingCards = () => {
     love: () => BONUS_CARDS.find(c => c.id === 'winter'),
   };
   let buffer = '';
-  const maxLen = Math.max(...Object.keys(TRIGGERS).map(k => k.length));
+  const maxLen = Math.max(
+    ...Object.keys(TRIGGERS).map(k => k.length),
+    'constelation'.length,
+  );
   document.addEventListener('keydown', (e) => {
     if (e.ctrlKey || e.altKey || e.metaKey) return;
     buffer = (buffer + e.key.toLowerCase()).slice(-maxLen);
+
+    // atalho debug: libera os 7 dias da constelação
+    if (buffer.endsWith('constelation')) {
+      buffer = '';
+      forceCompleteConstellation().then(() => {
+        const t = document.createElement('div');
+        t.className = 'egg-toast';
+        t.textContent = '✦ constelação completa — recarregando…';
+        document.body.appendChild(t);
+        requestAnimationFrame(() => t.classList.add('show'));
+        setTimeout(() => location.reload(), 900);
+      });
+      return;
+    }
+
     for (const [word, getter] of Object.entries(TRIGGERS)) {
       if (buffer.endsWith(word)) {
         revealCard(getter());
