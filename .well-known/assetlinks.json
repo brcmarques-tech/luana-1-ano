@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "br.com.bcmtech.luana",
+      "sha256_cert_fingerprints": [
+        "B7:5D:23:B7:F1:71:63:D1:93:CB:C0:A6:75:B7:F5:96:B0:35:FE:E4:90:3B:02:95:C4:EA:A7:60:C4:1D:2B:4E"
+      ]
+    }
+  }
+]
