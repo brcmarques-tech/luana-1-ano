@@ -66,7 +66,7 @@ const DEFAULT = [
   },
   {
     date: 'DEZ 2025',
-    caption: 'primeiro natal 🎄',
+    caption: 'primeiro natal juntos, e agora noivos 💍🎄',
     photo: 'assets/img/timeline-07.jpg',
     quotes: [
       { text: 'Amar é ser vulnerável. Amar qualquer coisa significa que seu coração certamente vai ser partido.', source: 'C.S. Lewis — Os Quatro Amores' },
