@@ -31,6 +31,7 @@ import { initFinal } from './screens/final.js';
 import { initPuzzle } from './screens/puzzle.js';
 import { initConstellationScreen } from './screens/constellation.js';
 import { showLockedScreen } from './screens/locked.js';
+import { holdUntilSunday } from './screens/sunday.js';
 import { initSkyButton } from './constellation/sky-button.js';
 
 'use strict';
@@ -225,9 +226,9 @@ const watchProfilePanel = () => {
   }).observe(document.body, { childList: true });
 };
 
-// ===== fluxo principal: sessão válida → init de tudo + gate =====
+// ===== fluxo principal: trava do domingo → sessão válida → init de tudo + gate =====
 
-initSession().then((access) => {
+holdUntilSunday().then(initSession).then((access) => {
   if (!access.hasAccess) {
     showLockedScreen(access.nextUnlock);
     return;

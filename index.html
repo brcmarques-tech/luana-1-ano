@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=5" />
+  <link rel="stylesheet" href="css/styles.css?v=6" />
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
@@ -32,7 +32,7 @@
   <main id="app">
 
     <!-- TELA 1: brincadeira "você é a Luana?" -->
-    <section id="screen-gate" class="screen active">
+    <section id="screen-gate" class="screen">
       <div class="gate-content">
         <h1 class="gate-title">Você é a <span class="highlight">Luana</span>?</h1>
         <p class="gate-subtitle">(precisamos ter certeza 🔍)</p>
@@ -241,6 +241,41 @@
       </div>
     </section>
 
+    <!-- TELA: trava até 31/10 23:59:59 + vídeo -->
+    <section id="screen-sunday" class="screen">
+      <div class="locked-content">
+        <div id="sunday-waiting" class="sunday-step">
+          <div class="locked-icon">🎁</div>
+          <h2 class="locked-title">tem uma surpresa aqui</h2>
+          <p class="locked-sub">mas ela só abre na hora certa 🌸<br/>até lá, nada de espiar</p>
+          <div class="locked-countdown">
+            <div class="countdown-unit"><span id="sd-days">--</span><small>dias</small></div>
+            <div class="countdown-sep">:</div>
+            <div class="countdown-unit"><span id="sd-hours">--</span><small>horas</small></div>
+            <div class="countdown-sep">:</div>
+            <div class="countdown-unit"><span id="sd-mins">--</span><small>min</small></div>
+            <div class="countdown-sep">:</div>
+            <div class="countdown-unit"><span id="sd-secs">--</span><small>seg</small></div>
+          </div>
+          <p class="locked-until">31 de outubro, 23:59:59 💛</p>
+          <div class="sunday-player">
+            <button id="sunday-toggle" class="sunday-player-btn" type="button" aria-label="tocar">▶</button>
+            <span id="sunday-song-title" class="sunday-song-title">Antes do primeiro beijo</span>
+            <button id="sunday-next" class="sunday-player-btn" type="button" aria-label="próxima música">⏭</button>
+          </div>
+        </div>
+        <div id="sunday-ready" class="sunday-step" hidden>
+          <div class="locked-icon">💛</div>
+          <h2 class="locked-title">chegou a hora</h2>
+          <p class="locked-sub">aumenta o volume e aperta o play</p>
+          <button id="sunday-play" class="btn btn-yes" type="button">▶ assistir</button>
+        </div>
+      </div>
+      <div id="sunday-video-wrap" class="sunday-video-wrap" hidden>
+        <video id="sunday-video" playsinline preload="auto"></video>
+      </div>
+    </section>
+
     <!-- aviso landscape -->
     <div class="landscape-warning" aria-hidden="true">
       <div class="landscape-icon">📱</div>
@@ -252,6 +287,6 @@
   <audio id="bg-music-a" preload="none"></audio>
   <audio id="bg-music-b" preload="none"></audio>
 
-  <script type="module" src="js/main.js?v=5"></script>
+  <script type="module" src="js/main.js?v=6"></script>
 </body>
 </html>
