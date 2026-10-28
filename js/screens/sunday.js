@@ -8,7 +8,7 @@
 
 export const SUNDAY_UNLOCK = new Date('2026-10-31T23:59:59-03:00').getTime();
 
-const VIDEO_SRC = 'assets/video/domingo.mp4';
+const VIDEO_SRC = 'assets/video/domingo-v2.mp4';
 // músicas da espera, uma depois da outra em loop
 const WAIT_SONGS = [
   { src: 'assets/audio/antes-do-primeiro-beijo.mp3', title: 'Antes do primeiro beijo' },
